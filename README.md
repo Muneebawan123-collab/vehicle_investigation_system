@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Vehicle Investigation System
 
 A comprehensive MERN stack application for law enforcement, insurance agents, investigators, and government regulators to manage vehicle investigations, case management, and document tracking.
@@ -217,3 +218,6 @@ Login credentials for demo:
 ## ✨ Contributors
 
 - Your Name - Lead Developer 
+=======
+# Vehicle_registration_system
+>>>>>>> 3c89962ff277d3227ba6c425e2f87b67d244c535
