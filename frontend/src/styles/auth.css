@@ -1,0 +1,38 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.auth-container {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-container h1 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #1890ff;
+}
+
+.auth-container p {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #666;
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.auth-links button {
+  padding: 0;
+} 

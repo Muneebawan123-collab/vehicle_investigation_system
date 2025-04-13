@@ -1,0 +1,23 @@
+2025-04-11 16:36:14 error: Server Error: "expiresIn" should be a number of seconds or string representing a timespan
+Error: "expiresIn" should be a number of seconds or string representing a timespan
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\jsonwebtoken\sign.js:56:15
+    at Array.forEach (<anonymous>)
+    at validate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\jsonwebtoken\sign.js:47:6)
+    at validateOptions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\jsonwebtoken\sign.js:62:10)
+    at module.exports [as sign] (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\jsonwebtoken\sign.js:171:5)
+    at generateToken (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\utils\authUtils.js:6:14)
+    at registerUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:57:21)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-04-11 16:43:24 error: Server Error: user.matchPassword is not a function
+TypeError: user.matchPassword is not a function
+    at loginUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:104:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-04-11 16:44:15 error: Server Error: user.matchPassword is not a function
+TypeError: user.matchPassword is not a function
+    at loginUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:104:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-04-11 16:44:45 error: Server Error: user.matchPassword is not a function
+TypeError: user.matchPassword is not a function
+    at loginUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:104:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-04-12 23:05:36 error: Authentication error: jwt expired

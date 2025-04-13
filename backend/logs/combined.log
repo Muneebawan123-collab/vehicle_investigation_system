@@ -1,0 +1,231 @@
+2025-04-11 15:16:48 info: Server running in development mode on port 5000
+2025-04-11 15:16:51 info: Cloudinary connection successful
+2025-04-11 16:20:15 info: Server running in development mode on port 5000
+2025-04-11 16:20:17 info: Cloudinary connection successful
+2025-04-11 16:20:46 warn: Validation Error: {"name":"Path `name` is required.","role":"`viewer` is not a valid enum value for path `role`."}
+2025-04-11 16:24:15 warn: Validation Error: {"name":"Path `name` is required.","role":"`viewer` is not a valid enum value for path `role`."}
+2025-04-11 16:27:08 warn: Validation Error: {"name":"Path `name` is required.","role":"`viewer` is not a valid enum value for path `role`."}
+2025-04-11 16:28:48 warn: Validation Error: {"name":"Path `name` is required."}
+2025-04-11 16:32:08 warn: Validation Error: {"name":"Path `name` is required."}
+2025-04-11 16:33:10 info: Server running in development mode on port 5000
+2025-04-11 16:33:12 info: Cloudinary connection successful
+2025-04-11 16:35:30 info: Server running in development mode on port 5000
+2025-04-11 16:35:32 info: Cloudinary connection successful
+2025-04-11 16:36:14 error: Server Error: "expiresIn" should be a number of seconds or string representing a timespan
+Error: "expiresIn" should be a number of seconds or string representing a timespan
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\jsonwebtoken\sign.js:56:15
+    at Array.forEach (<anonymous>)
+    at validate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\jsonwebtoken\sign.js:47:6)
+    at validateOptions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\jsonwebtoken\sign.js:62:10)
+    at module.exports [as sign] (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\jsonwebtoken\sign.js:171:5)
+    at generateToken (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\utils\authUtils.js:6:14)
+    at registerUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:57:21)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-04-11 16:41:44 info: Server running in development mode on port 5000
+2025-04-11 16:41:46 info: Cloudinary connection successful
+2025-04-11 16:43:24 error: Server Error: user.matchPassword is not a function
+TypeError: user.matchPassword is not a function
+    at loginUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:104:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-04-11 16:44:00 info: New user registered: suhail@123.com
+2025-04-11 16:44:15 error: Server Error: user.matchPassword is not a function
+TypeError: user.matchPassword is not a function
+    at loginUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:104:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-04-11 16:44:43 info: Server running in development mode on port 5000
+2025-04-11 16:44:45 error: Server Error: user.matchPassword is not a function
+TypeError: user.matchPassword is not a function
+    at loginUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:104:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-04-11 16:44:46 info: Cloudinary connection successful
+2025-04-11 16:45:39 info: Server running in development mode on port 5000
+2025-04-11 16:45:41 info: Cloudinary connection successful
+2025-04-11 16:46:43 warn: Attempted to create audit log without user ID: login - user
+2025-04-11 16:46:43 info: User logged in: suhail@123.com
+2025-04-11 16:46:43 debug: Audit log created: 67f8fa1baa328d2729c58d87
+2025-04-11 16:46:54 warn: Attempted to create audit log without user ID: login - user
+2025-04-11 16:46:54 info: User logged in: suhail@123.com
+2025-04-11 16:46:54 debug: Audit log created: 67f8fa26aa328d2729c58d8d
+2025-04-11 16:46:58 warn: Attempted to create audit log without user ID: failed_login - user
+2025-04-11 16:46:58 warn: Failed login attempt for: suhail@123.com
+2025-04-11 16:47:03 warn: Attempted to create audit log without user ID: login - user
+2025-04-11 16:47:03 info: User logged in: suhail@123.com
+2025-04-11 16:47:03 debug: Audit log created: 67f8fa2faa328d2729c58d94
+2025-04-11 16:47:05 warn: Attempted to create audit log without user ID: login - user
+2025-04-11 16:47:05 info: User logged in: suhail@123.com
+2025-04-11 16:47:05 debug: Audit log created: 67f8fa31aa328d2729c58d9a
+2025-04-11 16:47:10 debug: Audit log created: 67f8fa36aa328d2729c58da0
+2025-04-11 16:47:10 debug: Audit log created: 67f8fa36aa328d2729c58da2
+2025-04-11 16:47:31 warn: Attempted to create audit log without user ID: login - user
+2025-04-11 16:47:31 info: User logged in: muneeb@123.com
+2025-04-11 16:47:31 debug: Audit log created: 67f8fa4baa328d2729c58da8
+2025-04-11 16:48:19 debug: Audit log created: 67f8fa7baa328d2729c58dac
+2025-04-11 16:48:19 debug: Audit log created: 67f8fa7baa328d2729c58db0
+2025-04-11 16:50:24 debug: Audit log created: 67f8faf8aa328d2729c58db6
+2025-04-11 16:50:27 debug: Audit log created: 67f8fafbaa328d2729c58dbc
+2025-04-11 16:50:29 debug: Audit log created: 67f8fafdaa328d2729c58dc2
+2025-04-11 16:50:29 debug: Audit log created: 67f8fafdaa328d2729c58dc4
+2025-04-11 16:51:01 debug: Audit log created: 67f8fb1daa328d2729c58dca
+2025-04-11 16:51:37 info: Server running in development mode on port 5000
+2025-04-11 16:51:39 info: Cloudinary connection successful
+2025-04-11 16:51:42 debug: Audit log created: 67f8fb46eea22dbcaa321e11
+2025-04-11 16:51:42 debug: Audit log created: 67f8fb46eea22dbcaa321e13
+2025-04-11 16:51:51 debug: Audit log created: 67f8fb4feea22dbcaa321e19
+2025-04-11 16:52:31 debug: Audit log created: 67f8fb77eea22dbcaa321e1f
+2025-04-11 16:52:31 debug: Audit log created: 67f8fb77eea22dbcaa321e21
+2025-04-11 16:53:45 info: Server running in development mode on port 5000
+2025-04-11 16:53:47 info: Cloudinary connection successful
+2025-04-11 16:54:01 debug: Audit log created: 67f8fbd1bdb963c0a4671074
+2025-04-11 16:54:01 debug: Audit log created: 67f8fbd1bdb963c0a4671076
+2025-04-11 16:54:10 debug: Audit log created: 67f8fbdabdb963c0a467107c
+2025-04-11 16:56:08 info: Server running in development mode on port 5000
+2025-04-11 16:56:11 info: Cloudinary connection successful
+2025-04-11 16:56:15 debug: Audit log created: 67f8fc573c32109d9f4aba16
+2025-04-11 16:56:15 debug: Audit log created: 67f8fc573c32109d9f4aba18
+2025-04-11 16:57:23 debug: Audit log created: 67f8fc9b3c32109d9f4aba1f
+2025-04-11 16:57:23 debug: Audit log created: 67f8fc9b3c32109d9f4aba22
+2025-04-11 16:57:48 info: Server running in development mode on port 5000
+2025-04-11 16:57:50 info: Cloudinary connection successful
+2025-04-11 17:00:23 debug: Audit log created: 67f8fd4f572953e8295ff5b8
+2025-04-11 17:01:50 debug: Audit log created: 67f8fda6572953e8295ff5be
+2025-04-11 17:01:50 debug: Audit log created: 67f8fda6572953e8295ff5c0
+2025-04-11 17:02:43 debug: Audit log created: 67f8fddb572953e8295ff5c6
+2025-04-11 17:02:43 debug: Audit log created: 67f8fddb572953e8295ff5c8
+2025-04-11 17:11:09 debug: Audit log created: 67f8ffd5572953e8295ff5cc
+2025-04-11 17:11:09 debug: Audit log created: 67f8ffd5572953e8295ff5d0
+2025-04-11 19:43:47 debug: Audit log created: 67f9239b572953e8295ff5d8
+2025-04-11 19:43:47 debug: Audit log created: 67f9239b572953e8295ff5d4
+2025-04-11 19:47:07 debug: Audit log created: 67f92463572953e8295ff5dd
+2025-04-11 19:47:29 info: Server running in development mode on port 5000
+2025-04-11 19:47:31 info: Cloudinary connection successful
+2025-04-11 19:48:27 debug: Audit log created: 67f924b3d009f18b50017de0
+2025-04-11 19:48:27 debug: Audit log created: 67f924b3d009f18b50017de4
+2025-04-11 19:53:50 debug: Audit log created: 67f925f6d009f18b50017e04
+2025-04-11 19:53:50 debug: Audit log created: 67f925f6d009f18b50017e08
+2025-04-11 19:57:52 debug: Audit log created: 67f926e8d009f18b50017e28
+2025-04-11 19:57:52 debug: Audit log created: 67f926e8d009f18b50017e2c
+2025-04-11 20:03:11 debug: Audit log created: 67f92827d009f18b50017e5e
+2025-04-11 20:03:11 debug: Audit log created: 67f92827d009f18b50017e62
+2025-04-11 20:15:50 info: Server running in development mode on port 5000
+2025-04-11 20:15:52 info: Cloudinary connection successful
+2025-04-11 20:21:35 debug: Audit log created: 67f92c77f64f74b11f698f05
+2025-04-11 20:21:35 debug: Audit log created: 67f92c77f64f74b11f698f07
+2025-04-11 20:28:24 debug: Audit log created: 67f92e10f64f74b11f698f0d
+2025-04-11 20:28:24 debug: Audit log created: 67f92e10f64f74b11f698f0f
+2025-04-11 21:35:03 debug: Audit log created: 67f93daff64f74b11f698f15
+2025-04-11 21:35:03 debug: Audit log created: 67f93daff64f74b11f698f17
+2025-04-11 21:48:07 info: Server running in development mode on port 5000
+2025-04-11 21:48:08 info: Cloudinary connection successful
+2025-04-11 21:48:26 debug: Audit log created: 67f940d2ed43c7275a9a0bb4
+2025-04-11 21:48:26 debug: Audit log created: 67f940d2ed43c7275a9a0bb6
+2025-04-11 22:03:26 info: Server running in development mode on port 5000
+2025-04-11 22:03:27 info: Cloudinary connection successful
+2025-04-11 22:04:05 info: Server running in development mode on port 5000
+2025-04-11 22:04:06 info: Cloudinary connection successful
+2025-04-11 22:10:35 warn: 404 Not Found: /favicon.ico
+2025-04-11 22:10:35 warn: Client Error: Not Found - /favicon.ico
+2025-04-11 22:14:27 debug: Audit log created: 67f946ebbef54c3ccac7787a
+2025-04-11 22:14:27 debug: Audit log created: 67f946ebbef54c3ccac7787c
+2025-04-11 22:19:14 debug: Audit log created: 67f9480abef54c3ccac77882
+2025-04-11 22:19:14 debug: Audit log created: 67f9480abef54c3ccac77884
+2025-04-11 22:24:44 debug: Audit log created: 67f94954bef54c3ccac7788a
+2025-04-11 22:24:44 debug: Audit log created: 67f94954bef54c3ccac7788c
+2025-04-11 22:39:05 info: Server running in development mode on port 5000
+2025-04-11 22:39:07 info: Cloudinary connection successful
+2025-04-11 22:39:15 debug: Audit log created: 67f94cbb876cce4d5ffd0129
+2025-04-11 22:39:15 debug: Audit log created: 67f94cbb876cce4d5ffd012d
+2025-04-11 22:42:26 debug: Audit log created: 67f94d7a876cce4d5ffd0131
+2025-04-11 22:42:26 debug: Audit log created: 67f94d7a876cce4d5ffd0135
+2025-04-11 22:44:35 debug: Audit log created: 67f94dfb876cce4d5ffd013d
+2025-04-11 22:44:35 debug: Audit log created: 67f94dfb876cce4d5ffd0141
+2025-04-11 22:46:40 debug: Audit log created: 67f94e78876cce4d5ffd0145
+2025-04-11 22:46:40 debug: Audit log created: 67f94e78876cce4d5ffd0149
+2025-04-11 22:49:03 debug: Audit log created: 67f94f07876cce4d5ffd014d
+2025-04-11 22:49:03 debug: Audit log created: 67f94f07876cce4d5ffd0151
+2025-04-11 22:51:51 debug: Audit log created: 67f94faf876cce4d5ffd0157
+2025-04-11 22:51:51 info: Vehicle registered: 85896589870025478 by user 67f8f7a505956ef93a3057c9
+2025-04-11 22:52:32 debug: Audit log created: 67f94fd8876cce4d5ffd0175
+2025-04-11 22:52:32 debug: Audit log created: 67f94fd8876cce4d5ffd0177
+2025-04-11 22:53:00 debug: Audit log created: 67f94ff4876cce4d5ffd0189
+2025-04-11 22:56:06 info: Server running in development mode on port 5000
+2025-04-11 22:56:09 info: Cloudinary connection successful
+2025-04-11 22:56:29 debug: Audit log created: 67f950c515ade879b131a521
+2025-04-11 22:56:29 debug: Audit log created: 67f950c515ade879b131a525
+2025-04-11 22:56:32 debug: Audit log created: 67f950c815ade879b131a52e
+2025-04-11 22:56:32 debug: Audit log created: 67f950c815ade879b131a533
+2025-04-11 22:58:06 debug: Audit log created: 67f9512615ade879b131a548
+2025-04-11 22:58:06 debug: Audit log created: 67f9512615ade879b131a54d
+2025-04-11 22:58:23 debug: Audit log created: 67f9513715ade879b131a55c
+2025-04-11 22:58:23 debug: Audit log created: 67f9513715ade879b131a561
+2025-04-12 19:41:45 info: Server running in development mode on port 5000
+2025-04-12 19:41:48 info: Cloudinary connection successful
+2025-04-12 19:42:29 debug: Audit log created: 67fa74cdd1e373d907d36247
+2025-04-12 19:42:29 debug: Audit log created: 67fa74cdd1e373d907d3624b
+2025-04-12 19:42:30 debug: Audit log created: 67fa74ced1e373d907d36250
+2025-04-12 19:42:30 debug: Audit log created: 67fa74ced1e373d907d36255
+2025-04-12 19:45:28 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 19:47:22 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 19:49:37 info: Server running in development mode on port 5000
+2025-04-12 19:49:41 info: Cloudinary connection successful
+2025-04-12 19:51:17 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 19:53:56 debug: Audit log created: 67fa777c204f5eba80d733dd
+2025-04-12 19:53:56 debug: Audit log created: 67fa777c204f5eba80d733df
+2025-04-12 19:55:58 warn: Validation Error: {"owner.contact.address":"Path `owner.contact.address` is required.","owner.contact.phone":"Path `owner.contact.phone` is required.","owner.name":"Path `owner.name` is required.","licensePlate":"Path `licensePlate` is required."}
+2025-04-12 19:59:37 debug: Audit log created: 67fa78d1204f5eba80d733fa
+2025-04-12 19:59:37 debug: Audit log created: 67fa78d1204f5eba80d733fe
+2025-04-12 20:00:55 warn: Validation Error: {"owner.contact.address":"Path `owner.contact.address` is required.","owner.contact.phone":"Path `owner.contact.phone` is required.","owner.name":"Path `owner.name` is required.","licensePlate":"Path `licensePlate` is required."}
+2025-04-12 20:03:58 debug: Audit log created: 67fa79d6204f5eba80d7340b
+2025-04-12 20:03:58 debug: Audit log created: 67fa79d6204f5eba80d7340d
+2025-04-12 20:04:58 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 20:11:23 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 20:16:08 debug: Audit log created: 67fa7cb0204f5eba80d7341f
+2025-04-12 20:16:08 debug: Audit log created: 67fa7cb0204f5eba80d73421
+2025-04-12 20:23:21 debug: Audit log created: 67fa7e61204f5eba80d73427
+2025-04-12 20:23:21 debug: Audit log created: 67fa7e61204f5eba80d73429
+2025-04-12 22:16:38 debug: Audit log created: 67fa98ee204f5eba80d73431
+2025-04-12 22:16:38 debug: Audit log created: 67fa98ee204f5eba80d7342f
+2025-04-12 22:16:42 debug: Audit log created: 67fa98f2204f5eba80d73437
+2025-04-12 22:16:42 debug: Audit log created: 67fa98f2204f5eba80d73439
+2025-04-12 22:17:49 info: Server running in development mode on port 5000
+2025-04-12 22:17:51 info: Cloudinary connection successful
+2025-04-12 22:18:21 debug: Audit log created: 67fa99559a268cac8f988e9b
+2025-04-12 22:18:21 debug: Audit log created: 67fa99559a268cac8f988e9d
+2025-04-12 22:21:14 debug: Audit log created: 67fa9a029a268cac8f988ea3
+2025-04-12 22:21:14 debug: Audit log created: 67fa9a029a268cac8f988ea5
+2025-04-12 22:22:05 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 22:23:18 debug: Audit log created: 67fa9a7e9a268cac8f988eaf
+2025-04-12 22:23:18 debug: Audit log created: 67fa9a7e9a268cac8f988eb1
+2025-04-12 22:24:06 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 22:27:29 debug: Audit log created: 67fa9b799a268cac8f988ebf
+2025-04-12 22:27:29 info: Vehicle registered: 85896589870025458 by user 67f8f7a505956ef93a3057c9
+2025-04-12 22:27:33 debug: Audit log created: 67fa9b7d9a268cac8f988ecb
+2025-04-12 22:27:33 debug: Audit log created: 67fa9b7d9a268cac8f988ecd
+2025-04-12 22:28:38 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 22:46:41 debug: Audit log created: 67fa9ff99a268cac8f988edb
+2025-04-12 22:46:41 debug: Audit log created: 67fa9ff99a268cac8f988edd
+2025-04-12 22:47:59 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 22:52:56 debug: Audit log created: 67faa1709a268cac8f988ee7
+2025-04-12 22:52:56 debug: Audit log created: 67faa1709a268cac8f988ee9
+2025-04-12 23:05:36 error: Authentication error: jwt expired
+2025-04-12 23:05:52 debug: Audit log created: 67faa4789a268cac8f988eef
+2025-04-12 23:45:51 warn: Duplicate Key Error: registrationNumber=null
+2025-04-12 23:47:15 info: Server running in development mode on port 5000
+2025-04-12 23:47:17 info: Cloudinary connection successful
+2025-04-13 06:13:47 info: Server running in development mode on port 5000
+2025-04-13 06:13:49 info: Cloudinary connection successful
+2025-04-13 06:14:06 info: Server running in development mode on port 5000
+2025-04-13 06:14:09 info: Cloudinary connection successful
+2025-04-13 06:14:21 debug: Audit log created: 67fb08e59447d334307d5668
+2025-04-13 06:16:00 warn: Duplicate Key Error: registrationNumber=null
+2025-04-13 09:57:45 debug: Audit log created: 67fb3d419447d334307d567f
+2025-04-13 09:57:45 debug: Audit log created: 67fb3d419447d334307d5681
+2025-04-13 18:47:43 info: Server running in development mode on port 5000
+2025-04-13 18:47:44 info: Cloudinary connection successful
+2025-04-13 18:48:14 debug: Audit log created: 67fbb996530254586012e501
+2025-04-13 18:48:14 debug: Audit log created: 67fbb996530254586012e505
+2025-04-13 18:53:39 warn: Duplicate Key Error: registrationNumber=null
+2025-04-13 20:05:02 info: Server running in development mode on port 5000
+2025-04-13 20:05:04 warn: 404 Not Found: /login/
+2025-04-13 20:05:04 warn: Client Error: Not Found - /login/
+2025-04-13 20:05:04 info: Cloudinary connection successful
+2025-04-13 20:05:14 debug: Audit log created: 67fbcba27b2288f051a4346b
