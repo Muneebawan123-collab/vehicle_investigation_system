@@ -229,3 +229,891 @@ TypeError: user.matchPassword is not a function
 2025-04-13 20:05:04 warn: Client Error: Not Found - /login/
 2025-04-13 20:05:04 info: Cloudinary connection successful
 2025-04-13 20:05:14 debug: Audit log created: 67fbcba27b2288f051a4346b
+2025-04-14 00:13:24 info: Server running in development mode on port 5000
+2025-04-14 00:13:27 info: Cloudinary connection successful
+2025-04-14 00:15:39 debug: Audit log created: 67fc06538498e45448bb848a
+2025-04-14 00:15:39 debug: Audit log created: 67fc06538498e45448bb848c
+2025-04-14 00:17:32 debug: Audit log created: 67fc06c48498e45448bb84c4
+2025-04-14 00:17:32 debug: Audit log created: 67fc06c48498e45448bb84c6
+2025-04-14 00:18:26 debug: Audit log created: 67fc06fa8498e45448bb84d3
+2025-04-14 00:18:26 info: Vehicle registered: 85896589870025478 by user 67f8f7a505956ef93a3057c9
+2025-04-14 00:19:36 warn: Duplicate Key Error: registrationNumber=null
+2025-04-14 00:40:18 info: Server running in development mode on port 5000
+2025-04-14 00:40:21 info: Cloudinary connection successful
+2025-04-14 00:40:29 info: Server running in development mode on port 5000
+2025-04-14 00:40:31 info: Cloudinary connection successful
+2025-04-14 00:40:37 info: Server running in development mode on port 5000
+2025-04-14 00:40:39 info: Cloudinary connection successful
+2025-04-14 00:46:56 info: Server running in development mode on port 5000
+2025-04-14 00:46:58 info: Cloudinary connection successful
+2025-04-14 00:47:09 error: Authentication error: jwt malformed
+2025-04-14 00:47:13 debug: Audit log created: 67fc0db90cf5b95964ad24d2
+2025-04-14 00:47:26 debug: Audit log created: 67fc0dc60cf5b95964ad24da
+2025-04-14 00:47:26 debug: Audit log created: 67fc0dc60cf5b95964ad24de
+2025-04-14 00:50:47 info: Server running in development mode on port 5000
+2025-04-14 00:50:49 info: Cloudinary connection successful
+2025-04-14 00:51:39 info: Server running in development mode on port 5000
+2025-04-14 00:51:41 info: Cloudinary connection successful
+2025-04-14 00:51:52 info: Server running in development mode on port 5000
+2025-04-14 00:51:54 info: Cloudinary connection successful
+2025-04-14 00:52:13 info: Server running in development mode on port 5000
+2025-04-14 00:52:16 info: Cloudinary connection successful
+2025-04-14 00:52:58 info: Server running in development mode on port 5000
+2025-04-14 00:53:00 info: Cloudinary connection successful
+2025-04-14 00:53:13 debug: Audit log created: 67fc0f2001c2d339346755ad
+2025-04-14 00:53:13 debug: Audit log created: 67fc0f2001c2d339346755af
+2025-04-14 13:45:34 info: Server running in development mode on port 5000
+2025-04-14 13:45:34 error: Cloudinary connection error: getaddrinfo ENOTFOUND api.cloudinary.com
+2025-04-14 13:48:32 info: Server running in development mode on port 5000
+2025-04-14 13:48:34 info: Cloudinary connection successful
+2025-04-14 14:41:16 debug: Audit log created: 67fcd134020492c52c398ff6
+2025-04-14 14:41:16 debug: Audit log created: 67fcd134020492c52c398ffa
+2025-04-14 14:42:57 debug: Audit log created: 67fcd199020492c52c39901e
+2025-04-14 14:42:57 debug: Audit log created: 67fcd199020492c52c399022
+2025-04-14 14:50:53 debug: Audit log created: 67fcd375020492c52c39903c
+2025-04-14 14:50:53 debug: Audit log created: 67fcd375020492c52c399040
+2025-04-14 14:54:57 debug: Audit log created: 67fcd469020492c52c399052
+2025-04-14 14:54:57 debug: Audit log created: 67fcd469020492c52c399056
+2025-04-14 14:57:19 info: Server running in development mode on port 5000
+2025-04-14 14:57:21 info: MongoDB Connected Successfully
+2025-04-14 14:57:21 warn: User not found with ID: 67f8f7a505956ef93a3057c9
+2025-04-14 14:57:28 info: Server running in development mode on port 5000
+2025-04-14 14:57:29 info: MongoDB Connected Successfully
+2025-04-14 14:57:32 info: Cloudinary connection successful
+2025-04-14 14:58:10 warn: User not found with ID: 67f8f7a505956ef93a3057c9
+2025-04-14 14:58:37 warn: User not found with ID: 67f8f7a505956ef93a3057c9
+2025-04-14 14:58:38 warn: User not found with ID: 67f8f7a505956ef93a3057c9
+2025-04-14 14:58:46 warn: User not found with ID: 67f8f7a505956ef93a3057c9
+2025-04-14 14:58:57 info: Server running in development mode on port 5000
+2025-04-14 14:58:58 info: MongoDB Connected Successfully
+2025-04-14 14:59:00 info: Cloudinary connection successful
+2025-04-14 15:02:23 info: Server running in development mode on port 5000
+2025-04-14 15:02:26 info: MongoDB Connected Successfully
+2025-04-14 15:02:28 info: Cloudinary connection successful
+2025-04-14 15:02:35 info: Server running in development mode on port 5000
+2025-04-14 15:02:36 info: MongoDB Connected Successfully
+2025-04-14 15:02:39 info: Cloudinary connection successful
+2025-04-14 15:10:18 info: New user registered: awanmuneeb@123.com
+2025-04-14 15:13:31 info: New user registered: suhail@321.com
+2025-04-14 15:14:26 debug: Audit log created: 67fcd8f9773060bf30832980
+2025-04-14 15:23:24 info: Server running in development mode on port 5000
+2025-04-14 15:23:26 info: MongoDB Connected Successfully
+2025-04-14 15:23:28 info: Cloudinary connection successful
+2025-04-14 15:24:59 debug: Audit log created: 67fcdb7252dd4ef17d44226d
+2025-04-14 15:24:59 debug: Audit log created: 67fcdb7252dd4ef17d44226b
+2025-04-14 15:28:21 debug: Audit log created: 67fcdc3d52dd4ef17d44227a
+2025-04-14 15:28:21 debug: Audit log created: 67fcdc3d52dd4ef17d442278
+2025-04-14 15:30:24 info: Server running in development mode on port 5000
+2025-04-14 15:30:26 info: MongoDB Connected Successfully
+2025-04-14 15:30:28 info: Cloudinary connection successful
+2025-04-14 15:33:26 info: Server running in development mode on port 5000
+2025-04-14 15:33:27 info: MongoDB Connected Successfully
+2025-04-14 15:33:30 info: Cloudinary connection successful
+2025-04-14 15:40:47 debug: Audit log created: 67fcdf274ba356bb78cfc0f9
+2025-04-14 15:40:47 debug: Audit log created: 67fcdf274ba356bb78cfc0fb
+2025-04-14 15:49:32 debug: Audit log created: 67fce1334ba356bb78cfc106
+2025-04-14 15:49:32 debug: Audit log created: 67fce1334ba356bb78cfc108
+2025-04-14 15:57:31 info: Server running in development mode on port 5000
+2025-04-14 15:57:32 info: MongoDB Connected Successfully
+2025-04-14 15:57:35 info: Cloudinary connection successful
+2025-04-14 15:58:27 info: Server running in development mode on port 5000
+2025-04-14 15:58:29 info: MongoDB Connected Successfully
+2025-04-14 15:58:32 info: Cloudinary connection successful
+2025-04-14 15:58:41 debug: Audit log created: 67fce358804d8a6b5c34ccb2
+2025-04-14 15:58:41 debug: Audit log created: 67fce358804d8a6b5c34ccb4
+2025-04-14 16:02:10 info: Server running in development mode on port 5000
+2025-04-14 16:02:12 info: MongoDB Connected Successfully
+2025-04-14 16:02:14 info: Cloudinary connection successful
+2025-04-14 16:03:32 debug: Audit log created: 67fce47cb34b5d009ad9f778
+2025-04-14 16:03:32 debug: Audit log created: 67fce47cb34b5d009ad9f776
+2025-04-14 16:04:24 debug: Audit log created: 67fce4b0b34b5d009ad9f785
+2025-04-14 16:04:24 info: Vehicle registered: 12548796548745201 by user 67fcd8c3773060bf3083297a
+2025-04-14 16:04:49 debug: Audit log created: 67fce4c9b34b5d009ad9f797
+2025-04-14 16:04:49 debug: Audit log created: 67fce4c9b34b5d009ad9f799
+2025-04-14 16:06:23 debug: Audit log created: 67fce527b34b5d009ad9f7a4
+2025-04-14 16:06:23 info: Vehicle registered: 12548796548745023 by user 67fcd8c3773060bf3083297a
+2025-04-14 16:07:47 info: Server running in development mode on port 5000
+2025-04-14 16:07:48 info: MongoDB Connected Successfully
+2025-04-14 16:07:51 info: Cloudinary connection successful
+2025-04-14 16:08:42 debug: Audit log created: 67fce5b22520f6225656c8ac
+2025-04-14 16:08:42 debug: Audit log created: 67fce5b22520f6225656c8aa
+2025-04-14 16:12:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:12:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:12:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:12:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:13:04 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:13:04 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:13:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:13:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:01 error: Authentication error: read ECONNRESET
+2025-04-14 16:16:03 error: Authentication error: read ECONNRESET
+2025-04-14 16:16:09 error: Authentication error: read ECONNRESET
+2025-04-14 16:16:13 error: Authentication error: read ECONNRESET
+2025-04-14 16:16:29 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:34 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:54 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:59 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:04 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:09 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:19 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:24 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:30 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:35 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:54 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:00 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:05 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:09 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:19 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:24 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:30 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:36 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:54 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:00 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:06 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:09 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:21 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:24 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:31 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:36 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:51 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:54 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:20:01 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:20:06 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:20:09 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:23:19 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:23:31 debug: Audit log created: 67fce92b2520f6225656c940
+2025-04-14 16:23:31 debug: Audit log created: 67fce92b2520f6225656c942
+2025-04-14 16:24:21 info: Server running in development mode on port 5000
+2025-04-14 16:24:23 info: MongoDB Connected Successfully
+2025-04-14 16:24:26 info: Cloudinary connection successful
+2025-04-14 16:27:04 info: Server running in development mode on port 5000
+2025-04-14 16:27:07 info: MongoDB Connected Successfully
+2025-04-14 16:27:10 info: Cloudinary connection successful
+2025-04-14 16:28:04 info: Server running in development mode on port 5000
+2025-04-14 16:28:06 info: MongoDB Connected Successfully
+2025-04-14 16:28:08 info: Cloudinary connection successful
+2025-04-14 16:29:22 debug: Audit log created: 67fcea8ac75d7cc3c879693e
+2025-04-14 16:29:22 debug: Audit log created: 67fcea8ac75d7cc3c8796940
+2025-04-14 16:31:20 debug: Audit log created: 67fceb00c75d7cc3c879694c
+2025-04-14 16:31:20 debug: Audit log created: 67fceb00c75d7cc3c879694e
+2025-04-14 16:32:14 info: Server running in development mode on port 5000
+2025-04-14 16:32:18 info: MongoDB Connected Successfully
+2025-04-14 16:32:20 info: Cloudinary connection successful
+2025-04-14 16:32:45 debug: Audit log created: 67fceb553df53a3a4d2b1f9c
+2025-04-14 16:32:45 debug: Audit log created: 67fceb553df53a3a4d2b1f9e
+2025-04-14 16:43:52 info: Server running in development mode on port 5000
+2025-04-14 16:43:54 info: MongoDB Connected Successfully
+2025-04-14 16:43:56 info: Cloudinary connection successful
+2025-04-14 16:44:34 info: Server running in development mode on port 5000
+2025-04-14 16:44:39 info: MongoDB Connected Successfully
+2025-04-14 16:44:42 info: Cloudinary connection successful
+2025-04-14 16:45:04 info: Server running in development mode on port 5000
+2025-04-14 16:45:09 info: MongoDB Connected Successfully
+2025-04-14 16:45:12 info: Cloudinary connection successful
+2025-04-14 16:51:39 info: Server running in development mode on port 5000
+2025-04-14 16:51:42 info: MongoDB Connected Successfully
+2025-04-14 16:51:44 info: Cloudinary connection successful
+2025-04-14 16:52:05 info: Server running in development mode on port 5000
+2025-04-14 16:52:09 info: MongoDB Connected Successfully
+2025-04-14 16:52:11 info: Cloudinary connection successful
+2025-04-14 16:52:31 debug: Audit log created: 67fceff7970ab755e62bf234
+2025-04-14 16:52:31 debug: Audit log created: 67fceff7970ab755e62bf236
+2025-04-14 22:09:28 info: Server running in development mode on port 5000
+2025-04-14 22:09:30 info: MongoDB Connected Successfully
+2025-04-14 22:09:32 info: Cloudinary connection successful
+2025-04-14 22:12:46 debug: Audit log created: 67fd3b069811bd1ed1b8af24
+2025-04-14 22:12:47 debug: Audit log created: 67fd3b069811bd1ed1b8af22
+2025-04-14 22:17:28 info: Server running in development mode on port 5000
+2025-04-14 22:17:30 info: MongoDB Connected Successfully
+2025-04-14 22:17:32 info: Cloudinary connection successful
+2025-04-14 22:17:47 info: Server running in development mode on port 5000
+2025-04-14 22:17:48 info: MongoDB Connected Successfully
+2025-04-14 22:17:50 info: Cloudinary connection successful
+2025-04-14 22:20:53 debug: Audit log created: 67fd3ced7388135e1c075f21
+2025-04-14 22:20:53 debug: Audit log created: 67fd3ced7388135e1c075f23
+2025-04-14 22:26:44 info: Server running in development mode on port 5000
+2025-04-14 22:26:45 info: MongoDB Connected Successfully
+2025-04-14 22:26:48 info: Cloudinary connection successful
+2025-04-14 22:27:09 info: Server running in development mode on port 5000
+2025-04-14 22:27:10 info: MongoDB Connected Successfully
+2025-04-14 22:27:12 info: Cloudinary connection successful
+2025-04-14 22:28:33 info: Server running in development mode on port 5000
+2025-04-14 22:28:35 info: MongoDB Connected Successfully
+2025-04-14 22:28:37 info: Cloudinary connection successful
+2025-04-14 22:29:20 debug: Audit log created: 67fd3ee7fe31aca7ff3925dd
+2025-04-14 22:29:20 debug: Audit log created: 67fd3ee7fe31aca7ff3925df
+2025-04-14 22:30:11 info: New incident created: 67fd3f1bfe31aca7ff3925e7 by user 67fcd8c3773060bf3083297a
+2025-04-14 22:36:27 debug: Audit log created: 67fd4093fe31aca7ff392641
+2025-04-14 22:36:27 debug: Audit log created: 67fd4093fe31aca7ff39263f
+2025-04-14 22:42:46 info: New incident created: 67fd420efe31aca7ff392653 by user 67fcd8c3773060bf3083297a
+2025-04-14 22:46:15 info: Server running in development mode on port 5000
+2025-04-14 22:46:16 info: MongoDB Connected Successfully
+2025-04-14 22:46:19 info: Cloudinary connection successful
+2025-04-14 22:46:32 info: Server running in development mode on port 5000
+2025-04-14 22:46:33 info: MongoDB Connected Successfully
+2025-04-14 22:46:35 info: Cloudinary connection successful
+2025-04-14 22:50:02 info: Incident updated: 67fd3f1bfe31aca7ff3925e7 by user 67fcd8c3773060bf3083297a
+2025-04-14 22:50:44 info: Incident deleted: 67fd3f1bfe31aca7ff3925e7 by user 67fcd8c3773060bf3083297a
+2025-04-14 22:51:39 debug: Audit log created: 67fd4423a3db77e35a7fdc83
+2025-04-14 22:51:39 debug: Audit log created: 67fd4423a3db77e35a7fdc85
+2025-04-14 22:53:49 info: Server running in development mode on port 5000
+2025-04-14 22:53:51 info: MongoDB Connected Successfully
+2025-04-14 22:53:53 info: Cloudinary connection successful
+2025-04-14 22:59:37 info: Server running in development mode on port 5000
+2025-04-14 22:59:38 info: MongoDB Connected Successfully
+2025-04-14 22:59:40 info: Cloudinary connection successful
+2025-04-14 22:59:58 info: Server running in development mode on port 5000
+2025-04-14 22:59:59 info: MongoDB Connected Successfully
+2025-04-14 23:00:01 info: Cloudinary connection successful
+2025-04-14 23:00:17 info: Server running in development mode on port 5000
+2025-04-14 23:00:19 info: MongoDB Connected Successfully
+2025-04-14 23:00:21 info: Cloudinary connection successful
+2025-04-14 23:07:24 info: Server running in development mode on port 5000
+2025-04-14 23:07:26 info: MongoDB Connected Successfully
+2025-04-14 23:07:28 info: Cloudinary connection successful
+2025-04-14 23:09:22 info: Server running in development mode on port 5000
+2025-04-14 23:09:23 info: MongoDB Connected Successfully
+2025-04-14 23:09:26 info: Cloudinary connection successful
+2025-04-14 23:09:36 info: Server running in development mode on port 5000
+2025-04-14 23:09:37 info: MongoDB Connected Successfully
+2025-04-14 23:09:40 info: Cloudinary connection successful
+2025-04-14 23:09:49 info: Server running in development mode on port 5000
+2025-04-14 23:09:50 info: MongoDB Connected Successfully
+2025-04-14 23:09:53 info: Cloudinary connection successful
+2025-04-14 23:10:03 info: Server running in development mode on port 5000
+2025-04-14 23:10:04 info: MongoDB Connected Successfully
+2025-04-14 23:10:07 info: Cloudinary connection successful
+2025-04-14 23:10:24 info: Server running in development mode on port 5000
+2025-04-14 23:10:26 info: MongoDB Connected Successfully
+2025-04-14 23:10:28 info: Cloudinary connection successful
+2025-04-14 23:10:37 info: Server running in development mode on port 5000
+2025-04-14 23:10:39 info: MongoDB Connected Successfully
+2025-04-14 23:10:41 info: Cloudinary connection successful
+2025-04-14 23:10:54 info: Server running in development mode on port 5000
+2025-04-14 23:10:55 info: MongoDB Connected Successfully
+2025-04-14 23:10:57 info: Cloudinary connection successful
+2025-04-14 23:11:07 info: Server running in development mode on port 5000
+2025-04-14 23:11:09 info: MongoDB Connected Successfully
+2025-04-14 23:11:11 info: Cloudinary connection successful
+2025-04-14 23:11:38 info: Server running in development mode on port 5000
+2025-04-14 23:11:40 info: MongoDB Connected Successfully
+2025-04-14 23:11:42 info: Cloudinary connection successful
+2025-04-14 23:12:28 info: Server running in development mode on port 5000
+2025-04-14 23:12:29 info: MongoDB Connected Successfully
+2025-04-14 23:12:31 info: Cloudinary connection successful
+2025-04-14 23:13:23 debug: Audit log created: 67fd493a5d9334fbdd3724ed
+2025-04-14 23:13:32 debug: Audit log created: 67fd49435d9334fbdd3724f5
+2025-04-14 23:13:32 debug: Audit log created: 67fd49435d9334fbdd3724f3
+2025-04-14 23:17:03 info: Server running in development mode on port 5000
+2025-04-14 23:17:04 info: MongoDB Connected Successfully
+2025-04-14 23:17:07 info: Cloudinary connection successful
+2025-04-14 23:17:19 info: Server running in development mode on port 5000
+2025-04-14 23:17:21 info: MongoDB Connected Successfully
+2025-04-14 23:17:23 info: Cloudinary connection successful
+2025-04-14 23:17:32 info: Server running in development mode on port 5000
+2025-04-14 23:17:33 info: MongoDB Connected Successfully
+2025-04-14 23:17:35 info: Cloudinary connection successful
+2025-04-14 23:17:48 info: Server running in development mode on port 5000
+2025-04-14 23:17:49 info: MongoDB Connected Successfully
+2025-04-14 23:17:52 info: Cloudinary connection successful
+2025-04-14 23:18:48 info: Server running in development mode on port 5000
+2025-04-14 23:18:49 info: MongoDB Connected Successfully
+2025-04-14 23:18:51 info: Cloudinary connection successful
+2025-04-14 23:19:05 info: Server running in development mode on port 5000
+2025-04-14 23:19:06 info: MongoDB Connected Successfully
+2025-04-14 23:19:08 info: Cloudinary connection successful
+2025-04-14 23:19:24 info: Server running in development mode on port 5000
+2025-04-14 23:19:25 info: MongoDB Connected Successfully
+2025-04-14 23:19:28 info: Cloudinary connection successful
+2025-04-14 23:20:36 debug: Audit log created: 67fd4aec01de14fc013e68de
+2025-04-14 23:20:36 debug: Audit log created: 67fd4aec01de14fc013e68e0
+2025-04-14 23:22:07 info: Server running in development mode on port 5000
+2025-04-14 23:22:08 info: MongoDB Connected Successfully
+2025-04-14 23:22:10 info: Cloudinary connection successful
+2025-04-14 23:24:13 debug: Audit log created: 67fd4bc50bb08e19a13ab31b
+2025-04-14 23:24:13 debug: Audit log created: 67fd4bc50bb08e19a13ab31d
+2025-04-14 23:36:14 info: Server running in development mode on port 5000
+2025-04-14 23:36:16 info: MongoDB Connected Successfully
+2025-04-14 23:36:18 info: Cloudinary connection successful
+2025-04-14 23:36:48 info: Server running in development mode on port 5000
+2025-04-14 23:36:49 info: MongoDB Connected Successfully
+2025-04-14 23:36:51 info: Cloudinary connection successful
+2025-04-14 23:37:12 info: Server running in development mode on port 5000
+2025-04-14 23:37:14 info: MongoDB Connected Successfully
+2025-04-14 23:37:16 info: Cloudinary connection successful
+2025-04-14 23:37:43 info: Server running in development mode on port 5000
+2025-04-14 23:37:45 info: MongoDB Connected Successfully
+2025-04-14 23:37:47 info: Cloudinary connection successful
+2025-04-14 23:38:38 debug: Audit log created: 67fd4f25985889042e4ddfdc
+2025-04-14 23:38:38 debug: Audit log created: 67fd4f25985889042e4ddfde
+2025-04-14 23:41:57 info: Server running in development mode on port 5000
+2025-04-14 23:42:04 info: MongoDB Connected Successfully
+2025-04-14 23:42:06 info: Cloudinary connection successful
+2025-04-14 23:43:53 info: Server running in development mode on port 5000
+2025-04-14 23:43:55 info: MongoDB Connected Successfully
+2025-04-14 23:43:58 info: Cloudinary connection successful
+2025-04-14 23:44:33 debug: Audit log created: 67fd5089f3227e0e5a90ed12
+2025-04-14 23:44:33 debug: Audit log created: 67fd5089f3227e0e5a90ed14
+2025-04-14 23:44:42 debug: Audit log created: 67fd5092f3227e0e5a90ed18
+2025-04-14 23:44:42 debug: Audit log created: 67fd5092f3227e0e5a90ed1a
+2025-04-14 23:46:06 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Invoice_1744654562538" (type string) at path "resourceId" because of "BSONError"
+2025-04-14 23:46:08 debug: Audit log created: 67fd50e8f3227e0e5a90ed21
+2025-04-14 23:46:10 debug: Audit log created: 67fd50eaf3227e0e5a90ed23
+2025-04-14 23:51:22 debug: Audit log created: 67fd5222f3227e0e5a90ed2b
+2025-04-14 23:51:22 debug: Audit log created: 67fd5222f3227e0e5a90ed29
+2025-04-14 23:51:28 debug: Audit log created: 67fd5228f3227e0e5a90ed2f
+2025-04-14 23:51:30 debug: Audit log created: 67fd5229f3227e0e5a90ed31
+2025-04-14 23:52:17 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Other_1744654931773" (type string) at path "resourceId" because of "BSONError"
+2025-04-14 23:52:18 debug: Audit log created: 67fd525af3227e0e5a90ed37
+2025-04-14 23:52:20 debug: Audit log created: 67fd525cf3227e0e5a90ed39
+2025-04-14 23:56:32 debug: Audit log created: 67fd5357f3227e0e5a90ed3c
+2025-04-14 23:56:44 debug: Audit log created: 67fd5364f3227e0e5a90ed3f
+2025-04-14 23:57:05 debug: Audit log created: 67fd5379f3227e0e5a90ed42
+2025-04-14 23:57:27 debug: Audit log created: 67fd538ff3227e0e5a90ed45
+2025-04-14 23:57:48 info: Server running in development mode on port 5000
+2025-04-14 23:57:51 info: MongoDB Connected Successfully
+2025-04-14 23:57:53 info: Cloudinary connection successful
+2025-04-14 23:58:05 debug: Audit log created: 67fd53b576993d125fa7c0f8
+2025-04-14 23:58:30 info: Server running in development mode on port 5000
+2025-04-14 23:58:35 info: MongoDB Connected Successfully
+2025-04-14 23:58:37 info: Cloudinary connection successful
+2025-04-14 23:58:45 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-14 23:58:45 info: Server running in development mode on port 5000
+2025-04-14 23:58:47 info: MongoDB Connected Successfully
+2025-04-14 23:58:48 info: Cloudinary connection test successful:
+2025-04-14 23:58:50 info: Cloudinary connection successful
+2025-04-15 11:24:56 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 11:24:56 info: Server running in development mode on port 5000
+2025-04-15 11:24:59 info: Cloudinary connection test successful:
+2025-04-15 11:25:00 info: MongoDB Connected Successfully
+2025-04-15 11:25:00 info: Cloudinary connection successful
+2025-04-15 11:28:19 debug: Audit log created: 67fdf57b2a451e721524a0ec
+2025-04-15 11:28:20 debug: Audit log created: 67fdf57b2a451e721524a0ef
+2025-04-15 11:28:57 debug: Audit log created: 67fdf5a12a451e721524a100
+2025-04-15 11:28:58 debug: Audit log created: 67fdf5a22a451e721524a105
+2025-04-15 11:29:11 debug: Audit log created: 67fdf5af2a451e721524a118
+2025-04-15 11:29:13 debug: Audit log created: 67fdf5b02a451e721524a11b
+2025-04-15 11:29:38 debug: Audit log created: 67fdf5ca2a451e721524a128
+2025-04-15 11:29:40 debug: Audit log created: 67fdf5cb2a451e721524a12b
+2025-04-15 11:30:31 debug: Audit log created: 67fdf5ff2a451e721524a131
+2025-04-15 11:30:31 debug: Audit log created: 67fdf5ff2a451e721524a133
+2025-04-15 11:30:34 debug: Audit log created: 67fdf6022a451e721524a137
+2025-04-15 11:30:34 debug: Audit log created: 67fdf6022a451e721524a139
+2025-04-15 11:30:48 debug: Audit log created: 67fdf6102a451e721524a13c
+2025-04-15 11:44:20 debug: Audit log created: 67fdf93c2a451e721524a1e2
+2025-04-15 11:44:21 debug: Audit log created: 67fdf93c2a451e721524a1e4
+2025-04-15 11:44:55 info: New user registered: muneeb@123.com
+2025-04-15 11:45:10 debug: Audit log created: 67fdf96e2a451e721524a1f1
+2025-04-15 11:45:17 debug: Audit log created: 67fdf9742a451e721524a1fb
+2025-04-15 11:45:18 debug: Audit log created: 67fdf9762a451e721524a1fd
+2025-04-15 11:46:03 debug: Audit log created: 67fdf9a32a451e721524a200
+2025-04-15 11:46:04 debug: Audit log created: 67fdf9a42a451e721524a203
+2025-04-15 11:46:14 debug: Audit log created: 67fdf9ad2a451e721524a210
+2025-04-15 11:46:14 debug: Audit log created: 67fdf9ae2a451e721524a213
+2025-04-15 11:46:34 debug: Audit log created: 67fdf9c22a451e721524a226
+2025-04-15 11:46:35 debug: Audit log created: 67fdf9c22a451e721524a229
+2025-04-15 11:49:22 debug: Audit log created: 67fdfa6a2a451e721524a22c
+2025-04-15 11:49:23 debug: Audit log created: 67fdfa6b2a451e721524a232
+2025-04-15 12:00:33 debug: Audit log created: 67fdfd092a451e721524a280
+2025-04-15 12:00:35 debug: Audit log created: 67fdfd0a2a451e721524a283
+2025-04-15 12:00:46 debug: Audit log created: 67fdfd162a451e721524a290
+2025-04-15 12:00:49 debug: Audit log created: 67fdfd182a451e721524a293
+2025-04-15 12:01:01 debug: Audit log created: 67fdfd252a451e721524a2a0
+2025-04-15 12:01:02 debug: Audit log created: 67fdfd262a451e721524a2a3
+2025-04-15 12:01:06 debug: Audit log created: 67fdfd2a2a451e721524a2b4
+2025-04-15 12:01:07 debug: Audit log created: 67fdfd2a2a451e721524a2b7
+2025-04-15 12:01:29 warn: User 67fdf95f2a451e721524a1e7 with role officer attempted to access restricted resource
+2025-04-15 12:02:00 debug: Audit log created: 67fdfd602a451e721524a2be
+2025-04-15 12:02:00 debug: Audit log created: 67fdfd602a451e721524a2c0
+2025-04-15 12:02:03 warn: User 67fdf95f2a451e721524a1e7 with role officer attempted to access restricted resource
+2025-04-15 12:03:23 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:03:24 info: Server running in development mode on port 5000
+2025-04-15 12:03:25 info: MongoDB Connected Successfully
+2025-04-15 12:03:26 info: Cloudinary connection test successful:
+2025-04-15 12:03:27 info: Cloudinary connection successful
+2025-04-15 12:07:10 debug: Audit log created: 67fdfe96ea1e6f1c04bbd823
+2025-04-15 12:07:10 debug: Audit log created: 67fdfe96ea1e6f1c04bbd825
+2025-04-15 12:10:24 debug: Audit log created: 67fdff58ea1e6f1c04bbd82c
+2025-04-15 12:10:24 debug: Audit log created: 67fdff58ea1e6f1c04bbd82e
+2025-04-15 12:11:46 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:11:46 info: Server running in development mode on port 5000
+2025-04-15 12:11:47 info: MongoDB Connected Successfully
+2025-04-15 12:11:48 info: Cloudinary connection test successful:
+2025-04-15 12:11:49 info: Cloudinary connection successful
+2025-04-15 12:12:32 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:12:32 info: Server running in development mode on port 5000
+2025-04-15 12:12:33 info: MongoDB Connected Successfully
+2025-04-15 12:12:34 info: Cloudinary connection test successful:
+2025-04-15 12:12:35 info: Cloudinary connection successful
+2025-04-15 12:12:51 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:12:51 info: Server running in development mode on port 5000
+2025-04-15 12:12:52 info: MongoDB Connected Successfully
+2025-04-15 12:12:54 info: Cloudinary connection test successful:
+2025-04-15 12:12:55 info: Cloudinary connection successful
+2025-04-15 12:15:25 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:15:25 info: Server running in development mode on port 5000
+2025-04-15 12:15:27 info: MongoDB Connected Successfully
+2025-04-15 12:15:27 info: Cloudinary connection test successful:
+2025-04-15 12:15:29 info: Cloudinary connection successful
+2025-04-15 12:15:34 debug: Audit log created: 67fe008edd692f4f121ad6f6
+2025-04-15 12:15:34 debug: Audit log created: 67fe008edd692f4f121ad6f4
+2025-04-15 12:15:47 debug: Audit log created: 67fe009bdd692f4f121ad6fc
+2025-04-15 12:18:28 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:18:29 info: Server running in development mode on port 5000
+2025-04-15 12:18:31 info: Cloudinary connection test successful:
+2025-04-15 12:18:35 info: MongoDB Connected Successfully
+2025-04-15 12:18:36 info: Cloudinary connection successful
+2025-04-15 12:18:52 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:18:52 info: Server running in development mode on port 5000
+2025-04-15 12:18:55 info: Cloudinary connection test successful:
+2025-04-15 12:18:56 info: MongoDB Connected Successfully
+2025-04-15 12:18:56 info: Cloudinary connection successful
+2025-04-15 12:19:44 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:19:44 info: Server running in development mode on port 5000
+2025-04-15 12:19:45 info: MongoDB Connected Successfully
+2025-04-15 12:19:46 info: Cloudinary connection test successful:
+2025-04-15 12:19:48 info: Cloudinary connection successful
+2025-04-15 12:20:11 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:20:12 info: Server running in development mode on port 5000
+2025-04-15 12:20:13 info: MongoDB Connected Successfully
+2025-04-15 12:20:14 info: Cloudinary connection test successful:
+2025-04-15 12:20:15 info: Cloudinary connection successful
+2025-04-15 12:22:46 debug: Audit log created: 67fe023e743ac2e92f1b8af4
+2025-04-15 12:22:46 debug: Audit log created: 67fe023e743ac2e92f1b8af6
+2025-04-15 12:23:12 warn: Duplicate Key Error: email=muneeb@123.com
+2025-04-15 12:25:30 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:25:30 info: Server running in development mode on port 5000
+2025-04-15 12:25:32 info: MongoDB Connected Successfully
+2025-04-15 12:25:33 info: Cloudinary connection test successful:
+2025-04-15 12:25:35 info: Cloudinary connection successful
+2025-04-15 12:25:57 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:25:57 info: Server running in development mode on port 5000
+2025-04-15 12:25:59 info: Cloudinary connection test successful:
+2025-04-15 12:26:01 info: MongoDB Connected Successfully
+2025-04-15 12:26:01 info: Cloudinary connection successful
+2025-04-15 12:26:21 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:26:22 info: Server running in development mode on port 5000
+2025-04-15 12:26:23 info: MongoDB Connected Successfully
+2025-04-15 12:26:24 info: Cloudinary connection test successful:
+2025-04-15 12:26:25 info: Cloudinary connection successful
+2025-04-15 12:35:16 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:35:16 info: Server running in development mode on port 5000
+2025-04-15 12:35:20 info: MongoDB Connected Successfully
+2025-04-15 12:35:22 info: Cloudinary connection test successful:
+2025-04-15 12:35:23 info: Cloudinary connection successful
+2025-04-15 12:36:51 debug: Audit log created: 67fe058b5dfb489f1f7d73f6
+2025-04-15 12:36:52 debug: Audit log created: 67fe058c5dfb489f1f7d73fa
+2025-04-15 12:36:52 debug: Audit log created: 67fe058c5dfb489f1f7d73fc
+2025-04-15 12:37:05 debug: Audit log created: 67fe05995dfb489f1f7d7400
+2025-04-15 12:37:21 debug: Audit log created: 67fe05a95dfb489f1f7d7414
+2025-04-15 12:37:22 debug: Audit log created: 67fe05aa5dfb489f1f7d7416
+2025-04-15 12:37:33 debug: Audit log created: 67fe05b55dfb489f1f7d741e
+2025-04-15 12:37:33 debug: Audit log created: 67fe05b55dfb489f1f7d741c
+2025-04-15 12:37:42 debug: Audit log created: 67fe05be5dfb489f1f7d7430
+2025-04-15 12:37:42 debug: Audit log created: 67fe05be5dfb489f1f7d7432
+2025-04-15 12:37:52 debug: Audit log created: 67fe05c85dfb489f1f7d7444
+2025-04-15 12:37:52 debug: Audit log created: 67fe05c85dfb489f1f7d7446
+2025-04-15 12:38:22 debug: Audit log created: 67fe05e65dfb489f1f7d744f
+2025-04-15 12:38:25 debug: Audit log created: 67fe05e95dfb489f1f7d7451
+2025-04-15 12:38:25 debug: Audit log created: 67fe05e95dfb489f1f7d7453
+2025-04-15 12:39:00 info: Incident updated: 67fd420efe31aca7ff392653 by user 67fcd8c3773060bf3083297a
+2025-04-15 12:39:10 debug: Audit log created: 67fe06165dfb489f1f7d7495
+2025-04-15 12:39:10 debug: Audit log created: 67fe06165dfb489f1f7d7497
+2025-04-15 12:43:56 debug: Audit log created: 67fe07345dfb489f1f7d74d9
+2025-04-15 12:43:56 debug: Audit log created: 67fe07345dfb489f1f7d74db
+2025-04-15 12:44:14 debug: Audit log created: 67fe07455dfb489f1f7d74f7
+2025-04-15 12:44:14 debug: Audit log created: 67fe07455dfb489f1f7d74f9
+2025-04-15 12:44:39 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:44:39 info: Server running in development mode on port 5000
+2025-04-15 12:44:42 info: Cloudinary connection test successful:
+2025-04-15 12:44:43 info: MongoDB Connected Successfully
+2025-04-15 12:44:43 info: Cloudinary connection successful
+2025-04-15 12:44:46 debug: Audit log created: 67fe0766b2457f5f0a1287b3
+2025-04-15 12:44:49 debug: Audit log created: 67fe0769b2457f5f0a1287c1
+2025-04-15 12:44:52 debug: Audit log created: 67fe076cb2457f5f0a1287c5
+2025-04-15 12:45:08 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:45:08 info: Server running in development mode on port 5000
+2025-04-15 12:45:09 info: MongoDB Connected Successfully
+2025-04-15 12:45:11 info: Cloudinary connection test successful:
+2025-04-15 12:45:12 debug: Audit log created: 67fe078045db0adae7486145
+2025-04-15 12:45:13 debug: Audit log created: 67fe078145db0adae7486148
+2025-04-15 12:45:14 info: Cloudinary connection successful
+2025-04-15 12:45:30 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:45:30 info: Server running in development mode on port 5000
+2025-04-15 12:45:31 info: MongoDB Connected Successfully
+2025-04-15 12:45:33 info: Cloudinary connection test successful:
+2025-04-15 12:45:34 info: Cloudinary connection successful
+2025-04-15 12:48:08 debug: Audit log created: 67fe082fae32871717b62f89
+2025-04-15 12:48:12 debug: Audit log created: 67fe0834ae32871717b62f8f
+2025-04-15 12:48:12 debug: Audit log created: 67fe0834ae32871717b62f91
+2025-04-15 12:48:13 debug: Audit log created: 67fe0835ae32871717b62f97
+2025-04-15 12:48:13 debug: Audit log created: 67fe0835ae32871717b62f99
+2025-04-15 12:48:23 debug: Audit log created: 67fe083fae32871717b62f9d
+2025-04-15 12:51:06 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:51:06 info: Server running in development mode on port 5000
+2025-04-15 12:51:08 info: MongoDB Connected Successfully
+2025-04-15 12:51:09 info: Cloudinary connection test successful:
+2025-04-15 12:51:10 info: Cloudinary connection successful
+2025-04-15 12:51:13 debug: Audit log created: 67fe08e9fff97eb3c269d8dd
+2025-04-15 12:51:13 debug: Audit log created: 67fe08e9fff97eb3c269d8df
+2025-04-15 12:51:13 debug: Audit log created: 67fe08e9fff97eb3c269d8e1
+2025-04-15 12:51:17 debug: Audit log created: 67fe08edfff97eb3c269d8e5
+2025-04-15 12:51:35 debug: Audit log created: 67fe08fffff97eb3c269d8ec
+2025-04-15 12:51:35 debug: Audit log created: 67fe08fffff97eb3c269d8ee
+2025-04-15 12:51:36 debug: Audit log created: 67fe0900fff97eb3c269d8f4
+2025-04-15 12:51:36 debug: Audit log created: 67fe0900fff97eb3c269d8f6
+2025-04-15 12:51:45 debug: Audit log created: 67fe0909fff97eb3c269d8fc
+2025-04-15 12:51:45 debug: Audit log created: 67fe0909fff97eb3c269d8fe
+2025-04-15 12:52:10 debug: Audit log created: 67fe0922fff97eb3c269d904
+2025-04-15 12:52:10 debug: Audit log created: 67fe0922fff97eb3c269d906
+2025-04-15 12:52:18 debug: Audit log created: 67fe092afff97eb3c269d90c
+2025-04-15 12:52:18 debug: Audit log created: 67fe092afff97eb3c269d90e
+2025-04-15 12:52:18 debug: Audit log created: 67fe092afff97eb3c269d914
+2025-04-15 12:52:18 debug: Audit log created: 67fe092afff97eb3c269d916
+2025-04-15 12:52:22 debug: Audit log created: 67fe092efff97eb3c269d91c
+2025-04-15 12:52:22 debug: Audit log created: 67fe092efff97eb3c269d91e
+2025-04-15 12:52:28 debug: Audit log created: 67fe0934fff97eb3c269d923
+2025-04-15 12:52:28 info: User role updated from officer to admin for: suhail@321.com
+2025-04-15 12:52:35 debug: Audit log created: 67fe093bfff97eb3c269d928
+2025-04-15 12:52:35 info: User role updated from admin to officer for: suhail@321.com
+2025-04-15 12:52:41 debug: Audit log created: 67fe0941fff97eb3c269d92d
+2025-04-15 12:52:41 info: User role updated from officer to investigator for: suhail@321.com
+2025-04-15 12:52:45 debug: Audit log created: 67fe0945fff97eb3c269d931
+2025-04-15 12:52:51 debug: Audit log created: 67fe094bfff97eb3c269d938
+2025-04-15 12:52:51 debug: Audit log created: 67fe094bfff97eb3c269d93a
+2025-04-15 12:53:31 debug: Audit log created: 67fe0973fff97eb3c269d940
+2025-04-15 12:53:31 debug: Audit log created: 67fe0973fff97eb3c269d942
+2025-04-15 12:53:31 debug: Audit log created: 67fe0973fff97eb3c269d948
+2025-04-15 12:53:32 debug: Audit log created: 67fe0973fff97eb3c269d94a
+2025-04-15 12:53:35 debug: Audit log created: 67fe0977fff97eb3c269d950
+2025-04-15 12:53:35 debug: Audit log created: 67fe0977fff97eb3c269d952
+2025-04-15 12:54:20 warn: User 67fcd8c3773060bf3083297a with role investigator attempted to access restricted resource
+2025-04-15 12:54:20 warn: User 67fcd8c3773060bf3083297a with role investigator attempted to access restricted resource
+2025-04-15 12:54:21 debug: Audit log created: 67fe09a4fff97eb3c269d95a
+2025-04-15 12:54:33 debug: Audit log created: 67fe09b1fff97eb3c269d970
+2025-04-15 12:54:34 debug: Audit log created: 67fe09b1fff97eb3c269d972
+2025-04-15 12:55:06 debug: Audit log created: 67fe09d2fff97eb3c269d98a
+2025-04-15 12:55:06 debug: Audit log created: 67fe09d2fff97eb3c269d98c
+2025-04-15 12:55:59 debug: Audit log created: 67fe0a07fff97eb3c269d9a6
+2025-04-15 12:56:21 debug: Audit log created: 67fe0a1dfff97eb3c269d9ae
+2025-04-15 12:56:21 debug: Audit log created: 67fe0a1dfff97eb3c269d9b2
+2025-04-15 12:56:48 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 12:56:48 info: Server running in development mode on port 5000
+2025-04-15 12:56:49 info: MongoDB Connected Successfully
+2025-04-15 12:56:50 info: Cloudinary connection test successful:
+2025-04-15 12:56:51 info: Cloudinary connection successful
+2025-04-15 12:56:58 debug: Audit log created: 67fe0a42ac94c584d2707102
+2025-04-15 12:56:58 debug: Audit log created: 67fe0a42ac94c584d2707104
+2025-04-15 12:57:27 debug: Audit log created: 67fe0a5fac94c584d2707112
+2025-04-15 12:57:27 debug: Audit log created: 67fe0a5fac94c584d2707110
+2025-04-15 13:03:13 debug: Audit log created: 67fe0bb9ac94c584d2707148
+2025-04-15 13:03:13 debug: Audit log created: 67fe0bb9ac94c584d270714a
+2025-04-15 13:04:42 debug: Audit log created: 67fe0c12ac94c584d2707150
+2025-04-15 13:04:42 debug: Audit log created: 67fe0c12ac94c584d2707152
+2025-04-15 13:04:53 debug: Audit log created: 67fe0c1dac94c584d270715a
+2025-04-15 13:04:53 debug: Audit log created: 67fe0c1dac94c584d2707158
+2025-04-15 13:05:02 debug: Audit log created: 67fe0c26ac94c584d2707170
+2025-04-15 13:05:02 debug: Audit log created: 67fe0c26ac94c584d2707172
+2025-04-15 13:09:22 debug: Audit log created: 67fe0d2aac94c584d2707178
+2025-04-15 13:09:22 debug: Audit log created: 67fe0d2aac94c584d270717a
+2025-04-15 13:09:27 debug: Audit log created: 67fe0d2fac94c584d270718c
+2025-04-15 13:09:27 debug: Audit log created: 67fe0d2fac94c584d270718e
+2025-04-15 13:09:56 debug: Audit log created: 67fe0d4cac94c584d2707194
+2025-04-15 13:09:57 debug: Audit log created: 67fe0d4cac94c584d2707196
+2025-04-15 13:10:22 debug: Audit log created: 67fe0d66ac94c584d270719c
+2025-04-15 13:10:22 debug: Audit log created: 67fe0d66ac94c584d270719e
+2025-04-15 13:10:23 debug: Audit log created: 67fe0d67ac94c584d27071a4
+2025-04-15 13:10:23 debug: Audit log created: 67fe0d67ac94c584d27071a6
+2025-04-15 13:23:53 debug: Audit log created: 67fe1091ac94c584d27071ac
+2025-04-15 13:23:53 debug: Audit log created: 67fe1091ac94c584d27071aa
+2025-04-15 13:24:31 debug: Audit log created: 67fe10b7ac94c584d27071e5
+2025-04-15 13:24:32 debug: Audit log created: 67fe10b8ac94c584d27071e8
+2025-04-15 13:43:50 debug: Audit log created: 67fe153eac94c584d27071f9
+2025-04-15 13:43:51 debug: Audit log created: 67fe153fac94c584d27071fc
+2025-04-15 13:51:03 debug: Audit log created: 67fe16eeac94c584d2707202
+2025-04-15 13:51:03 debug: Audit log created: 67fe16eeac94c584d2707204
+2025-04-15 13:52:54 debug: Audit log created: 67fe175eac94c584d270720a
+2025-04-15 13:52:54 debug: Audit log created: 67fe175eac94c584d270720c
+2025-04-15 13:55:47 debug: Audit log created: 67fe180bac94c584d2707211
+2025-04-15 13:55:47 info: User profile updated: muneeb@123.com
+2025-04-15 13:56:15 debug: Audit log created: 67fe1827ac94c584d2707216
+2025-04-15 13:56:15 info: User profile updated: muneeb@123.com
+2025-04-15 13:56:32 debug: Audit log created: 67fe1837ac94c584d270721b
+2025-04-15 13:56:32 info: User profile updated: muneeb@123.com
+2025-04-15 14:01:11 debug: Audit log created: 67fe194fac94c584d2707221
+2025-04-15 14:01:11 debug: Audit log created: 67fe194fac94c584d2707223
+2025-04-15 14:01:31 debug: Audit log created: 67fe1963ac94c584d2707228
+2025-04-15 14:01:31 info: User profile updated: muneeb@123.com
+2025-04-15 14:02:55 debug: Audit log created: 67fe19b7ac94c584d270722e
+2025-04-15 14:02:55 debug: Audit log created: 67fe19b7ac94c584d270722c
+2025-04-15 14:02:58 debug: Audit log created: 67fe19baac94c584d2707234
+2025-04-15 14:02:59 debug: Audit log created: 67fe19baac94c584d2707236
+2025-04-15 14:03:00 debug: Audit log created: 67fe19bcac94c584d270723a
+2025-04-15 14:03:02 debug: Audit log created: 67fe19beac94c584d270723c
+2025-04-15 14:03:24 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:03:25 info: Server running in development mode on port 5000
+2025-04-15 14:03:27 info: Cloudinary connection test successful:
+2025-04-15 14:03:28 info: MongoDB Connected Successfully
+2025-04-15 14:03:29 info: Cloudinary connection successful
+2025-04-15 14:04:28 debug: Audit log created: 67fe1a13ad70b6aeff814092
+2025-04-15 14:04:28 debug: Audit log created: 67fe1a13ad70b6aeff814094
+2025-04-15 14:04:51 debug: Audit log created: 67fe1a2bad70b6aeff81409c
+2025-04-15 14:04:54 debug: Audit log created: 67fe1a2ead70b6aeff8140a0
+2025-04-15 14:04:54 debug: Audit log created: 67fe1a2ead70b6aeff81409e
+2025-04-15 14:05:35 debug: Audit log created: 67fe1a57ad70b6aeff8140a5
+2025-04-15 14:05:35 info: User profile updated: suhail@321.com
+2025-04-15 14:05:49 debug: Audit log created: 67fe1a65ad70b6aeff8140b7
+2025-04-15 14:05:51 debug: Audit log created: 67fe1a66ad70b6aeff8140b9
+2025-04-15 14:06:15 debug: Audit log created: 67fe1a7fad70b6aeff8140c3
+2025-04-15 14:06:15 debug: Audit log created: 67fe1a7fad70b6aeff8140c5
+2025-04-15 14:06:18 debug: Audit log created: 67fe1a81ad70b6aeff8140d5
+2025-04-15 14:06:18 debug: Audit log created: 67fe1a81ad70b6aeff8140d7
+2025-04-15 14:06:39 debug: Audit log created: 67fe1a96ad70b6aeff8140ed
+2025-04-15 14:06:39 debug: Audit log created: 67fe1a96ad70b6aeff8140ef
+2025-04-15 14:10:56 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:10:56 info: Server running in development mode on port 5000
+2025-04-15 14:11:00 info: MongoDB Connected Successfully
+2025-04-15 14:11:00 info: Cloudinary connection test successful:
+2025-04-15 14:11:02 info: Cloudinary connection successful
+2025-04-15 14:11:31 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:11:31 info: Server running in development mode on port 5000
+2025-04-15 14:11:34 info: MongoDB Connected Successfully
+2025-04-15 14:11:34 info: Cloudinary connection test successful:
+2025-04-15 14:11:36 info: Cloudinary connection successful
+2025-04-15 14:12:53 debug: Audit log created: 67fe1c0d4bd3483be7b6c9e3
+2025-04-15 14:14:36 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:14:36 info: Server running in development mode on port 5000
+2025-04-15 14:14:39 info: Cloudinary connection test successful:
+2025-04-15 14:14:43 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:14:43 info: Server running in development mode on port 5000
+2025-04-15 14:14:46 info: MongoDB Connected Successfully
+2025-04-15 14:14:46 info: Cloudinary connection test successful:
+2025-04-15 14:14:49 info: Cloudinary connection successful
+2025-04-15 14:15:18 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:15:18 info: Server running in development mode on port 5000
+2025-04-15 14:15:20 info: MongoDB Connected Successfully
+2025-04-15 14:15:20 info: Cloudinary connection test successful:
+2025-04-15 14:15:22 info: Cloudinary connection successful
+2025-04-15 14:15:28 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:15:28 info: Server running in development mode on port 5000
+2025-04-15 14:15:31 info: MongoDB Connected Successfully
+2025-04-15 14:15:31 info: Cloudinary connection test successful:
+2025-04-15 14:15:36 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:15:36 info: Server running in development mode on port 5000
+2025-04-15 14:15:39 info: MongoDB Connected Successfully
+2025-04-15 14:15:39 info: Cloudinary connection test successful:
+2025-04-15 14:15:44 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:15:44 info: Server running in development mode on port 5000
+2025-04-15 14:15:46 info: MongoDB Connected Successfully
+2025-04-15 14:15:47 info: Cloudinary connection test successful:
+2025-04-15 14:15:50 info: Cloudinary connection successful
+2025-04-15 14:16:06 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:16:07 info: Server running in development mode on port 5000
+2025-04-15 14:16:10 info: Cloudinary connection test successful:
+2025-04-15 14:16:10 info: MongoDB Connected Successfully
+2025-04-15 14:16:11 info: Cloudinary connection successful
+2025-04-15 14:22:13 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:22:14 info: Server running in development mode on port 5000
+2025-04-15 14:22:18 info: Cloudinary connection test successful:
+2025-04-15 14:22:18 info: MongoDB Connected Successfully
+2025-04-15 14:22:18 info: Cloudinary connection successful
+2025-04-15 14:28:57 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:28:58 info: Server running in development mode on port 5000
+2025-04-15 14:29:00 info: MongoDB Connected Successfully
+2025-04-15 14:29:00 info: Cloudinary connection test successful:
+2025-04-15 14:29:02 info: Cloudinary connection successful
+2025-04-15 14:42:59 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 14:42:59 info: Server running in development mode on port 5000
+2025-04-15 14:43:03 info: Cloudinary connection test successful:
+2025-04-15 14:43:05 info: MongoDB Connected Successfully
+2025-04-15 14:43:05 info: Cloudinary connection successful
+2025-04-15 14:44:07 debug: Audit log created: 67fe235f0c65d2523e45ebd2
+2025-04-15 14:44:07 debug: Audit log created: 67fe235f0c65d2523e45ebd0
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:26 debug: Audit log created: 67fe23720c65d2523e45ebfe
+2025-04-15 14:44:26 debug: Audit log created: 67fe23720c65d2523e45ec00
+2025-04-15 14:44:37 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:39 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:39 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:40 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:41 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:41 debug: Audit log created: 67fe23810c65d2523e45ec13
+2025-04-15 14:44:42 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:56 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:08 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:10 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:12 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:19 debug: Audit log created: 67fe23a70c65d2523e45ec2f
+2025-04-15 14:45:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:27 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:29 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:40 debug: Audit log created: 67fe23bc0c65d2523e45ec51
+2025-04-15 14:45:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:52 debug: Audit log created: 67fe23c70c65d2523e45ec5c
+2025-04-15 14:45:53 debug: Audit log created: 67fe23c90c65d2523e45ec61
+2025-04-15 14:46:05 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:07 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:08 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:08 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:11 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:43 debug: Audit log created: 67fe23fb0c65d2523e45ec98
+2025-04-15 14:46:45 debug: Audit log created: 67fe23fc0c65d2523e45ec9b
+2025-04-15 14:46:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:47:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:47:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:47:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:47:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:48:11 debug: Audit log created: 67fe24520c65d2523e45ecd2
+2025-04-15 14:48:12 debug: Audit log created: 67fe24530c65d2523e45ecd5
+2025-04-15 14:48:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:48:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:48:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:48:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:49:12 debug: Audit log created: 67fe248f0c65d2523e45eced
+2025-04-15 14:49:13 debug: Audit log created: 67fe24910c65d2523e45ecf5
+2025-04-15 14:49:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:49:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:49:27 debug: Audit log created: 67fe249e0c65d2523e45ed0e
+2025-04-15 14:49:28 debug: Audit log created: 67fe24a00c65d2523e45ed11
+2025-04-15 14:49:49 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:49:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:50:19 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:50:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:50:49 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:50:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:51:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:51:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:51:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:51:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:52:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:52:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:59:19 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:59:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:59:49 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:59:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:00:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:00:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:00:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:00:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:01:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:01:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:02:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:02:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:03:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:03:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:04:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:04:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:05:55 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:05:55 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:06:56 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:06:56 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:07:09 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 15:07:10 info: Server running in development mode on port 5000
+2025-04-15 15:07:11 info: MongoDB Connected Successfully
+2025-04-15 15:07:12 info: Cloudinary connection test successful:
+2025-04-15 15:07:19 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 15:07:19 info: Server running in development mode on port 5000
+2025-04-15 15:07:21 info: MongoDB Connected Successfully
+2025-04-15 15:07:22 info: Cloudinary connection test successful:
+2025-04-15 15:07:23 info: Cloudinary connection successful
+2025-04-15 15:07:46 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 15:07:46 info: Server running in development mode on port 5000
+2025-04-15 15:07:47 info: MongoDB Connected Successfully
+2025-04-15 15:07:48 info: Cloudinary connection test successful:
+2025-04-15 15:07:49 info: Cloudinary connection successful
+2025-04-15 15:07:57 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:07:57 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:17:35 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 15:17:36 info: Server running in development mode on port 5000
+2025-04-15 15:17:37 info: MongoDB Connected Successfully
+2025-04-15 15:17:38 info: Cloudinary connection test successful:
+2025-04-15 15:17:39 info: Cloudinary connection successful
+2025-04-15 15:17:46 info: Cloudinary configured with cloud_name: dggbgybzb
+2025-04-15 15:17:46 info: Server running in development mode on port 5000
+2025-04-15 15:17:48 info: MongoDB Connected Successfully
+2025-04-15 15:17:48 info: Cloudinary connection test successful:
+2025-04-15 15:17:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:17:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:17:53 info: Cloudinary connection successful
+2025-04-15 15:18:10 info: Cloudinary connection successful
+2025-04-15 15:18:27 info: Cloudinary connection successful
+2025-04-15 15:18:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:18:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:19:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:19:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:33 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:33 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:54 debug: Audit log created: 67fe2bfe9dea0de06d7551a4
+2025-04-15 15:20:55 debug: Audit log created: 67fe2bff9dea0de06d7551a8
+2025-04-15 15:20:56 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:57 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:57 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:58 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:00 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:01 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:02 debug: Audit log created: 67fe2c069dea0de06d7551d1
+2025-04-15 15:21:16 debug: Audit log created: 67fe2c139dea0de06d7551d4
+2025-04-15 15:21:27 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:28 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:58 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:58 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:22:21 debug: Audit log created: 67fe2c559dea0de06d7551eb
+2025-04-15 15:22:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:22:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:22:26 debug: Audit log created: 67fe2c5a9dea0de06d755203
+2025-04-15 15:22:27 debug: Audit log created: 67fe2c5b9dea0de06d755206
+2025-04-15 15:22:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:22:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:23:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:23:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:23:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:23:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:24:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:24:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:24:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:24:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:25:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:25:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:25:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:25:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:26:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:26:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:26:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:26:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:27:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:27:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:28:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:28:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:28:58 debug: Audit log created: 67fe2de1a42ca6b4b129f01a
+2025-04-15 15:29:10 debug: Audit log created: 67fe2deea42ca6b4b129f024
+2025-04-15 15:29:10 debug: Audit log created: 67fe2deea42ca6b4b129f022
+2025-04-15 15:29:50 debug: Audit log created: 67fe2e16a84def761c8c508b

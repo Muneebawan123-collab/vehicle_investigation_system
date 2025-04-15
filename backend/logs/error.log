@@ -21,3 +21,188 @@ TypeError: user.matchPassword is not a function
     at loginUser (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:104:29)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 2025-04-12 23:05:36 error: Authentication error: jwt expired
+2025-04-14 00:47:09 error: Authentication error: jwt malformed
+2025-04-14 13:45:34 error: Cloudinary connection error: getaddrinfo ENOTFOUND api.cloudinary.com
+2025-04-14 16:12:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:12:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:12:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:12:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:13:04 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:13:04 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:13:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:13:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:01 error: Authentication error: read ECONNRESET
+2025-04-14 16:16:03 error: Authentication error: read ECONNRESET
+2025-04-14 16:16:09 error: Authentication error: read ECONNRESET
+2025-04-14 16:16:13 error: Authentication error: read ECONNRESET
+2025-04-14 16:16:29 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:34 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:54 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:16:59 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:04 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:09 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:19 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:24 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:30 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:35 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:17:54 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:00 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:05 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:09 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:19 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:24 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:30 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:36 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:49 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:18:54 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:00 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:06 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:09 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:14 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:21 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:24 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:31 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:36 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:44 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:51 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:19:54 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:20:01 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:20:06 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:20:09 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 16:23:19 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-14 23:46:06 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Invoice_1744654562538" (type string) at path "resourceId" because of "BSONError"
+2025-04-14 23:52:17 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Other_1744654931773" (type string) at path "resourceId" because of "BSONError"
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:37 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:39 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:39 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:40 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:41 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:42 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:44:56 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:08 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:10 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:12 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:27 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:29 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:45:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:05 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:07 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:08 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:08 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:11 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:46:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:47:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:47:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:47:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:47:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:48:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:48:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:48:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:48:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:49:21 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:49:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:49:49 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:49:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:50:19 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:50:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:50:49 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:50:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:51:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:51:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:51:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:51:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:52:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:52:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:59:19 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:59:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:59:49 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 14:59:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:00:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:00:20 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:00:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:00:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:01:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:01:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:02:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:02:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:03:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:03:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:04:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:04:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:05:55 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:05:55 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:06:56 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:06:56 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:07:57 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:07:57 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:17:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:17:51 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:18:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:18:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:19:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:19:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:33 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:33 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:50 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:56 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:57 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:57 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:20:58 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:00 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:01 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:27 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:28 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:58 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:21:58 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:22:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:22:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:22:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:22:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:23:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:23:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:23:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:23:52 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:24:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:24:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:24:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:24:54 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:25:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:25:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:25:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:25:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:26:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:26:22 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:26:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:26:53 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:27:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:27:23 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:28:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 15:28:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
+2025-04-15 23:15:12 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.

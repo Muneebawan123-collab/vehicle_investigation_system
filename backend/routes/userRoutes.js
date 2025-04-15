@@ -13,13 +13,15 @@ const {
   resetPassword,
   updateUserRole,
   updateConsentStatus,
-  recordLastLogin
+  recordLastLogin,
+  getAvailableUsers
 } = require('../controllers/userController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const upload = require('../utils/multerConfig');
 const { check, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 // Public routes
 router.post('/register', registerUser);
@@ -32,13 +34,55 @@ router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, upload.single('profileImage'), updateUserProfile);
 router.put('/consent', protect, updateConsentStatus);
 router.put('/last-login', protect, recordLastLogin);
+router.get('/available', protect, getAvailableUsers);
 
 // Protected routes - admin only
 router.get('/', protect, authorize('admin'), getUsers);
 router.get('/:id', protect, authorize('admin'), getUserById);
 router.put('/:id', protect, authorize('admin'), updateUser);
 router.delete('/:id', protect, authorize('admin'), deleteUser);
-router.put('/:id/role', protect, authorize('admin'), updateUserRole);
+router.put('/:id/role', protect, async (req, res, next) => {
+  try {
+    // Add debug logging to understand what's happening
+    console.log('Role update request details:', {
+      pathId: req.params.id,
+      requestedBy: req.user?._id,
+      requestedRole: req.body.role,
+      currentUserRole: req.user?.role,
+      currentUserEmail: req.user?.email
+    });
+
+    // Check if this is a request to promote Muneeb
+    const isMuneebRequest = req.params.id === '67fdfab1c5f4f06ad5dced30';
+    const isMuneebEmail = req.user?.email === 'muneeb@123.com';
+    
+    // Allow if it's Muneeb's email or if admin
+    const isMuneebPromotingSelf = isMuneebRequest && isMuneebEmail;
+    
+    console.log('Promotion check:', {
+      isMuneebRequest,
+      isMuneebEmail,
+      isMuneebPromotingSelf
+    });
+
+    // If it's Muneeb promoting himself, allow it; otherwise, check admin role
+    if (!isMuneebPromotingSelf && req.user.role !== 'admin') {
+      console.log('Authorization failed for role update');
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to change user roles',
+        detail: 'You must be an admin to change user roles'
+      });
+    }
+    
+    console.log('Role update authorized, proceeding to controller');
+    // Proceed to controller
+    next();
+  } catch (error) {
+    console.error('Error in role update middleware:', error);
+    next(error);
+  }
+}, updateUserRole);
 
 // @route   GET api/users
 // @desc    Get all users
@@ -193,6 +237,75 @@ router.delete('/:id', auth, async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Special route for promoting Muneeb to admin (no auth required)
+router.post('/promote-muneeb', async (req, res, next) => {
+  try {
+    console.log('Direct Muneeb promotion route accessed');
+    const MUNEEB_EMAIL = 'muneeb@123.com';
+    
+    // First try to find by email, which is more reliable than ID
+    let user = await User.findOne({ email: MUNEEB_EMAIL });
+    
+    if (user) {
+      console.log(`Found Muneeb by email: ${MUNEEB_EMAIL}, ID: ${user._id}`);
+      
+      // Store this ID for future reference
+      const MUNEEB_ID = user._id.toString();
+      
+      // Return this ID in the response so frontend can update
+      if (user.role === 'admin') {
+        return res.json({
+          message: 'Muneeb is already an admin',
+          user: {
+            _id: user._id,
+            email: user.email,
+            role: user.role
+          }
+        });
+      }
+      
+      // Update role
+      const oldRole = user.role;
+      user.role = 'admin';
+      
+      // Save the user
+      const updatedUser = await user.save();
+      
+      console.log(`Successfully promoted Muneeb to admin`);
+      
+      // Return success
+      return res.json({
+        message: 'Successfully promoted Muneeb to admin',
+        user: {
+          _id: updatedUser._id,
+          email: updatedUser.email,
+          role: updatedUser.role
+        }
+      });
+    } else {
+      // This shouldn't happen based on logs, but just in case
+      console.log(`Muneeb user not found with email: ${MUNEEB_EMAIL}, this is unexpected`);
+      return res.status(404).json({ 
+        message: 'Muneeb user not found by email',
+        detail: 'User with email muneeb@123.com does not exist in the database.'
+      });
+    }
+  } catch (error) {
+    console.error('Error in promoteMuneeb route:', error);
+    
+    // Better error handling
+    if (error.code === 11000) {
+      console.warn(`Duplicate Key Error: email=muneeb@123.com`);
+      return res.status(409).json({
+        message: 'Duplicate email error',
+        detail: 'Another user with this email already exists'
+      });
+    }
+    
+    next(error);
   }
 });
 

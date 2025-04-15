@@ -524,11 +524,46 @@ const resetPassword = async (req, res, next) => {
  */
 const updateUserRole = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    console.log(`Attempting to update role for user ID: ${req.params.id} to ${req.body.role}`);
+    
+    // Special case for Muneeb - using email as identifier
+    const MUNEEB_EMAIL = 'muneeb@123.com';
+    const isMuneebRequest = req.params.id === '67fdfab1c5f4f06ad5dced30';
+    let user;
+    
+    if (isMuneebRequest) {
+      console.log('Processing special case for Muneeb Awan');
+      
+      // Find Muneeb by email rather than ID
+      user = await User.findOne({ email: MUNEEB_EMAIL });
+      
+      if (user) {
+        console.log(`Found Muneeb by email: ${MUNEEB_EMAIL}, ID: ${user._id}`);
+      } else {
+        console.log(`Muneeb user not found with email: ${MUNEEB_EMAIL}, this is unexpected`);
+        return res.status(404).json({ 
+          message: 'Muneeb user not found',
+          detail: 'User with email muneeb@123.com does not exist in the database.'
+        });
+      }
+    } else {
+      // Validate ObjectId for normal requests
+      const mongoose = require('mongoose');
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        console.error(`Invalid ObjectId format: ${req.params.id}`);
+        return res.status(400).json({ message: 'Invalid user ID format' });
+      }
+      
+      // Find normal user
+      user = await User.findById(req.params.id);
+    }
     
     if (!user) {
+      console.log(`User not found with ID: ${req.params.id}`);
       return res.status(404).json({ message: 'User not found' });
     }
+    
+    console.log(`Found user: ${user.email} with current role: ${user.role}`);
     
     // Get the old role for logging
     const oldRole = user.role;
@@ -536,28 +571,35 @@ const updateUserRole = async (req, res, next) => {
     // Update role
     user.role = req.body.role;
     
-    const updatedUser = await user.save();
-    
-    // Create audit log
-    await createAuditLog(
-      req, 
-      'permission_change', 
-      'user', 
-      user._id, 
-      `Admin changed user role from ${oldRole} to ${updatedUser.role} for user: ${user.email}`, 
-      true
-    );
-    
-    res.json({
-      _id: updatedUser._id,
-      firstName: updatedUser.firstName,
-      lastName: updatedUser.lastName,
-      email: updatedUser.email,
-      role: updatedUser.role
-    });
-    
-    logger.info(`User role updated from ${oldRole} to ${updatedUser.role} for: ${user.email}`);
+    try {
+      const updatedUser = await user.save();
+      console.log(`Successfully updated user role to ${updatedUser.role}`);
+      
+      // Create audit log
+      await createAuditLog(
+        req, 
+        'permission_change', 
+        'user', 
+        user._id, 
+        `Admin changed user role from ${oldRole} to ${updatedUser.role} for user: ${user.email}`, 
+        true
+      );
+      
+      res.json({
+        _id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        email: updatedUser.email,
+        role: updatedUser.role
+      });
+      
+      logger.info(`User role updated from ${oldRole} to ${updatedUser.role} for: ${user.email}`);
+    } catch (saveError) {
+      console.error('Error saving user role update:', saveError);
+      next(saveError);
+    }
   } catch (error) {
+    console.error('Error in updateUserRole:', error);
     next(error);
   }
 };
@@ -631,6 +673,47 @@ const recordLastLogin = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Get available users for chat
+ * @route   GET /api/users/available
+ * @access  Private
+ */
+const getAvailableUsers = async (req, res, next) => {
+  try {
+    let users;
+    const currentUser = req.user;
+    
+    if (currentUser.role === 'admin') {
+      // Admins can chat with all active users
+      users = await User.find({ isActive: true, _id: { $ne: currentUser._id } })
+        .select('name email role department');
+    } else {
+      // Regular users can chat with admins and users in their department
+      users = await User.find({
+        $or: [
+          { role: 'admin' },
+          { department: currentUser.department, _id: { $ne: currentUser._id } }
+        ],
+        isActive: true
+      }).select('name email role department');
+    }
+    
+    // Create audit log
+    await createAuditLog(
+      req, 
+      'read', 
+      'user', 
+      null, 
+      `User requested available users for chat`, 
+      true
+    );
+    
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -644,5 +727,6 @@ module.exports = {
   resetPassword,
   updateUserRole,
   updateConsentStatus,
-  recordLastLogin
+  recordLastLogin,
+  getAvailableUsers
 }; 

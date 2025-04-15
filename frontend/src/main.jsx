@@ -5,6 +5,7 @@ import './index.css'
 import 'antd/dist/reset.css'  // Add Ant Design styles
 import './styles/auth.css'  // Add auth styles
 import { AuthProvider } from './context/AuthContext'
+import { ChatProvider } from './context/ChatContext'
 
 // Polyfills for older browsers if needed
 import 'core-js/stable';
@@ -66,7 +67,9 @@ if (import.meta.env.DEV) {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <App />
+      <ChatProvider>
+        <App />
+      </ChatProvider>
     </AuthProvider>
   </React.StrictMode>,
 )

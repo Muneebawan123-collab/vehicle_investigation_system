@@ -39,6 +39,7 @@ const auditSchema = new mongoose.Schema({
       'case',
       'report',
       'system',
+      'chat',
       'other'
     ]
   },

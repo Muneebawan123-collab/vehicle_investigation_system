@@ -6,34 +6,61 @@ const logger = require('../utils/logger');
 const protect = async (req, res, next) => {
   let token;
 
-  // Check for token in headers
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    try {
+  try {
+    console.log('Auth middleware - Headers:', {
+      authorization: req.headers.authorization ? 'Present' : 'Not present',
+      contentType: req.headers['content-type']
+    });
+
+    // Check for token in headers
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       // Get token from header
       token = req.headers.authorization.split(' ')[1];
+      console.log('Token extracted:', token ? 'Present' : 'Not present');
 
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      try {
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Token verification result:', {
+          userId: decoded.id,
+          role: decoded.role,
+          exp: decoded.exp ? new Date(decoded.exp * 1000).toISOString() : 'Not present'
+        });
 
-      // Get user from token
-      req.user = await User.findById(decoded.id).select('-password');
+        // Get user from token
+        const user = await User.findById(decoded.id).select('-password');
 
-      // If user not found
-      if (!req.user) {
-        logger.warn(`User not found with ID: ${decoded.id}`);
-        return res.status(401).json({ message: 'Not authorized, user not found' });
+        // If user not found
+        if (!user) {
+          logger.warn(`User not found with ID: ${decoded.id}`);
+          return res.status(401).json({ message: 'Not authorized, user not found' });
+        }
+
+        // Add user to request object
+        req.user = user;
+        console.log('User authorized:', {
+          id: user._id,
+          role: user.role,
+          name: user.name
+        });
+        next();
+      } catch (error) {
+        console.error('Token verification error:', error);
+        if (error.name === 'JsonWebTokenError') {
+          return res.status(401).json({ message: 'Not authorized, invalid token' });
+        }
+        if (error.name === 'TokenExpiredError') {
+          return res.status(401).json({ message: 'Not authorized, token expired' });
+        }
+        throw error;
       }
-
-      next();
-    } catch (error) {
-      logger.error(`Authentication error: ${error.message}`);
-      res.status(401).json({ message: 'Not authorized, token failed' });
+    } else {
+      logger.warn('No authentication token provided');
+      return res.status(401).json({ message: 'Not authorized, no token' });
     }
-  }
-
-  if (!token) {
-    logger.warn('No authentication token provided');
-    res.status(401).json({ message: 'Not authorized, no token' });
+  } catch (error) {
+    logger.error(`Authentication error: ${error.message}`);
+    return res.status(401).json({ message: 'Not authorized, token failed' });
   }
 };
 

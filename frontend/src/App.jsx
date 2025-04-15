@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme, CssBaseline, GlobalStyles } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 // Auth & Context
 import PrivateRoute from './components/routing/PrivateRoute';
+import { ChatProvider } from './context/ChatContext';
 
 // Layouts
 import DashboardLayout from './components/layouts/DashboardLayout';
@@ -38,12 +38,17 @@ import DocumentsListPage from './pages/documents/DocumentsListPage';
 import DocumentUploadPage from './pages/documents/DocumentUploadPage';
 import DocumentDetailsPage from './pages/documents/DocumentDetailsPage';
 
+// Protected Pages - Chat
+import ChatPage from './pages/chat/ChatPage';
+
 // Protected Pages - Profile & Admin
 import UserProfilePage from './pages/profile/UserProfilePage';
 import EditProfilePage from './pages/profile/EditProfilePage';
 import UsersManagementPage from './pages/admin/UsersManagementPage';
 import SystemLogsPage from './pages/admin/SystemLogsPage';
 import SettingsPage from './pages/admin/SettingsPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import PromoteMuneebPage from './pages/admin/PromoteMuneebPage';
 
 // Utils & Helpers
 import ScrollToTop from './utils/ScrollToTop';
@@ -116,82 +121,104 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <ScrollToTop />
-        <Routes>
-          {/* Public Routes */}
-          <Route element={<AuthLayout />}>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-          </Route>
+      <GlobalStyles
+        styles={(theme) => ({
+          'body': {
+            overflow: 'auto',
+          },
+          '.page-container': {
+            paddingTop: '84px', // Add space below navbar for all pages
+            minHeight: '100vh',
+            position: 'relative',
+            zIndex: 1,
+          },
+        })}
+      />
+      <ChatProvider>
+        <Router>
+          <ScrollToTop />
+          <Routes>
+            {/* Public Routes */}
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+            </Route>
 
-          {/* Protected Routes */}
-          <Route element={<PrivateRoute />}>
-            <Route path="/" element={<DashboardLayout darkMode={darkMode} setDarkMode={setDarkMode} />}>
-              {/* Dashboard */}
-              <Route index element={<DashboardPage />} />
-              
-              {/* Vehicles */}
-              <Route path="vehicles">
-                <Route index element={<VehiclesListPage />} />
-                <Route path="register" element={<VehicleRegistrationPage />} />
-                <Route path=":id" element={<VehicleDetailsPage />} />
-                <Route path=":id/edit" element={<VehicleEditPage />} />
-              </Route>
-              
-              {/* Incidents */}
-              <Route path="incidents">
-                <Route index element={<IncidentsListPage />} />
-                <Route path="create" element={<IncidentCreatePage />} />
-                <Route path=":id" element={<IncidentDetailsPage />} />
-                <Route path=":id/edit" element={<IncidentEditPage />} />
-              </Route>
-              
-              {/* Documents */}
-              <Route path="documents">
-                <Route index element={<DocumentsListPage />} />
-                <Route path="upload" element={<DocumentUploadPage />} />
-                <Route path=":id" element={<DocumentDetailsPage />} />
-              </Route>
-              
-              {/* Profile */}
-              <Route path="profile">
-                <Route index element={<UserProfilePage />} />
-                <Route path="edit" element={<EditProfilePage />} />
-              </Route>
-              
-              {/* Admin */}
-              <Route path="admin">
-                <Route path="users" element={<UsersManagementPage />} />
-                <Route path="logs" element={<SystemLogsPage />} />
-                <Route path="settings" element={<SettingsPage />} />
+            {/* Protected Routes */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<DashboardLayout darkMode={darkMode} setDarkMode={setDarkMode} />}>
+                {/* Dashboard */}
+                <Route index element={<DashboardPage />} />
+                
+                {/* Vehicles */}
+                <Route path="vehicles">
+                  <Route index element={<VehiclesListPage />} />
+                  <Route path="register" element={<VehicleRegistrationPage />} />
+                  <Route path=":id" element={<VehicleDetailsPage />} />
+                  <Route path=":id/edit" element={<VehicleEditPage />} />
+                </Route>
+                
+                {/* Incidents */}
+                <Route path="incidents">
+                  <Route index element={<IncidentsListPage />} />
+                  <Route path="create" element={<IncidentCreatePage />} />
+                  <Route path=":id" element={<IncidentDetailsPage />} />
+                  <Route path=":id/edit" element={<IncidentEditPage />} />
+                </Route>
+                
+                {/* Documents */}
+                <Route path="documents">
+                  <Route index element={<DocumentsListPage />} />
+                  <Route path="upload" element={<DocumentUploadPage />} />
+                  <Route path=":id" element={<DocumentDetailsPage />} />
+                </Route>
+                
+                {/* Chat */}
+                <Route path="messages">
+                  <Route index element={<ChatPage />} />
+                </Route>
+                
+                {/* Profile */}
+                <Route path="profile">
+                  <Route index element={<UserProfilePage />} />
+                  <Route path="edit" element={<EditProfilePage />} />
+                </Route>
+                
+                {/* Admin */}
+                <Route path="admin">
+                  <Route path="users" element={<UsersManagementPage />} />
+                  <Route path="manage-users" element={<AdminUsersPage />} />
+                  <Route path="promote-muneeb" element={<PromoteMuneebPage />} />
+                  <Route path="logs" element={<SystemLogsPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
 
-          {/* Redirect from /dashboard to / */}
-          <Route path="/dashboard" element={<Navigate to="/" replace />} />
-          
-          {/* 404 Route */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Router>
-      
-      {/* Toast Notifications */}
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={darkMode ? 'dark' : 'light'}
-      />
+            {/* Redirect from /dashboard to / */}
+            <Route path="/dashboard" element={<Navigate to="/" replace />} />
+            
+            {/* 404 Route */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Router>
+        
+        {/* Toast Notifications */}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme={darkMode ? 'dark' : 'light'}
+        />
+      </ChatProvider>
     </ThemeProvider>
   );
 }

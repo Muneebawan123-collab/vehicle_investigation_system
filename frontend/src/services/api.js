@@ -16,11 +16,29 @@ apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
+      console.log(`Adding authorization header for ${config.url}`);
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      console.warn(`No token available for request to ${config.url}`);
     }
+    
+    // For debugging authorization issues
+    if (config.url?.includes('/users/') && config.url?.includes('/role')) {
+      console.log('Role update request details:', {
+        url: config.url,
+        method: config.method,
+        headers: {
+          ...config.headers,
+          Authorization: config.headers.Authorization ? 'Bearer [PRESENT]' : 'None'
+        },
+        data: config.data
+      });
+    }
+    
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -29,6 +47,22 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Add more detailed logging for auth failures
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      console.error('Authorization error:', {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        message: error.response.data?.message || 'No message',
+        detail: error.response.data?.detail || 'No detail',
+        url: error.config.url,
+        method: error.config.method
+      });
+      
+      // Log auth header presence
+      console.log('Authorization header was ' + 
+        (error.config.headers.Authorization ? 'present' : 'missing'));
+    }
+    
     // Handle session expiration
     if (error.response?.status === 401) {
       // Optionally, you could redirect to login page here
@@ -117,13 +151,75 @@ export const incidentService = {
  * Document Services
  */
 export const documentService = {
-  getAllDocuments: (params) => apiClient.get('/documents', { params }),
+  getAllDocuments: (params) => {
+    console.log('Fetching all documents with params:', params);
+    return apiClient.get('/documents', { params })
+      .then(response => {
+        console.log('Documents API response:', response);
+        return response;
+      })
+      .catch(error => {
+        console.error('Error fetching documents:', error);
+        throw error;
+      });
+  },
   getDocumentById: (id) => apiClient.get(`/documents/${id}`),
-  uploadDocument: (formData) => apiClient.post('/documents', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }),
+  uploadDocument: (formData) => {
+    // Verify formData is valid
+    if (!(formData instanceof FormData)) {
+      console.error('uploadDocument: formData is not a FormData instance');
+      return Promise.reject(new Error('Invalid FormData object'));
+    }
+    
+    // Check if the file is present in FormData
+    let hasFile = false;
+    try {
+      // Check formData entries
+      for (let pair of formData.entries()) {
+        if (pair[0] === 'file' && pair[1]) {
+          hasFile = true;
+          break;
+        }
+      }
+    } catch (error) {
+      console.error('Error checking FormData entries:', error);
+    }
+    
+    if (!hasFile) {
+      console.error('uploadDocument: No file found in FormData');
+      return Promise.reject(new Error('No file found in form data'));
+    }
+    
+    // Ensure we're not setting JSON content type for file uploads
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      // Add timeout value
+      timeout: 30000,
+    };
+    console.log('Calling upload document API with multipart form data');
+    return apiClient.post('/documents', formData, config);
+  },
+  // Test basic upload functionality without authentication
+  testUpload: (formData) => {
+    // Verify formData is valid
+    if (!(formData instanceof FormData)) {
+      console.error('testUpload: formData is not a FormData instance');
+      return Promise.reject(new Error('Invalid FormData object'));
+    }
+    
+    // Ensure we're not setting JSON content type for file uploads
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      // Add timeout value
+      timeout: 30000,
+    };
+    console.log('Calling test upload API with multipart form data');
+    return apiClient.post('/documents/test-upload', formData, config);
+  },
   updateDocument: (id, documentData) => apiClient.put(`/documents/${id}`, documentData),
   deleteDocument: (id) => apiClient.delete(`/documents/${id}`),
   getDocumentsByVehicle: (vehicleId) => apiClient.get(`/documents/vehicle/${vehicleId}`),

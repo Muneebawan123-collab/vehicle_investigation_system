@@ -6,50 +6,225 @@ const { createAuditLog } = require('../utils/auditUtils');
 // Upload document
 exports.uploadDocument = async (req, res) => {
   try {
+    console.log('Document upload handler started');
+    
+    // Double check that the file exists and has valid properties
     if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+      console.error('Error: File object not found in request');
+      return res.status(400).json({ 
+        success: false,
+        message: 'No file uploaded',
+        details: 'The file field is missing in the request'
+      });
+    }
+    
+    // Validate file object has required properties
+    if (!req.file.path || !req.file.originalname || !req.file.mimetype) {
+      console.error('Error: Invalid file object', req.file);
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid file object',
+        details: 'The uploaded file is missing required properties'
+      });
+    }
+    
+    // Check if file exists on disk
+    if (!fs.existsSync(req.file.path)) {
+      console.error('Error: File does not exist on disk', req.file.path);
+      return res.status(400).json({
+        success: false,
+        message: 'File not found',
+        details: 'The uploaded file could not be found on the server'
+      });
     }
 
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: 'auto',
-      folder: 'vehicle_documents'
+    console.log('Processing file upload:', {
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      path: req.file.path
     });
+    
+    // Log request details for debugging
+    console.log('Request body:', req.body);
+    console.log('Request user:', req.user ? {
+      id: req.user.id,
+      name: req.user.name,
+      role: req.user.role
+    } : 'Not authenticated');
 
-    // Delete local file
-    fs.unlinkSync(req.file.path);
+    // Get document information from the request body
+    const { type, description, vehicleId } = req.body || {}; // Add fallback empty object
+    
+    // Ensure type exists
+    if (!type) {
+      console.log('Error: Document type is required');
+      
+      // Clean up the uploaded file
+      if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+        console.log('Cleaned up file due to missing type');
+      }
+      
+      return res.status(400).json({ 
+        success: false,
+        message: 'Document type is required',
+        details: 'The type field is missing in the request body'
+      });
+    }
 
-    const document = {
-      type: req.body.type,
-      url: result.secure_url,
-      description: req.body.description,
-      uploadedBy: req.user.id,
-      publicId: result.public_id
-    };
+    console.log('Starting upload to Cloudinary');
+    
+    try {
+      // Check that all required inputs for Cloudinary are valid
+      if (!req.file.path) {
+        throw new Error('File path is missing');
+      }
+      
+      // Upload to Cloudinary with proper error handling
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: 'auto',
+        folder: vehicleId 
+          ? `vehicle_documents/${vehicleId}`
+          : 'vehicle_documents',
+        public_id: `${type}_${Date.now()}`,
+        tags: [type]
+      });
+      
+      if (!result || !result.secure_url) {
+        throw new Error('Failed to get valid response from Cloudinary');
+      }
 
-    await createAuditLog(
-      req,
-      'create',
-      'document',
-      result.public_id,
-      `Document uploaded: ${req.body.type}`,
-      true
-    );
+      console.log('Cloudinary upload successful:', {
+        publicId: result.public_id,
+        url: result.secure_url,
+        size: result.bytes,
+        format: result.format
+      });
 
-    res.status(201).json(document);
+      // Delete local file after upload
+      if (fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+        console.log('Local file deleted after successful upload');
+      }
+
+      // Create document object with all relevant information
+      const document = {
+        type,
+        url: result.secure_url,
+        description: description || 'No description provided',
+        uploadedBy: req.user.id,
+        publicId: result.public_id,
+        size: result.bytes,
+        format: result.format,
+        vehicleId: vehicleId || null,
+        createdAt: result.created_at
+      };
+
+      console.log('Creating audit log');
+      await createAuditLog(
+        req,
+        'create',
+        'document',
+        result.public_id,
+        `Document uploaded: ${type}`,
+        true
+      );
+
+      console.log('Document upload completed successfully');
+      res.status(201).json({
+        success: true,
+        message: 'Document uploaded successfully',
+        document
+      });
+    } catch (cloudinaryError) {
+      console.error('Cloudinary upload error:', cloudinaryError);
+      
+      // Clean up the uploaded file
+      if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+        console.log('Cleaned up file after Cloudinary error');
+      }
+      
+      res.status(500).json({ 
+        success: false,
+        message: 'Cloud storage error',
+        details: 'Failed to upload file to cloud storage',
+        error: cloudinaryError.message
+      });
+    }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Document upload error:', error);
+    
+    // Delete temp file if it exists
+    if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+      console.log('Cleaned up file after general error');
+    }
+    
+    // Provide more specific error messages based on the error type
+    let errorMessage = 'Server error during document upload';
+    let errorDetails = error.message;
+    
+    if (error.name === 'MulterError') {
+      if (error.code === 'LIMIT_FILE_SIZE') {
+        errorMessage = 'File size exceeds the limit';
+        errorDetails = 'Maximum file size is 5MB';
+      } else {
+        errorMessage = 'File upload error';
+        errorDetails = error.message;
+      }
+    } else if (error.name === 'CloudinaryError' || error.message.includes('Cloudinary')) {
+      errorMessage = 'Cloud storage error';
+      errorDetails = 'Error uploading to cloud storage';
+    }
+    
+    res.status(500).json({ 
+      success: false,
+      message: errorMessage,
+      details: errorDetails,
+      error: error.message
+    });
   }
 };
 
 // Get all documents
 exports.getDocuments = async (req, res) => {
   try {
-    const documents = await cloudinary.api.resources({
+    console.log('Getting documents from Cloudinary...');
+    
+    // Get documents from Cloudinary
+    const result = await cloudinary.api.resources({
       type: 'upload',
-      prefix: 'vehicle_documents/'
+      prefix: 'vehicle_documents/',
+      max_results: 100,
+      tags: req.query.type ? [req.query.type] : undefined
     });
+
+    console.log('Retrieved documents from Cloudinary:', result.resources.length);
+    
+    // If no documents were found, log more details
+    if (!result.resources || result.resources.length === 0) {
+      console.log('No documents found in Cloudinary');
+      console.log('Result object:', JSON.stringify(result, null, 2));
+    } else {
+      // Log sample document (first one)
+      console.log('Sample document:', JSON.stringify(result.resources[0], null, 2));
+    }
+
+    // Format the documents for the frontend
+    const formattedDocuments = result.resources.map(doc => ({
+      id: doc.public_id,
+      name: doc.public_id.split('/').pop(),
+      type: doc.format || 'document',
+      size: doc.bytes || 0,
+      url: doc.secure_url,
+      uploadDate: doc.created_at,
+      uploadedBy: 'System',
+      secure_url: doc.secure_url
+    }));
+
+    console.log('Formatted documents:', formattedDocuments.length);
 
     await createAuditLog(
       req,
@@ -60,10 +235,18 @@ exports.getDocuments = async (req, res) => {
       true
     );
 
-    res.json(documents.resources);
+    res.status(200).json({
+      success: true,
+      count: formattedDocuments.length,
+      data: formattedDocuments
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error getting documents:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Server error retrieving documents',
+      error: error.message 
+    });
   }
 };
 
@@ -390,8 +573,18 @@ exports.getDocumentVersions = async (req, res) => {
 // Replace document
 exports.replaceDocument = async (req, res) => {
   try {
+    console.log('Document replace request received');
+    console.log('Request body:', req.body);
+    console.log('Request file:', req.file);
+    console.log('Request user:', req.user);
+    
     if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+      console.log('Error: No file uploaded for replacement');
+      return res.status(400).json({ 
+        success: false,
+        message: 'No file uploaded',
+        details: 'The file field is missing in the request for document replacement'
+      });
     }
 
     // Delete old version
@@ -403,6 +596,8 @@ exports.replaceDocument = async (req, res) => {
       public_id: req.params.id,
       folder: 'vehicle_documents'
     });
+
+    console.log('Cloudinary upload result for replacement:', result);
 
     // Delete local file
     fs.unlinkSync(req.file.path);
@@ -416,9 +611,23 @@ exports.replaceDocument = async (req, res) => {
       true
     );
 
-    res.json(result);
+    res.status(200).json({
+      success: true,
+      message: 'Document replaced successfully',
+      document: result
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Document replacement error:', error);
+    
+    // Delete temp file if it exists
+    if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    
+    res.status(500).json({ 
+      success: false,
+      message: 'Server error during document replacement',
+      error: error.message
+    });
   }
 }; 

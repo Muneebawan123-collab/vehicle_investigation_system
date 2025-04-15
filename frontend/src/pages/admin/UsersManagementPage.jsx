@@ -18,9 +18,13 @@ const UsersManagementPage = () => {
     setLoading(true);
     try {
       const response = await axios.get('/api/users');
-      setUsers(response.data);
+      // Ensure users is always an array, even if the API returns null or undefined
+      const userData = Array.isArray(response.data) ? response.data : [];
+      setUsers(userData);
     } catch (error) {
       message.error('Failed to fetch users');
+      // Set empty array on error to avoid rawData.some errors
+      setUsers([]);
     }
     setLoading(false);
   };

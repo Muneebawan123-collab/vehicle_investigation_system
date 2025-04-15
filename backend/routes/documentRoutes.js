@@ -33,6 +33,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+// Log Cloudinary configuration (without exposing secrets)
+console.log('Cloudinary configuration loaded:', {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? 'Set' : 'Not set',
+  api_key: process.env.CLOUDINARY_API_KEY ? 'Set' : 'Not set',
+  api_secret: process.env.CLOUDINARY_API_SECRET ? 'Set' : 'Not set'
+});
+
 // Configure multer for file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -47,130 +54,203 @@ const storage = multer.diskStorage({
   }
 });
 
+// Add a middleware to validate the incoming multipart request
+const validateMultipart = (req, res, next) => {
+  console.log('Validating multipart request');
+  const contentType = req.headers['content-type'] || '';
+  
+  if (!contentType.includes('multipart/form-data')) {
+    console.error('Error: Content-Type is not multipart/form-data');
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid request format',
+      details: 'Content-Type must be multipart/form-data'
+    });
+  }
+  
+  console.log('Content-Type validation passed');
+  next();
+};
+
+// Enhanced file filter function with better error handling
+const fileFilter = (req, file, cb) => {
+  console.log('File filter called with file:', file ? {
+    fieldname: file.fieldname,
+    originalname: file.originalname,
+    mimetype: file.mimetype,
+    size: file.size
+  } : 'No file');
+  
+  // Check if file exists and has required properties
+  if (!file || !file.mimetype) {
+    console.error('File filter error: Invalid or missing file object');
+    return cb(new Error('Missing or invalid file'), false);
+  }
+  
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+  
+  if (!allowedTypes.includes(file.mimetype)) {
+    console.error(`File type not allowed: ${file.mimetype}`);
+    return cb(new Error(`Invalid file type. Allowed types: ${allowedTypes.join(', ')}`), false);
+  }
+  
+  console.log('File passed validation filters');
+  cb(null, true);
+};
+
 const upload = multer({
   storage,
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-    if (!allowedTypes.includes(file.mimetype)) {
-      return cb(new Error('Invalid file type'));
-    }
-    cb(null, true);
-  }
+  fileFilter
 });
 
-// @route   POST api/documents/upload
-// @desc    Upload document
-// @access  Private
-router.post('/upload', [
-  auth,
-  upload.single('file'),
-  check('type', 'Document type is required').not().isEmpty(),
-  check('description', 'Description is required').not().isEmpty()
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+// Handle multer errors
+const handleMulterError = (err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    console.error('Multer error:', err);
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({
+        success: false,
+        message: 'File too large',
+        details: 'Maximum file size is 5MB'
+      });
+    }
+    return res.status(400).json({
+      success: false,
+      message: 'File upload error',
+      details: err.message
+    });
+  } else if (err) {
+    console.error('Upload error:', err);
+    return res.status(400).json({
+      success: false,
+      message: 'Upload error',
+      details: err.message
+    });
   }
+  next();
+};
 
+// ROUTES CONFIGURATION
+
+// Add a test endpoint for debugging upload issues - must be defined BEFORE other routes to avoid conflicts
+router.post('/test-upload', (req, res, next) => {
+  console.log('Test upload request received');
+  console.log('Headers:', req.headers);
+  console.log('Content type:', req.headers['content-type']);
+  
+  next();
+}, upload.single('file'), handleMulterError, (req, res) => {
   try {
+    console.log('Test upload endpoint processing');
+    console.log('Request body:', req.body);
+    console.log('Request file:', req.file);
+    
     if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+      console.error('Test upload: No file found in request');
+      return res.status(400).json({ 
+        success: false, 
+        message: 'No file uploaded',
+        details: 'The file field is missing in the request'
+      });
     }
-
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: 'auto',
-      folder: 'vehicle_documents'
+    
+    // Log successful file receipt
+    console.log('Test upload: File received successfully:', {
+      filename: req.file.filename,
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      path: req.file.path
     });
-
-    // Delete local file
-    fs.unlinkSync(req.file.path);
-
-    const document = {
-      type: req.body.type,
-      url: result.secure_url,
-      description: req.body.description,
-      uploadedBy: req.user.id,
-      publicId: result.public_id
-    };
-
-    res.status(201).json(document);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// @route   GET api/documents
-// @desc    Get all documents
-// @access  Private
-router.get('/', auth, async (req, res) => {
-  try {
-    const documents = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: 'vehicle_documents/'
+    
+    // Success response with file details
+    res.status(200).json({
+      success: true,
+      message: 'File received successfully',
+      file: {
+        filename: req.file.filename,
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size,
+        path: req.file.path
+      }
     });
-    res.json(documents.resources);
+    
+    // Delete the file after sending response
+    setTimeout(() => {
+      if (fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+        console.log('Test file deleted after successful test');
+      }
+    }, 5000);
+    
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// @route   DELETE api/documents/:id
-// @desc    Delete document
-// @access  Private
-router.delete('/:id', auth, async (req, res) => {
-  try {
-    await cloudinary.uploader.destroy(req.params.id);
-    res.json({ message: 'Document deleted' });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// @route   GET api/documents/search
-// @desc    Search documents
-// @access  Private
-router.get('/search', auth, async (req, res) => {
-  try {
-    const { query } = req.query;
-    const documents = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: 'vehicle_documents/',
-      tags: query
+    console.error('Test upload error:', error);
+    
+    // Clean up if file exists
+    if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+      console.log('Test file deleted after error');
+    }
+    
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error during test upload',
+      error: error.message
     });
-    res.json(documents.resources);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Protected routes - all authenticated users
+// POST routes - Create documents and related operations
+// Add proper validation and authentication with better error handling
+router.post('/', validateMultipart, (req, res, next) => {
+  console.log('Document upload request received');
+  console.log('Headers:', req.headers);
+  console.log('Content type:', req.headers['content-type']);
+  
+  // Continue with auth check
+  next();
+}, protect, (req, res, next) => {
+  // Role authorization with better error handling
+  const allowedRoles = ['officer', 'admin', 'investigator'];
+  if (!req.user || !allowedRoles.includes(req.user.role)) {
+    return res.status(403).json({
+      success: false,
+      message: 'Permission denied',
+      details: `Required role: ${allowedRoles.join(', ')}. Your role: ${req.user?.role || 'none'}`
+    });
+  }
+  
+  // Continue to file upload middleware
+  next();
+}, upload.single('file'), handleMulterError, uploadDocument);
+
+// GET routes - Read operations
 router.get('/', protect, getDocuments);
-router.get('/search', protect, searchDocuments);
 router.get('/vehicle/:vehicleId', protect, getDocumentsByVehicle);
 router.get('/type/:type', protect, getDocumentsByType);
+router.get('/search', protect, searchDocuments);
 router.get('/expiring', protect, getExpiringDocuments);
-router.get('/:id', protect, getDocumentById);
 router.get('/:id/versions', protect, getDocumentVersions);
+router.get('/:id', protect, getDocumentById);
+
+// PUT routes - Update operations (admin only)
+router.put('/:id', protect, authorize('admin'), updateDocument);
+router.put('/:id/verify', protect, authorize('admin'), verifyDocument);
+
+// POST routes - Other operations
+router.post('/:id/notes', protect, addDocumentNote);
 router.post('/:id/access-log', protect, logDocumentAccess);
 
-// Protected routes - officers, investigators, and admin
-router.post('/', protect, authorize('officer', 'admin', 'investigator'), upload.single('document'), uploadDocument);
-router.put('/:id', protect, authorize('officer', 'admin', 'investigator'), updateDocument);
-router.delete('/:id', protect, authorize('admin'), deleteDocument);
-router.post('/:id/replace', protect, authorize('officer', 'admin', 'investigator'), upload.single('document'), replaceDocument);
-router.post('/:id/notes', protect, authorize('officer', 'admin', 'investigator'), addDocumentNote);
-
-// Protected routes - specific roles only
-router.put('/:id/verify', protect, authorize('admin', 'investigator'), verifyDocument);
+// POST routes - Special operations (admin only)
 router.post('/:id/watermark', protect, authorize('admin'), watermarkDocument);
 router.post('/:id/sign', protect, authorize('admin'), signDocument);
+router.post('/:id/replace', protect, authorize('admin'), upload.single('file'), handleMulterError, replaceDocument);
+
+// DELETE routes - Delete operations (admin only)
+router.delete('/:id', protect, authorize('admin'), deleteDocument);
 
 module.exports = router; 

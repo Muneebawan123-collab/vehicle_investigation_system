@@ -8,23 +8,24 @@ const incidentSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   incidentType: {
     type: String,
-    required: true,
-    enum: ['accident', 'theft', 'vandalism', 'other']
+    enum: ['accident', 'theft', 'vandalism', 'other'],
+    required: true
   },
   severity: {
     type: String,
-    required: true,
-    enum: ['low', 'medium', 'high', 'critical']
+    enum: ['low', 'medium', 'high', 'critical'],
+    default: 'medium',
+    required: true
   },
-  status: {
-    type: String,
-    required: true,
-    enum: ['open', 'under_investigation', 'resolved', 'closed'],
-    default: 'open'
+  dateTime: {
+    type: Date,
+    default: Date.now,
+    required: true
   },
   location: {
     type: {
@@ -34,58 +35,76 @@ const incidentSchema = new mongoose.Schema({
     },
     coordinates: {
       type: [Number],
-      required: true
+      default: [0, 0]
     },
-    address: String
-  },
-  dateTime: {
-    type: Date,
-    required: true
+    address: {
+      type: String,
+      trim: true
+    }
   },
   vehicle: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Vehicle',
-    required: true
+    ref: 'Vehicle'
   },
   reportedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  assignedTo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  evidence: [{
-    type: {
-      type: String,
-      enum: ['image', 'video', 'document', 'other']
-    },
-    url: String,
-    description: String
-  }],
-  notes: [{
-    content: String,
-    addedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    addedAt: {
-      type: Date,
-      default: Date.now
+  witnesses: [
+    {
+      name: String,
+      contact: String,
+      statement: String
     }
-  }],
-  resolution: {
-    type: String
+  ],
+  evidence: [
+    {
+      type: {
+        type: String,
+        enum: ['photo', 'video', 'document', 'other'],
+        required: true
+      },
+      description: String,
+      url: String,
+      fileType: String,
+      uploadedAt: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ],
+  status: {
+    type: String,
+    enum: ['Open', 'In Progress', 'Resolved', 'Closed'],
+    default: 'Open'
   },
-  resolvedAt: {
-    type: Date
-  }
+  policeReportNumber: {
+    type: String,
+    trim: true
+  },
+  notes: [
+    {
+      content: {
+        type: String,
+        required: true
+      },
+      createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ]
 }, {
   timestamps: true
 });
 
-// Create geospatial index for location
+// Add 2dsphere index for geospatial queries
 incidentSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('Incident', incidentSchema); 

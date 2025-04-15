@@ -2,6 +2,7 @@ const Vehicle = require('../models/Vehicle');
 const logger = require('../utils/logger');
 const { createAuditLog } = require('../utils/auditUtils');
 const { cloudinary } = require('../config/cloudinary');
+const asyncHandler = require('express-async-handler');
 
 /**
  * @desc    Get all vehicles
@@ -21,104 +22,113 @@ const getVehicles = async (req, res, next) => {
 
 /**
  * @desc    Register a new vehicle
- * @route   POST /api/vehicles
- * @access  Private/Officer/Admin/Investigator
+ * @route   POST /api/vehicles/register
+ * @access  Private (Officer, Admin, Investigator)
  */
-const registerVehicle = async (req, res, next) => {
+const registerVehicle = asyncHandler(async (req, res) => {
   try {
-    const { 
-      make, 
-      model, 
-      year, 
+    // Extract vehicle data from request body
+    const {
+      licensePlate,
       vin,
-      licensePlate, 
-      color, 
+      make,
+      model,
+      year,
+      color,
       registrationState,
+      ownerName,
+      ownerContact,
+      ownerAddress,
       registrationExpiry,
       insuranceProvider,
       insurancePolicyNumber,
       insuranceExpiry,
-      owner,
-      complianceDetails,
-      status,
-      location
+      status = 'active'
     } = req.body;
 
-    // Check if vehicle with this VIN already exists
-    const vehicleExists = await Vehicle.findOne({ vin });
-    if (vehicleExists) {
-      return res.status(400).json({ 
-        message: 'Vehicle with this VIN already exists',
-        existingVehicle: {
-          _id: vehicleExists._id,
-          make: vehicleExists.make,
-          model: vehicleExists.model,
-          year: vehicleExists.year,
-          licensePlate: vehicleExists.licensePlate
-        }
+    // Check for required fields
+    if (!licensePlate || !vin || !make || !model) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields: license plate, VIN, make, and model'
       });
     }
 
-    // Check if vehicle with this license plate already exists
-    const licensePlateExists = await Vehicle.findOne({ licensePlate });
-    if (licensePlateExists) {
-      return res.status(409).json({ 
-        message: `Vehicle with license plate "${licensePlate}" already exists`,
-        existingVehicle: {
-          _id: licensePlateExists._id,
-          make: licensePlateExists.make,
-          model: licensePlateExists.model,
-          year: licensePlateExists.year,
-          licensePlate: licensePlateExists.licensePlate
-        }
+    // Set registrationNumber to licensePlate if not provided
+    const registrationNumber = req.body.registrationNumber || licensePlate;
+
+    // Check if vehicle with same VIN already exists
+    const existingVehicleByVin = await Vehicle.findOne({ vin });
+    if (existingVehicleByVin) {
+      return res.status(400).json({
+        success: false,
+        message: `Vehicle with VIN ${vin} is already registered`
+      });
+    }
+
+    // Check if vehicle with same license plate already exists
+    const existingVehicleByPlate = await Vehicle.findOne({ licensePlate });
+    if (existingVehicleByPlate) {
+      return res.status(400).json({
+        success: false,
+        message: `Vehicle with license plate ${licensePlate} is already registered`
       });
     }
 
     // Create vehicle
     const vehicle = await Vehicle.create({
+      registrationNumber,
+      licensePlate,
+      vin,
       make,
       model,
       year,
-      vin,
-      licensePlate,
       color,
       registrationState,
-      registrationExpiry: registrationExpiry ? new Date(registrationExpiry) : undefined,
+      ownerName,
+      ownerContact,
+      ownerAddress,
+      registrationExpiry,
       insuranceProvider,
       insurancePolicyNumber,
-      insuranceExpiry: insuranceExpiry ? new Date(insuranceExpiry) : undefined,
-      owner,
-      complianceDetails,
-      status: status || 'active',
-      location: location || {
-        type: 'Point',
-        coordinates: [0, 0]
-      },
-      registeredBy: req.user._id,
-      vehicleImages: [],
-      mainImage: ''
+      insuranceExpiry,
+      status
     });
 
-    if (vehicle) {
-      // Create audit log
-      await createAuditLog(
-        req,
-        'create',
-        'vehicle',
-        vehicle._id,
-        `Vehicle registered: ${year} ${make} ${model} (${licensePlate})`,
-        true
-      );
+    // Log the action using the createAuditLog utility
+    await createAuditLog(
+      req,
+      'create',
+      'vehicle',
+      vehicle._id,
+      `Vehicle ${registrationNumber} (${make} ${model}) registered by ${req.user.name}`,
+      true
+    );
 
-      res.status(201).json(vehicle);
-      logger.info(`Vehicle registered: ${vehicle.vin} by user ${req.user._id}`);
-    } else {
-      res.status(400).json({ message: 'Invalid vehicle data' });
-    }
+    res.status(201).json({
+      success: true,
+      message: 'Vehicle registered successfully',
+      vehicle
+    });
   } catch (error) {
-    next(error);
+    // Handle duplicate key errors
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      const value = error.keyValue[field];
+      return res.status(400).json({
+        success: false,
+        message: `A vehicle with this ${field} (${value}) is already registered`
+      });
+    }
+    
+    console.error('Vehicle registration error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error during vehicle registration',
+      error: error.message
+    });
   }
-};
+});
 
 /**
  * @desc    Get vehicle by ID
@@ -174,8 +184,24 @@ const deleteVehicle = async (req, res, next) => {
       return res.status(404).json({ message: 'Vehicle not found' });
     }
 
-    await vehicle.remove();
-    res.json({ message: 'Vehicle removed' });
+    // Use findByIdAndDelete instead of remove() which is deprecated
+    await Vehicle.findByIdAndDelete(req.params.id);
+    
+    // Create audit log
+    await createAuditLog(
+      req,
+      'delete',
+      'vehicle',
+      vehicle._id,
+      `Vehicle deleted: ${vehicle.year} ${vehicle.make} ${vehicle.model} (${vehicle.licensePlate})`,
+      true
+    );
+
+    res.json({ 
+      success: true,
+      message: 'Vehicle removed successfully' 
+    });
+    logger.info(`Vehicle deleted: ${vehicle.vin} by user ${req.user._id}`);
   } catch (error) {
     next(error);
   }

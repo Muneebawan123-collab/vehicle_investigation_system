@@ -13,9 +13,15 @@ dotenv.config();
 
 // Import utilities and configurations
 const connectDB = require('./config/database');
-const logger = require('./utils/logger');
+const logger = require('./config/logger');
 const { notFound, errorHandler, mongooseValidationError, duplicateKeyError } = require('./middleware/errorMiddleware');
 const { testCloudinaryConnection } = require('./config/cloudinary');
+const userRoutes = require('./routes/userRoutes');
+const vehicleRoutes = require('./routes/vehicleRoutes');
+const incidentRoutes = require('./routes/incidentRoutes');
+const documentRoutes = require('./routes/documentRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const trafficRoutes = require('./routes/trafficRoutes');
 
 // Create Express app
 const app = express();
@@ -25,15 +31,16 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB Connected'))
-.catch(err => console.error('MongoDB Connection Error:', err));
-
-// Test Cloudinary connection
-testCloudinaryConnection();
+connectDB()
+  .then(() => {
+    logger.info('MongoDB Connected Successfully');
+    // Test Cloudinary connection after MongoDB is connected
+    testCloudinaryConnection();
+  })
+  .catch(err => {
+    logger.error('MongoDB Connection Error:', err);
+    process.exit(1);
+  });
 
 // Create logs directory if it doesn't exist
 const logsDir = path.join(__dirname, 'logs');
@@ -71,10 +78,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/vehicles', require('./routes/vehicleRoutes'));
-app.use('/api/incidents', require('./routes/incidentRoutes'));
-app.use('/api/documents', require('./routes/documentRoutes'));
+app.use('/api/users', userRoutes);
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/incidents', incidentRoutes);
+app.use('/api/documents', documentRoutes);
+app.use('/api/chats', chatRoutes);
+app.use('/api/traffic', trafficRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

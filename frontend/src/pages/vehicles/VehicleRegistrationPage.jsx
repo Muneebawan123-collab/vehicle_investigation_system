@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Input, Button, Select, DatePicker, message, Alert, Row, Col, Card } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { CarOutlined } from '@ant-design/icons';
@@ -12,7 +12,7 @@ const VehicleRegistrationPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
   const { user, isAuthenticated, hasRole } = useAuth();
 
   useEffect(() => {
@@ -25,10 +25,10 @@ const VehicleRegistrationPage = () => {
     }
 
     if (!hasRole('officer') && !hasRole('admin') && !hasRole('investigator')) {
-      setError('You do not have permission to register vehicles. Please contact an administrator.');
+      setFormErrors({ message: 'You do not have permission to register vehicles. Please contact an administrator.' });
     }
 
-    // Initialize form with default values
+    // Initialize all form fields with empty values to avoid undefined errors
     form.setFieldsValue({
       licensePlate: '',
       vin: '',
@@ -39,59 +39,34 @@ const VehicleRegistrationPage = () => {
       registrationState: '',
       ownerName: '',
       ownerContact: '',
-      ownerAddress: ''
+      ownerAddress: '',
+      // Optional fields can also be initialized
+      registrationExpiry: null,
+      insuranceProvider: '',
+      insurancePolicyNumber: '',
+      insuranceExpiry: null
     });
+
+    // Set page title
+    document.title = 'Register Vehicle | Vehicle Investigation System';
   }, [isAuthenticated, hasRole, navigate, user, form]);
 
-  const handleSubmit = async (values) => {
+  const onFinish = useCallback(async (values) => {
+    setLoading(true);
+    setFormErrors({});
+    console.log('Form values being submitted:', values);
+
     try {
-      setLoading(true);
-      setError(null);
-
-      // Log form values before submission
-      console.log('Form values before submission:', values);
-
-      // Validate required fields
-      if (!values.licensePlate) {
-        throw new Error('License plate is required');
-      }
-
-      const licensePlate = values.licensePlate.toUpperCase().trim();
-      if (!licensePlate) {
-        throw new Error('License plate cannot be empty');
-      }
-
-      // Format the data to match backend model
-      const vehicleData = {
-        licensePlate: licensePlate,
-        make: values.make?.trim() || '',
-        model: values.model?.trim() || '',
-        year: values.year ? parseInt(values.year) : null,
-        vin: values.vin?.toUpperCase().trim() || '',
-        color: values.color?.trim() || '',
-        registrationState: values.registrationState?.trim() || '',
-        registrationExpiry: values.registrationExpiry?.toISOString() || null,
-        insuranceProvider: values.insuranceProvider?.trim() || null,
-        insurancePolicyNumber: values.insurancePolicyNumber?.trim() || null,
-        insuranceExpiry: values.insuranceExpiry?.toISOString() || null,
-        owner: {
-          name: values.ownerName?.trim() || '',
-          contact: {
-            phone: values.ownerContact?.trim() || '',
-            email: values.ownerEmail?.trim() || '',
-            address: values.ownerAddress?.trim() || ''
-          }
-        },
-        status: 'active'
+      // Format dates if they exist
+      const formattedValues = {
+        ...values,
+        registrationExpiry: values.registrationExpiry ? values.registrationExpiry.format('YYYY-MM-DD') : undefined,
+        insuranceExpiry: values.insuranceExpiry ? values.insuranceExpiry.format('YYYY-MM-DD') : undefined
       };
 
-      // Log the data being sent
-      console.log('Sending vehicle data:', JSON.stringify(vehicleData, null, 2));
-
-      // Make API call
       const response = await axios.post(
-        `${API_BASE_URL}/api/vehicles`,
-        vehicleData,
+        `${API_BASE_URL}/api/vehicles/register`,
+        formattedValues,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -99,55 +74,41 @@ const VehicleRegistrationPage = () => {
           }
         }
       );
-
-      console.log('Registration successful:', response.data);
-      message.success('Vehicle registered successfully!');
-      form.resetFields();
-      navigate('/vehicles');
-
-    } catch (error) {
-      console.error('Registration error:', error);
+      console.log('Vehicle registration response:', response.data);
       
-      let errorMessage = 'Failed to register vehicle. ';
-
-      if (error.response) {
-        console.error('Server response:', error.response.data);
-        
-        if (error.response.status === 401) {
-          errorMessage = 'Please log in to register a vehicle';
-          navigate('/login');
-        } else if (error.response.status === 403) {
-          errorMessage = 'You do not have permission to register vehicles';
-        } else if (error.response.status === 409) {
-          errorMessage = `A vehicle with license plate "${values.licensePlate}" already exists`;
-        } else if (error.response.status === 400) {
-          errorMessage = 'Validation failed: ' + (error.response.data?.message || 'Please check all required fields');
-          if (error.response.data?.errors) {
-            const errors = Object.entries(error.response.data.errors)
-              .map(([field, msg]) => `${field}: ${msg}`)
-              .join(', ');
-            errorMessage += ` (${errors})`;
-          }
-        } else {
-          errorMessage += error.response.data?.message || 'An unknown error occurred';
-        }
-      } else if (error.message) {
-        errorMessage += error.message;
+      if (response.data.success) {
+        message.success('Vehicle registered successfully!');
+        form.resetFields();
+        navigate('/vehicles');
+      } else {
+        // Handle case where API returns a failure status
+        message.error(response.data.message || 'Failed to register vehicle');
+        setFormErrors(response.data.errors || {});
       }
-
-      setError(errorMessage);
-      message.error(errorMessage);
+    } catch (error) {
+      console.error('Vehicle registration error:', error);
+      
+      if (error.response && error.response.data) {
+        message.error(error.response.data.message || 'Failed to register vehicle');
+        
+        // If there are validation errors, mark the fields
+        if (error.response.data.errors) {
+          setFormErrors(error.response.data.errors);
+        }
+      } else {
+        message.error('An error occurred during registration');
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [form, navigate]);
 
-  if (error) {
+  if (formErrors.message) {
     return (
       <div style={{ padding: '24px' }}>
         <Alert
           message="Error"
-          description={error}
+          description={formErrors.message}
           type="error"
           showIcon
         />
@@ -159,45 +120,62 @@ const VehicleRegistrationPage = () => {
     <div style={{ 
       padding: '24px',
       marginTop: '750px',
-      minHeight: 'calc(100vh - 80px)'
+      minHeight: 'calc(100vh - 80px)',
+      position: 'relative',
+      zIndex: 1
     }}>
       <div style={{ 
         maxWidth: 800, 
         margin: '0 auto',
-        padding: '24px',
+        padding: '32px',
         backgroundColor: '#fff',
         borderRadius: '8px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
       }}>
-        <h1 style={{ marginBottom: '24px' }}>
-          <CarOutlined /> Register New Vehicle
+        <h1 style={{ marginBottom: '32px', fontSize: '28px' }}>
+          <CarOutlined style={{ marginRight: '12px' }} /> Register New Vehicle
         </h1>
         
-        <Card>
+        {formErrors.message && (
+          <Alert
+            message="Error"
+            description={formErrors.message}
+            type="error"
+            showIcon
+            style={{ marginBottom: '24px' }}
+            closable
+          />
+        )}
+        
+        <Card 
+          title="Register New Vehicle" 
+          variant="outlined"
+          style={{ maxWidth: 800, margin: '0 auto' }}
+        >
           <Form
             form={form}
-            name="vehicle-registration"
             layout="vertical"
-            size="large"
+            onFinish={onFinish}
             initialValues={{
               status: 'active'
             }}
-            onFinish={handleSubmit}
           >
-            <h3 style={{ marginBottom: '16px' }}>Vehicle Information</h3>
+            <h3 style={{ marginBottom: '16px', fontSize: '18px', borderBottom: '1px solid #f0f0f0', paddingBottom: '8px' }}>Vehicle Information</h3>
             
-            <Row gutter={16}>
+            <Row gutter={24}>
               <Col span={12}>
                 <Form.Item
                   name="licensePlate"
                   label="License Plate"
                   rules={[
-                    { required: true, message: 'Please input the license plate!' },
-                    { pattern: /^[A-Z0-9-]+$/, message: 'Please enter a valid license plate (letters, numbers, and hyphens only)!' }
+                    { required: true, message: 'Please enter the license plate' },
+                    { pattern: /^[A-Z0-9-]+$/, message: 'Please enter a valid license plate (letters, numbers, and hyphens only)' }
                   ]}
+                  tooltip="License plate of the vehicle"
                 >
                   <Input 
                     placeholder="e.g., ABC-123" 
+                    maxLength={20}
                     onChange={(e) => {
                       const value = e.target.value.toUpperCase();
                       form.setFieldsValue({ licensePlate: value });
@@ -211,12 +189,14 @@ const VehicleRegistrationPage = () => {
                   name="vin"
                   label="VIN"
                   rules={[
-                    { required: true, message: 'Please input the VIN!' },
-                    { pattern: /^[A-HJ-NPR-Z0-9]{17}$/, message: 'Please enter a valid 17-character VIN!' }
+                    { required: true, message: 'Please enter the VIN' },
+                    { pattern: /^[A-HJ-NPR-Z0-9]{17}$/, message: 'Please enter a valid 17-character VIN' }
                   ]}
+                  tooltip="Vehicle Identification Number (17 characters)"
                 >
                   <Input 
                     placeholder="Enter 17-character VIN"
+                    maxLength={17}
                     onChange={(e) => {
                       const value = e.target.value.toUpperCase();
                       form.setFieldsValue({ vin: value });
@@ -409,25 +389,42 @@ const VehicleRegistrationPage = () => {
                 type="primary" 
                 htmlType="submit" 
                 loading={loading} 
-                block
+                size="large"
                 disabled={!isAuthenticated || (!hasRole('officer') && !hasRole('admin') && !hasRole('investigator'))}
-                style={{ marginTop: '24px' }}
+                style={{ marginTop: '24px', height: '48px', fontSize: '16px' }}
+                icon={<CarOutlined />}
               >
                 Register Vehicle
               </Button>
+              <Button 
+                htmlType="button" 
+                onClick={() => form.resetFields()}
+                style={{ marginTop: '24px', marginLeft: '16px' }}
+                disabled={loading}
+              >
+                Reset Form
+              </Button>
             </Form.Item>
+            
+            {!isAuthenticated && (
+              <Alert 
+                message="Authentication Required" 
+                description="You need to login to register a vehicle" 
+                type="warning" 
+                showIcon 
+              />
+            )}
+            
+            {isAuthenticated && !hasRole('officer') && !hasRole('admin') && !hasRole('investigator') && (
+              <Alert 
+                message="Permission Required" 
+                description="You don't have permission to register vehicles. Please contact an administrator." 
+                type="warning" 
+                showIcon 
+              />
+            )}
           </Form>
         </Card>
-
-        {error && (
-          <Alert
-            message="Error"
-            description={error}
-            type="error"
-            showIcon
-            style={{ marginTop: '16px' }}
-          />
-        )}
       </div>
     </div>
   );

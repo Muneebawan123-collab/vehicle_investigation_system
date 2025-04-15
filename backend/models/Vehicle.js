@@ -1,42 +1,69 @@
 const mongoose = require('mongoose');
 
 const vehicleSchema = new mongoose.Schema({
-  make: {
+  registrationNumber: {
     type: String,
-    required: true,
-    trim: true
-  },
-  model: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  year: {
-    type: Number,
-    required: true
+    trim: true,
+    unique: true,
+    sparse: true, // This allows null/undefined values without triggering unique constraint
+    index: true // Explicitly define as an index
   },
   vin: {
     type: String,
-    required: true,
+    required: [true, 'VIN is required'],
     unique: true,
     trim: true,
     uppercase: true
   },
   licensePlate: {
     type: String,
-    required: true,
+    required: [true, 'License plate is required'],
     unique: true,
     trim: true,
     uppercase: true
   },
+  make: {
+    type: String,
+    required: [true, 'Vehicle make is required'],
+    trim: true
+  },
+  model: {
+    type: String,
+    required: [true, 'Vehicle model is required'],
+    trim: true
+  },
+  year: {
+    type: Number,
+    required: [true, 'Vehicle year is required']
+  },
   color: {
     type: String,
-    required: true,
+    required: [true, 'Vehicle color is required'],
     trim: true
   },
   registrationState: {
     type: String,
-    required: true,
+    required: [true, 'Registration state is required'],
+    trim: true
+  },
+  ownerName: {
+    type: String,
+    required: [true, 'Owner name is required'],
+    trim: true
+  },
+  ownerContact: {
+    type: String,
+    required: [true, 'Owner contact is required'],
+    trim: true
+  },
+  ownerEmail: {
+    type: String,
+    trim: true,
+    lowercase: true
+  },
+  ownerAddress: {
+    type: String,
+    required: [true, 'Owner address is required'],
     trim: true
   },
   registrationExpiry: {
@@ -53,91 +80,22 @@ const vehicleSchema = new mongoose.Schema({
   insuranceExpiry: {
     type: Date
   },
-  owner: {
-    name: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    contact: {
-      phone: {
-        type: String,
-        required: true,
-        trim: true
-      },
-      email: {
-        type: String,
-        trim: true,
-        lowercase: true
-      },
-      address: {
-        type: String,
-        required: true,
-        trim: true
-      }
-    }
-  },
-  complianceDetails: {
-    emissions: {
-      type: Map,
-      of: String
-    },
-    safety: {
-      type: Map,
-      of: String
-    }
-  },
   status: {
     type: String,
-    enum: ['active', 'stolen', 'recovered', 'scrapped'],
+    enum: ['active', 'stolen', 'recovered', 'impounded'],
     default: 'active'
   },
-  location: {
-    type: {
-      type: String,
-      enum: ['Point'],
-      default: 'Point'
-    },
-    coordinates: {
-      type: [Number],
-      default: [0, 0]
-    }
-  },
-  registeredBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  updatedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  vehicleImages: [{
-    type: String
-  }],
-  mainImage: {
-    type: String
-  },
-  notes: [{
-    content: String,
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
-  }]
+  lastUpdated: {
+    type: Date,
+    default: Date.now
+  }
 }, {
   timestamps: true
 });
 
-// Create indexes for efficient querying
-vehicleSchema.index({ vin: 1 });
-vehicleSchema.index({ licensePlate: 1 });
-vehicleSchema.index({ 'owner.name': 1 });
-vehicleSchema.index({ status: 1 });
-vehicleSchema.index({ location: '2dsphere' });
+// We don't need to re-declare the indexes since they're already in the schema definition
+// The schema will automatically create indexes for fields marked as unique
 
-module.exports = mongoose.model('Vehicle', vehicleSchema); 
+const Vehicle = mongoose.model('Vehicle', vehicleSchema);
+
+module.exports = Vehicle; 

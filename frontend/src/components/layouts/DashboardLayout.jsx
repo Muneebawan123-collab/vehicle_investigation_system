@@ -44,9 +44,11 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import ChatIcon from '@mui/icons-material/Chat';
 
 // Context
 import { useAuth } from '../../context/AuthContext';
+import { useChat } from '../../context/ChatContext';
 
 // Constants
 const drawerWidth = 260;
@@ -55,12 +57,15 @@ const drawerWidth = 260;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(4),
+    paddingTop: theme.spacing(10),
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: `-${drawerWidth}px`,
+    position: 'relative',
+    zIndex: 1,
     ...(open && {
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.easeOut,
@@ -75,12 +80,15 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(0, 1),
+  minHeight: '64px',
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
 }));
 
 const StyledAppBar = styled(AppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    position: 'fixed',
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -102,11 +110,14 @@ const menuItems = [
   { text: 'Vehicles', icon: <DirectionsCarIcon />, path: '/vehicles' },
   { text: 'Incidents', icon: <ReportIcon />, path: '/incidents' },
   { text: 'Documents', icon: <DescriptionIcon />, path: '/documents' },
+  { text: 'Messages', icon: <ChatIcon />, path: '/messages' },
   { text: 'Profile', icon: <PersonIcon />, path: '/profile' },
 ];
 
 const adminMenuItems = [
   { text: 'User Management', icon: <PeopleIcon />, path: '/admin/users' },
+  { text: 'Manage Users', icon: <PeopleIcon />, path: '/admin/manage-users' },
+  { text: 'Promote Muneeb', icon: <PersonIcon />, path: '/admin/promote-muneeb' },
   { text: 'System Logs', icon: <DescriptionIcon />, path: '/admin/logs' },
   { text: 'Settings', icon: <SettingsIcon />, path: '/admin/settings' },
 ];
@@ -118,6 +129,7 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
   const [notificationsAnchorEl, setNotificationsAnchorEl] = useState(null);
   
   const { user, loading, logout, hasRole } = useAuth();
+  const { unreadCount } = useChat();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -259,7 +271,15 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
                 },
               }}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemIcon>
+                {item.text === 'Messages' ? (
+                  <Badge color="error" badgeContent={unreadCount} invisible={!unreadCount}>
+                    <ChatIcon />
+                  </Badge>
+                ) : (
+                  item.icon
+                )}
+              </ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>
           </ListItem>
@@ -424,6 +444,14 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
           </ListItemIcon>
           <ListItemText>Settings</ListItemText>
         </MenuItem>
+        {user?.email === 'muneeb@123.com' && (
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/admin/promote-muneeb'); }}>
+            <ListItemIcon>
+              <PersonIcon fontSize="small" color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Promote to Admin" primaryTypographyProps={{ color: 'primary' }} />
+          </MenuItem>
+        )}
         <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
@@ -469,13 +497,13 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
       
       {/* Main Content */}
       <Main open={drawerOpen}>
-        <DrawerHeader />
+        <Box sx={{ height: theme => theme.spacing(6) }} />
         
         {/* Breadcrumbs */}
         <Breadcrumbs 
           separator={<NavigateNextIcon fontSize="small" />}
           aria-label="breadcrumb"
-          sx={{ mb: 3 }}
+          sx={{ mb: 3, mt: 2 }}
         >
           {breadcrumbs.map((crumb, index) => {
             const isLast = index === breadcrumbs.length - 1;
@@ -506,12 +534,21 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
         </Breadcrumbs>
         
         {/* Page Content */}
-        <Container maxWidth="xl" disableGutters>
+        <Container 
+          maxWidth="xl" 
+          disableGutters
+          sx={{ 
+            pt: 2, 
+            position: 'relative',
+            zIndex: 1
+          }}
+        >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
+            style={{ paddingTop: '10px' }}
           >
             <Outlet />
           </motion.div>

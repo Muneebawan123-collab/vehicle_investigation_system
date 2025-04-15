@@ -37,17 +37,32 @@ const SettingsPage = () => {
       const response = await axios.get('/api/settings', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setSettings(response.data);
+      
+      // Ensure all boolean fields have default values if undefined
+      const receivedSettings = response.data || {};
+      const safeSettings = {
+        ...settings, // Keep defaults
+        ...receivedSettings,
+        // Ensure boolean values are never undefined
+        emailNotifications: receivedSettings.emailNotifications === undefined ? 
+          settings.emailNotifications : Boolean(receivedSettings.emailNotifications),
+        smsNotifications: receivedSettings.smsNotifications === undefined ? 
+          settings.smsNotifications : Boolean(receivedSettings.smsNotifications),
+        maintenanceMode: receivedSettings.maintenanceMode === undefined ? 
+          settings.maintenanceMode : Boolean(receivedSettings.maintenanceMode),
+      };
+      
+      setSettings(safeSettings);
     } catch (error) {
       console.error('Error fetching settings:', error);
     }
   };
 
   const handleChange = (e) => {
-    const { name, value, checked } = e.target;
+    const { name, value, checked, type } = e.target;
     setSettings(prev => ({
       ...prev,
-      [name]: e.target.type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : (value || '') // Ensure non-checkbox values are never undefined
     }));
   };
 
@@ -95,7 +110,7 @@ const SettingsPage = () => {
                 fullWidth
                 label="System Name"
                 name="systemName"
-                value={settings.systemName}
+                value={settings.systemName || ''}
                 onChange={handleChange}
               />
             </Grid>
@@ -111,7 +126,7 @@ const SettingsPage = () => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={settings.emailNotifications}
+                    checked={Boolean(settings.emailNotifications)}
                     onChange={handleChange}
                     name="emailNotifications"
                   />
@@ -121,7 +136,7 @@ const SettingsPage = () => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={settings.smsNotifications}
+                    checked={Boolean(settings.smsNotifications)}
                     onChange={handleChange}
                     name="smsNotifications"
                   />
@@ -143,7 +158,7 @@ const SettingsPage = () => {
                 type="number"
                 label="Document Retention Period (days)"
                 name="documentRetentionDays"
-                value={settings.documentRetentionDays}
+                value={settings.documentRetentionDays || 30}
                 onChange={handleChange}
                 sx={{ mb: 2 }}
               />
@@ -152,7 +167,7 @@ const SettingsPage = () => {
                 type="number"
                 label="Maximum File Size (MB)"
                 name="maxFileSize"
-                value={settings.maxFileSize}
+                value={settings.maxFileSize || 10}
                 onChange={handleChange}
               />
             </Grid>
@@ -168,7 +183,7 @@ const SettingsPage = () => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={settings.maintenanceMode}
+                    checked={Boolean(settings.maintenanceMode)}
                     onChange={handleChange}
                     name="maintenanceMode"
                   />

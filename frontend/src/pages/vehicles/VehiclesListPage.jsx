@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Input, Space, message } from 'antd';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import { Table, Button, Input, Space, message, Alert } from 'antd';
+import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 const API_BASE_URL = 'http://localhost:5000';
 
@@ -11,6 +12,9 @@ const VehiclesListPage = () => {
   const [loading, setLoading] = useState(false);
   const [vehicles, setVehicles] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const { currentUser } = useAuth();
+  const isAdmin = currentUser?.role === 'admin';
+  
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -121,18 +125,66 @@ const VehiclesListPage = () => {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
-        <Button
-          type="link"
-          onClick={() => navigate(`/vehicles/${record._id}`)}
-        >
-          View Details
-        </Button>
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => navigate(`/vehicles/${record._id}`)}
+          >
+            View Details
+          </Button>
+          {isAdmin && (
+            <>
+              <Button
+                type="default"
+                icon={<EditOutlined />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/vehicles/edit/${record._id}`);
+                }}
+              >
+                Edit
+              </Button>
+              <Button
+                type="primary"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteVehicle(record._id);
+                }}
+              >
+                Delete
+              </Button>
+            </>
+          )}
+        </Space>
       ),
     },
   ];
 
+  // Add delete handler
+  const handleDeleteVehicle = async (id) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/api/vehicles/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      message.success('Vehicle deleted successfully');
+      fetchVehicles(pagination.current, pagination.pageSize);
+    } catch (error) {
+      console.error('Error deleting vehicle:', error);
+      message.error(error.response?.data?.message || 'Failed to delete vehicle');
+    }
+  };
+
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ 
+      padding: '24px',
+      paddingTop: '100px', // Add space for the navbar
+      position: 'relative',
+      zIndex: 0
+    }}>
       <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
         <Input
           placeholder="Search by registration number"
@@ -149,6 +201,17 @@ const VehiclesListPage = () => {
           Register New Vehicle
         </Button>
       </div>
+
+      {!isAdmin && (
+        <Alert
+          message="Read-only Mode"
+          description="You can view vehicle details, but only administrators can edit or delete vehicles."
+          type="info"
+          showIcon
+          icon={<InfoCircleOutlined />}
+          style={{ marginBottom: '16px' }}
+        />
+      )}
 
       <Table
         columns={columns}

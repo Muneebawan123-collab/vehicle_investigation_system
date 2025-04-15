@@ -33,9 +33,13 @@ const SystemLogsPage = () => {
       const response = await axios.get('/api/logs', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setLogs(response.data);
+      // Ensure logs is always an array
+      const logsData = Array.isArray(response.data) ? response.data : [];
+      setLogs(logsData);
     } catch (error) {
       console.error('Error fetching logs:', error);
+      // Set empty array on error to avoid .filter errors
+      setLogs([]);
     } finally {
       setLoading(false);
     }
@@ -54,11 +58,12 @@ const SystemLogsPage = () => {
     setPage(0);
   };
 
-  const filteredLogs = logs.filter(log =>
-    log.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    log.level.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    log.timestamp.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Make sure logs is an array before filtering
+  const filteredLogs = Array.isArray(logs) ? logs.filter(log =>
+    (log.message?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+    (log.level?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+    (log.timestamp?.toLowerCase() || '').includes(searchTerm.toLowerCase())
+  ) : [];
 
   return (
     <Box sx={{ p: 3 }}>
@@ -103,7 +108,7 @@ const SystemLogsPage = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((log, index) => (
                 <TableRow key={index}>
-                  <TableCell>{new Date(log.timestamp).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(log.timestamp || '').toLocaleString()}</TableCell>
                   <TableCell>
                     <Typography
                       sx={{
@@ -115,10 +120,10 @@ const SystemLogsPage = () => {
                             : 'success.main',
                       }}
                     >
-                      {log.level.toUpperCase()}
+                      {(log.level || '').toUpperCase()}
                     </Typography>
                   </TableCell>
-                  <TableCell>{log.message}</TableCell>
+                  <TableCell>{log.message || ''}</TableCell>
                   <TableCell>{log.user || 'System'}</TableCell>
                 </TableRow>
               ))}
