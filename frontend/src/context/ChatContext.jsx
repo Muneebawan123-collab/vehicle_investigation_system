@@ -21,13 +21,17 @@ export const ChatProvider = ({ children }) => {
     
     try {
       const response = await api.get('/api/chats');
-      setChats(response.data.chats);
+      // Make sure response.data.chats exists and is an array
+      const chatsList = response.data?.chats || [];
+      setChats(chatsList);
       
       // Calculate unread count
       let count = 0;
-      response.data.chats.forEach(chat => {
-        if (chat.unreadCount) count += chat.unreadCount;
-      });
+      if (Array.isArray(chatsList)) {
+        chatsList.forEach(chat => {
+          if (chat && chat.unreadCount) count += chat.unreadCount;
+        });
+      }
       setUnreadCount(count);
     } catch (err) {
       setError(err.response?.data?.message || 'Could not fetch chats');
@@ -132,9 +136,11 @@ export const ChatProvider = ({ children }) => {
   // Calculate total unread messages
   const calculateUnreadCount = useCallback(() => {
     let count = 0;
-    chats.forEach(chat => {
-      if (chat.unreadCount) count += chat.unreadCount;
-    });
+    if (Array.isArray(chats)) {
+      chats.forEach(chat => {
+        if (chat && chat.unreadCount) count += chat.unreadCount;
+      });
+    }
     setUnreadCount(count);
   }, [chats]);
 

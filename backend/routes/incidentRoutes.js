@@ -10,7 +10,10 @@ const {
   updateIncident,
   deleteIncident,
   getIncidentsByVehicle,
-  getIncidentsByUser
+  getIncidentsByUser,
+  assignIncident,
+  submitInvestigationReport,
+  reviewInvestigationReport
 } = require('../controllers/incidentController');
 
 // Validation middleware
@@ -29,7 +32,7 @@ const updateIncidentValidation = [
   check('description', 'Description is required if provided').optional().not().isEmpty(),
   check('incidentType', 'Valid incident type is required if provided')
     .optional()
-    .isIn(['accident', 'theft', 'vandalism', 'other']),
+    .isIn(['accident', 'theft', 'vandalism', 'traffic_violation', 'dui', 'abandoned', 'suspicious_activity', 'other']),
   check('severity', 'Valid severity is required if provided')
     .optional()
     .isIn(['low', 'medium', 'high', 'critical']),
@@ -38,7 +41,7 @@ const updateIncidentValidation = [
     .isMongoId(),
   check('status', 'Valid status is required if provided')
     .optional()
-    .isIn(['Open', 'In Progress', 'Resolved', 'Closed'])
+    .isIn(['open', 'under_investigation', 'pending', 'closed', 'reopened'])
 ];
 
 // @route   GET api/incidents
@@ -81,5 +84,43 @@ router.put('/:id', [
 // @desc    Delete incident
 // @access  Private (Admin only)
 router.delete('/:id', [protect, authorize('admin')], deleteIncident);
+
+// New Routes for the Incident Workflow
+
+// @route   POST api/incidents/:id/assign
+// @desc    Assign incident to investigator (Admin only)
+// @access  Private (Admin only)
+router.post('/:id/assign', [
+  protect, 
+  authorize('admin'),
+  check('investigatorId', 'Investigator ID is required').isMongoId(),
+  check('priority', 'Valid priority is required if provided')
+    .optional()
+    .isIn(['low', 'medium', 'high', 'urgent'])
+], assignIncident);
+
+// @route   POST api/incidents/:id/report
+// @desc    Submit investigation report (Investigator only)
+// @access  Private (Investigator only)
+router.post('/:id/report', [
+  protect, 
+  authorize('investigator'),
+  check('findings', 'Findings are required').not().isEmpty(),
+  check('recommendations', 'Recommendations are required').not().isEmpty(),
+  check('conclusion', 'Valid conclusion is required')
+    .isIn(['substantiated', 'unsubstantiated', 'inconclusive']),
+  check('reportContent', 'Report content is required').not().isEmpty()
+], submitInvestigationReport);
+
+// @route   POST api/incidents/:id/review
+// @desc    Review investigation report (Officer only)
+// @access  Private (Officer only)
+router.post('/:id/review', [
+  protect, 
+  authorize('officer'),
+  check('actions', 'Actions are required').not().isEmpty(),
+  check('reportStatus', 'Valid report status is required')
+    .isIn(['approved', 'rejected'])
+], reviewInvestigationReport);
 
 module.exports = router; 

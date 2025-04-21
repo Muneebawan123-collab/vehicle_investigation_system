@@ -1,12 +1,22 @@
-import React, { useMemo } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { Form, Input, Button, Card, message, Progress } from 'antd';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { Form, Input, Button, Card, message, Progress, Upload, Avatar, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { formatFileUrl } from '../../utils/imageUtils';
 
 const EditProfilePage = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(true);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(user?.profileImage);
+
+  // Debug log to see user data
+  console.log('Edit Profile - User Data:', user);
+  console.log('Edit Profile - Name value:', user?.name);
+  console.log('Edit Profile - Address value:', user?.address);
 
   // Calculate profile completion percentage
   const profileCompletion = useMemo(() => {
@@ -18,7 +28,8 @@ const EditProfilePage = () => {
       { name: 'email', label: 'Email', completed: !!user.email },
       { name: 'phone', label: 'Phone', completed: !!user.phone },
       { name: 'address', label: 'Address', completed: !!user.address },
-      { name: 'department', label: 'Department', completed: !!user.department }
+      { name: 'department', label: 'Department', completed: !!user.department },
+      { name: 'profileImage', label: 'Profile Picture', completed: !!user.profileImage }
     ];
 
     const completedFields = fields.filter(field => field.completed);
@@ -28,15 +39,109 @@ const EditProfilePage = () => {
     return { percent, missingFields };
   }, [user]);
 
-  const onFinish = async (values) => {
-    try {
-      await updateProfile(values);
-      message.success('Profile updated successfully');
-      navigate('/profile');
-    } catch (error) {
-      message.error('Failed to update profile');
+  const handleImageChange = (info) => {
+    if (info.file.status === 'done') {
+      // Get the uploaded file
+      setImageFile(info.file.originFileObj);
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(info.file.originFileObj);
+      
+      console.log('Image file prepared for upload:', info.file.originFileObj.name);
     }
   };
+
+  const onFinish = async (values) => {
+    try {
+      // Debug log form values
+      console.log('Form values before submit:', values);
+      
+      // Create FormData object to send file
+      const formData = new FormData();
+      
+      // Add all form values to FormData
+      Object.entries(values).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          formData.append(key, value);
+          console.log(`Adding ${key} to formData:`, value);
+        }
+      });
+      
+      // Append the image file if it exists
+      if (imageFile) {
+        formData.append('profileImage', imageFile);
+        console.log('Adding profileImage to formData');
+      }
+
+      // Log the form data for debugging
+      console.log('Submitting form data:', values);
+
+      // Show loading indicator
+      message.loading('Updating profile...', 0);
+      
+      const response = await updateProfile(formData);
+      
+      // Hide loading indicator
+      message.destroy();
+      
+      if (response && response.success) {
+        message.success('Profile updated successfully');
+        
+        // Wait a moment before navigating to ensure state is updated
+        setTimeout(() => {
+          navigate('/profile');
+        }, 800);
+      } else {
+        message.error('Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Profile update error:', error);
+      message.error(error.message || 'Failed to update profile');
+    }
+  };
+
+  // Add useEffect to update form values when user data changes
+  useEffect(() => {
+    if (user) {
+      console.log('Setting form values with user data:', {
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        department: user.department || ''
+      });
+      
+      form.setFieldsValue({
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        department: user.department || ''
+      });
+      
+      setImagePreview(user.profileImage);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }, [user, form]);
+
+  // Show loading state
+  if (loading || authLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Spin spinning={true}>
+          <div style={{ padding: '50px', textAlign: 'center', backgroundColor: '#fafafa', borderRadius: '4px', minHeight: '200px', minWidth: '300px' }}>
+            <h3>Loading profile data...</h3>
+            <p>Please wait while we retrieve your information</p>
+          </div>
+        </Spin>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -53,6 +158,7 @@ const EditProfilePage = () => {
           <Progress 
             percent={profileCompletion.percent} 
             status={profileCompletion.percent === 100 ? 'success' : 'active'} 
+            size={8}
           />
           
           {profileCompletion.missingFields.length > 0 && (
@@ -62,16 +168,33 @@ const EditProfilePage = () => {
           )}
         </div>
 
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <Avatar
+            size={100}
+            icon={<UserOutlined />}
+            src={imagePreview || formatFileUrl(user?.profileImage)}
+            style={{ marginBottom: 16 }}
+          />
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            customRequest={({ onSuccess }) => setTimeout(() => onSuccess("ok"), 0)}
+            onChange={handleImageChange}
+          >
+            <Button icon={<UploadOutlined />}>Change Profile Picture</Button>
+          </Upload>
+        </div>
+
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
           initialValues={{
-            name: user?.name,
-            email: user?.email,
-            phone: user?.phone,
-            address: user?.address,
-            department: user?.department
+            name: user?.name || '',
+            email: user?.email || '',
+            phone: user?.phone || '',
+            address: user?.address || '',
+            department: user?.department || ''
           }}
         >
           <Form.Item
@@ -79,7 +202,7 @@ const EditProfilePage = () => {
             label="Name"
             rules={[{ required: true, message: 'Please input your name!' }]}
           >
-            <Input />
+            <Input placeholder="Enter your full name" />
           </Form.Item>
 
           <Form.Item
@@ -90,7 +213,7 @@ const EditProfilePage = () => {
               { type: 'email', message: 'Please enter a valid email!' }
             ]}
           >
-            <Input />
+            <Input placeholder="Enter your email address" />
           </Form.Item>
 
           <Form.Item
@@ -109,7 +232,7 @@ const EditProfilePage = () => {
             label="Address"
             rules={[{ required: true, message: 'Please input your address!' }]}
           >
-            <Input.TextArea rows={3} />
+            <Input.TextArea rows={3} placeholder="Enter your complete address" />
           </Form.Item>
 
           <Form.Item
@@ -117,7 +240,7 @@ const EditProfilePage = () => {
             label="Department"
             rules={[{ required: true, message: 'Please input your department!' }]}
           >
-            <Input />
+            <Input placeholder="Enter your department" />
           </Form.Item>
 
           <Form.Item>

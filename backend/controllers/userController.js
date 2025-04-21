@@ -215,12 +215,11 @@ const updateUserProfile = async (req, res, next) => {
 
     if (user) {
       // Update basic info
-      user.firstName = req.body.firstName || user.firstName;
-      user.lastName = req.body.lastName || user.lastName;
+      user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
       user.phone = req.body.phone || user.phone;
       user.department = req.body.department || user.department;
-      user.badge = req.body.badge || user.badge;
+      user.address = req.body.address || user.address;
 
       // Update password if provided
       if (req.body.password) {
@@ -239,7 +238,8 @@ const updateUserProfile = async (req, res, next) => {
             });
             user.profileImage = result.secure_url;
           } else {
-            user.profileImage = `/uploads/${req.file.filename}`;
+            // Store the full URL for the image
+            user.profileImage = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
           }
         } catch (uploadError) {
           logger.error(`Profile image upload error: ${uploadError.message}`);
@@ -259,17 +259,20 @@ const updateUserProfile = async (req, res, next) => {
         true
       );
 
+      // Return updated user data
       res.json({
-        _id: updatedUser._id,
-        firstName: updatedUser.firstName,
-        lastName: updatedUser.lastName,
-        email: updatedUser.email,
-        role: updatedUser.role,
-        department: updatedUser.department,
-        badge: updatedUser.badge,
-        phone: updatedUser.phone,
-        profileImage: updatedUser.profileImage,
-        token: generateToken(updatedUser._id)
+        success: true,
+        message: 'Profile updated successfully',
+        user: {
+          _id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          role: updatedUser.role,
+          department: updatedUser.department,
+          phone: updatedUser.phone,
+          address: updatedUser.address,
+          profileImage: updatedUser.profileImage
+        }
       });
 
       logger.info(`User profile updated: ${updatedUser.email}`);
@@ -519,88 +522,116 @@ const resetPassword = async (req, res, next) => {
 
 /**
  * @desc    Update user role
- * @route   PUT /api/users/:id/role
+ * @route   PATCH /api/users/:id/role
  * @access  Private/Admin
  */
-const updateUserRole = async (req, res, next) => {
+const updateUserRole = async (req, res) => {
   try {
-    console.log(`Attempting to update role for user ID: ${req.params.id} to ${req.body.role}`);
-    
-    // Special case for Muneeb - using email as identifier
-    const MUNEEB_EMAIL = 'muneeb@123.com';
-    const isMuneebRequest = req.params.id === '67fdfab1c5f4f06ad5dced30';
-    let user;
-    
-    if (isMuneebRequest) {
-      console.log('Processing special case for Muneeb Awan');
-      
-      // Find Muneeb by email rather than ID
-      user = await User.findOne({ email: MUNEEB_EMAIL });
-      
-      if (user) {
-        console.log(`Found Muneeb by email: ${MUNEEB_EMAIL}, ID: ${user._id}`);
-      } else {
-        console.log(`Muneeb user not found with email: ${MUNEEB_EMAIL}, this is unexpected`);
-        return res.status(404).json({ 
-          message: 'Muneeb user not found',
-          detail: 'User with email muneeb@123.com does not exist in the database.'
-        });
-      }
-    } else {
-      // Validate ObjectId for normal requests
-      const mongoose = require('mongoose');
-      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        console.error(`Invalid ObjectId format: ${req.params.id}`);
-        return res.status(400).json({ message: 'Invalid user ID format' });
-      }
-      
-      // Find normal user
-      user = await User.findById(req.params.id);
-    }
-    
-    if (!user) {
-      console.log(`User not found with ID: ${req.params.id}`);
-      return res.status(404).json({ message: 'User not found' });
-    }
-    
-    console.log(`Found user: ${user.email} with current role: ${user.role}`);
-    
-    // Get the old role for logging
-    const oldRole = user.role;
-    
-    // Update role
-    user.role = req.body.role;
-    
-    try {
-      const updatedUser = await user.save();
-      console.log(`Successfully updated user role to ${updatedUser.role}`);
-      
-      // Create audit log
-      await createAuditLog(
-        req, 
-        'permission_change', 
-        'user', 
-        user._id, 
-        `Admin changed user role from ${oldRole} to ${updatedUser.role} for user: ${user.email}`, 
-        true
-      );
-      
-      res.json({
-        _id: updatedUser._id,
-        firstName: updatedUser.firstName,
-        lastName: updatedUser.lastName,
-        email: updatedUser.email,
-        role: updatedUser.role
+    const { role } = req.body;
+    const userId = req.params.id;
+
+    // Log the request details for debugging
+    console.log('Update user role request:', {
+      userId,
+      requestedRole: role,
+      requestedBy: req.user?._id,
+      requestingUserRole: req.user?.role
+    });
+
+    // Validate role
+    const validRoles = ['admin', 'officer', 'investigator'];
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid role specified. Role must be one of: ${validRoles.join(', ')}`
       });
-      
-      logger.info(`User role updated from ${oldRole} to ${updatedUser.role} for: ${user.email}`);
-    } catch (saveError) {
-      console.error('Error saving user role update:', saveError);
-      next(saveError);
     }
+
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      console.log(`User not found with ID: ${userId}`);
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    console.log(`Found user to update:`, {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      currentRole: user.role,
+      newRole: role
+    });
+
+    // Special exception for Muneeb promoting himself
+    const isMuneebEmail = user.email === 'muneeb@123.com';
+    const isSelfUpdate = user._id.toString() === req.user._id.toString();
+    
+    // Only prevent self-role modification if not Muneeb
+    if (isSelfUpdate && !isMuneebEmail) {
+      console.log('Attempt to modify own role rejected');
+      return res.status(403).json({
+        success: false,
+        message: 'Cannot modify your own role'
+      });
+    }
+
+    // If the role isn't changing, no need to update
+    if (user.role === role) {
+      console.log(`User already has role ${role}, no change needed`);
+      return res.json({
+        success: true,
+        message: `User already has role ${role}`,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
+      });
+    }
+
+    // Update user role
+    const previousRole = user.role;
+    user.role = role;
+    const updatedUser = await user.save();
+
+    console.log(`User role successfully updated:`, {
+      id: updatedUser._id,
+      name: updatedUser.name,
+      previousRole,
+      newRole: updatedUser.role
+    });
+
+    // Create audit log
+    await createAuditLog(
+      req,
+      'update',
+      'user',
+      user._id,
+      `User role updated: ${user.name} (${user.email}) changed from ${previousRole} to ${role}`,
+      true
+    );
+
+    res.json({
+      success: true,
+      message: `User role successfully updated to ${role}`,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
   } catch (error) {
-    console.error('Error in updateUserRole:', error);
-    next(error);
+    console.error('Error updating user role:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error updating user role',
+      error: error.message
+    });
   }
 };
 

@@ -25,6 +25,7 @@ const {
   replaceDocument
 } = require('../controllers/documentController');
 const { protect, authorize } = require('../middleware/authMiddleware');
+const Document = require('../models/document');
 
 // Configure Cloudinary
 cloudinary.config({
@@ -251,6 +252,89 @@ router.post('/:id/sign', protect, authorize('admin'), signDocument);
 router.post('/:id/replace', protect, authorize('admin'), upload.single('file'), handleMulterError, replaceDocument);
 
 // DELETE routes - Delete operations (admin only)
-router.delete('/:id', protect, authorize('admin'), deleteDocument);
+router.delete('/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    const documentId = req.params.id;
+    console.log('Delete request received for document:', documentId);
+    
+    // Find the document in MongoDB
+    const document = await Document.findOne({
+      $or: [
+        { _id: documentId },
+        { publicId: documentId },
+        { publicId: `vehicle_documents/${documentId}` }
+      ]
+    });
+
+    if (!document) {
+      console.log('Document not found:', documentId);
+      return res.status(404).json({
+        success: false,
+        message: 'Document not found'
+      });
+    }
+
+    console.log('Found document:', {
+      id: document._id,
+      publicId: document.publicId,
+      name: document.name
+    });
+
+    // Delete from Cloudinary if publicId exists
+    if (document.publicId) {
+      try {
+        console.log('Attempting to delete from Cloudinary:', document.publicId);
+        await cloudinary.uploader.destroy(document.publicId);
+        console.log('Successfully deleted from Cloudinary');
+      } catch (error) {
+        console.error('Error deleting from Cloudinary:', error);
+        // Continue with document deletion even if Cloudinary fails
+      }
+    }
+
+    // Delete document from database
+    await Document.findByIdAndDelete(document._id);
+    console.log('Successfully deleted from MongoDB');
+
+    res.json({
+      success: true,
+      message: 'Document deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting document:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting document',
+      error: error.message
+    });
+  }
+});
+
+// Download route
+router.get('/:id/download', protect, async (req, res) => {
+  try {
+    const document = await Document.findById(req.params.id);
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        message: 'Document not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        url: document.url
+      }
+    });
+  } catch (error) {
+    console.error('Error downloading document:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error downloading document',
+      error: error.message
+    });
+  }
+});
 
 module.exports = router; 

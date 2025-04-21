@@ -1,32 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Typography,
   Paper,
-  Grid,
+  Typography,
   TextField,
-  Button,
   Switch,
   FormControlLabel,
-  Divider,
+  Button,
   Alert,
+  Grid,
+  CircularProgress,
+  Divider
 } from '@mui/material';
+import { Settings as SettingsIcon, Save } from '@mui/icons-material';
 import axios from 'axios';
-import { useAuth } from '../../context/AuthContext';
+
+// Configure axios baseURL
+axios.defaults.baseURL = 'http://localhost:5000';
 
 const SettingsPage = () => {
   const [settings, setSettings] = useState({
-    systemName: 'Vehicle Investigation System',
+    systemName: '',
     emailNotifications: true,
     smsNotifications: false,
-    documentRetentionDays: 30,
     maxFileSize: 10,
-    maintenanceMode: false,
+    allowedFileTypes: [],
+    retentionPeriod: 30,
+    autoArchive: false,
+    maintenanceMode: false
   });
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
-  const { token } = useAuth();
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     fetchSettings();
@@ -34,75 +41,86 @@ const SettingsPage = () => {
 
   const fetchSettings = async () => {
     try {
+      setLoading(true);
       const response = await axios.get('/api/settings', {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
       });
       
-      // Ensure all boolean fields have default values if undefined
-      const receivedSettings = response.data || {};
-      const safeSettings = {
-        ...settings, // Keep defaults
-        ...receivedSettings,
-        // Ensure boolean values are never undefined
-        emailNotifications: receivedSettings.emailNotifications === undefined ? 
-          settings.emailNotifications : Boolean(receivedSettings.emailNotifications),
-        smsNotifications: receivedSettings.smsNotifications === undefined ? 
-          settings.smsNotifications : Boolean(receivedSettings.smsNotifications),
-        maintenanceMode: receivedSettings.maintenanceMode === undefined ? 
-          settings.maintenanceMode : Boolean(receivedSettings.maintenanceMode),
-      };
-      
-      setSettings(safeSettings);
-    } catch (error) {
-      console.error('Error fetching settings:', error);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    setSettings(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : (value || '') // Ensure non-checkbox values are never undefined
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess(false);
-
-    try {
-      await axios.put('/api/settings', settings, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setSuccess(true);
-    } catch (error) {
-      setError(error.response?.data?.message || 'Failed to update settings');
+      if (response.data.success) {
+        setSettings(response.data.data);
+        setError(null);
+      }
+    } catch (err) {
+      console.error('Error fetching settings:', err);
+      setError(err.response?.data?.message || 'Failed to load settings');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleChange = (event) => {
+    const { name, value, checked } = event.target;
+    setSettings(prev => ({
+      ...prev,
+      [name]: event.target.type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      setSaving(true);
+      setError(null);
+      setSuccess(null);
+
+      const response = await axios.put('/api/settings', settings, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (response.data.success) {
+        setSuccess('Settings updated successfully');
+        setSettings(response.data.data);
+      }
+    } catch (err) {
+      console.error('Error updating settings:', err);
+      setError(err.response?.data?.message || 'Failed to update settings');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        System Settings
-      </Typography>
-
-      {success && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          Settings updated successfully!
-        </Alert>
-      )}
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
-
+    <Box p={3}>
       <Paper sx={{ p: 3 }}>
+        <Box display="flex" alignItems="center" mb={3}>
+          <SettingsIcon sx={{ mr: 2 }} />
+          <Typography variant="h5">System Settings</Typography>
+        </Box>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess(null)}>
+            {success}
+          </Alert>
+        )}
+
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -110,82 +128,24 @@ const SettingsPage = () => {
                 fullWidth
                 label="System Name"
                 name="systemName"
-                value={settings.systemName || ''}
+                value={settings.systemName}
                 onChange={handleChange}
+                required
               />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Notification Settings
-              </Typography>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={Boolean(settings.emailNotifications)}
-                    onChange={handleChange}
-                    name="emailNotifications"
-                  />
-                }
-                label="Email Notifications"
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={Boolean(settings.smsNotifications)}
-                    onChange={handleChange}
-                    name="smsNotifications"
-                  />
-                }
-                label="SMS Notifications"
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Document Settings
-              </Typography>
-              <TextField
-                fullWidth
-                type="number"
-                label="Document Retention Period (days)"
-                name="documentRetentionDays"
-                value={settings.documentRetentionDays || 30}
-                onChange={handleChange}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                fullWidth
-                type="number"
-                label="Maximum File Size (MB)"
-                name="maxFileSize"
-                value={settings.maxFileSize || 10}
-                onChange={handleChange}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Divider />
             </Grid>
 
             <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 System Status
               </Typography>
+              <Divider sx={{ mb: 2 }} />
               <FormControlLabel
                 control={
                   <Switch
-                    checked={Boolean(settings.maintenanceMode)}
+                    checked={settings.maintenanceMode}
                     onChange={handleChange}
                     name="maintenanceMode"
+                    color="warning"
                   />
                 }
                 label="Maintenance Mode"
@@ -193,17 +153,96 @@ const SettingsPage = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                sx={{ mt: 2 }}
-              >
-                {loading ? 'Saving...' : 'Save Settings'}
-              </Button>
+              <Typography variant="h6" gutterBottom>
+                Notification Settings
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.emailNotifications}
+                        onChange={handleChange}
+                        name="emailNotifications"
+                        color="primary"
+                      />
+                    }
+                    label="Email Notifications"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.smsNotifications}
+                        onChange={handleChange}
+                        name="smsNotifications"
+                        color="primary"
+                      />
+                    }
+                    label="SMS Notifications"
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                Document Settings
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Max File Size (MB)"
+                    name="maxFileSize"
+                    value={settings.maxFileSize}
+                    onChange={handleChange}
+                    inputProps={{ min: 1, max: 100 }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Retention Period (days)"
+                    name="retentionPeriod"
+                    value={settings.retentionPeriod}
+                    onChange={handleChange}
+                    inputProps={{ min: 1 }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.autoArchive}
+                        onChange={handleChange}
+                        name="autoArchive"
+                        color="primary"
+                      />
+                    }
+                    label="Auto Archive Documents"
+                  />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
+
+          <Box mt={3} display="flex" justifyContent="flex-end">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={saving}
+              startIcon={saving ? <CircularProgress size={20} /> : <Save />}
+            >
+              {saving ? 'Saving...' : 'Save Settings'}
+            </Button>
+          </Box>
         </form>
       </Paper>
     </Box>

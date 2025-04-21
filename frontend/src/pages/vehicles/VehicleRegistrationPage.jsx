@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 
 const { Option } = Select;
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 const VehicleRegistrationPage = () => {
   const [form] = Form.useForm();
@@ -65,7 +65,7 @@ const VehicleRegistrationPage = () => {
       };
 
       const response = await axios.post(
-        `${API_BASE_URL}/api/vehicles/register`,
+        `/api/vehicles/register`,
         formattedValues,
         {
           headers: {

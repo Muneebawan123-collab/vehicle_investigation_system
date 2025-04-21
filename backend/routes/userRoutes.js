@@ -5,23 +5,25 @@ const {
   loginUser, 
   getUserProfile, 
   updateUserProfile,
+  getAllUsers,
+  deleteUser,
+  updateUserRole,
   getUsers,
   getUserById,
   updateUser,
-  deleteUser,
   forgotPassword,
   resetPassword,
-  updateUserRole,
   updateConsentStatus,
   recordLastLogin,
   getAvailableUsers
 } = require('../controllers/userController');
-const { protect, authorize } = require('../middleware/authMiddleware');
+const { protect, authorize, admin } = require('../middleware/authMiddleware');
 const upload = require('../utils/multerConfig');
 const { check, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
 const User = require('../models/User');
 const mongoose = require('mongoose');
+const { createAuditLog } = require('../utils/auditUtils');
 
 // Public routes
 router.post('/register', registerUser);
@@ -30,215 +32,198 @@ router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:resetToken', resetPassword);
 
 // Protected routes - all users
-router.get('/profile', protect, getUserProfile);
-router.put('/profile', protect, upload.single('profileImage'), updateUserProfile);
-router.put('/consent', protect, updateConsentStatus);
-router.put('/last-login', protect, recordLastLogin);
-router.get('/available', protect, getAvailableUsers);
-
-// Protected routes - admin only
-router.get('/', protect, authorize('admin'), getUsers);
-router.get('/:id', protect, authorize('admin'), getUserById);
-router.put('/:id', protect, authorize('admin'), updateUser);
-router.delete('/:id', protect, authorize('admin'), deleteUser);
-router.put('/:id/role', protect, async (req, res, next) => {
+router.get('/profile', protect, async (req, res) => {
   try {
-    // Add debug logging to understand what's happening
-    console.log('Role update request details:', {
-      pathId: req.params.id,
-      requestedBy: req.user?._id,
-      requestedRole: req.body.role,
-      currentUserRole: req.user?.role,
-      currentUserEmail: req.user?.email
-    });
-
-    // Check if this is a request to promote Muneeb
-    const isMuneebRequest = req.params.id === '67fdfab1c5f4f06ad5dced30';
-    const isMuneebEmail = req.user?.email === 'muneeb@123.com';
+    console.log('Get user profile request received for user ID:', req.user._id);
     
-    // Allow if it's Muneeb's email or if admin
-    const isMuneebPromotingSelf = isMuneebRequest && isMuneebEmail;
+    const user = await User.findById(req.user._id);
     
-    console.log('Promotion check:', {
-      isMuneebRequest,
-      isMuneebEmail,
-      isMuneebPromotingSelf
-    });
-
-    // If it's Muneeb promoting himself, allow it; otherwise, check admin role
-    if (!isMuneebPromotingSelf && req.user.role !== 'admin') {
-      console.log('Authorization failed for role update');
-      return res.status(403).json({
+    if (!user) {
+      console.log('User not found with ID:', req.user._id);
+      return res.status(404).json({ 
         success: false,
-        message: 'Not authorized to change user roles',
-        detail: 'You must be an admin to change user roles'
+        message: 'User not found' 
       });
     }
     
-    console.log('Role update authorized, proceeding to controller');
-    // Proceed to controller
-    next();
+    // Debug log the found user's fields
+    console.log('User fields available:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      address: user.address,
+      phone: user.phone,
+      department: user.department
+    });
+    
+    // Return complete user object with all fields
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      department: user.department,
+      badge: user.badge,
+      phone: user.phone,
+      address: user.address,
+      profileImage: user.profileImage,
+      consentAccepted: user.consentAccepted,
+      consentDate: user.consentDate,
+      lastLogin: user.lastLogin,
+      createdAt: user.createdAt,
+      success: true
+    });
+    
+    // Create audit log asynchronously
+    createAuditLog(
+      req, 
+      'read', 
+      'user', 
+      user._id, 
+      `User viewed their profile`, 
+      true
+    ).catch(err => console.error('Error creating audit log:', err));
+    
   } catch (error) {
-    console.error('Error in role update middleware:', error);
-    next(error);
-  }
-}, updateUserRole);
-
-// @route   GET api/users
-// @desc    Get all users
-// @access  Private (Admin only)
-router.get('/', auth, async (req, res) => {
-  try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Not authorized' });
-    }
-
-    const users = await User.find().select('-password');
-    res.json(users);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error getting user profile:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error retrieving user profile',
+      error: error.message 
+    });
   }
 });
-
-// @route   GET api/users/:id
-// @desc    Get user by ID
-// @access  Private (Admin only)
-router.get('/:id', auth, async (req, res) => {
+router.put('/profile', protect, upload, async (req, res) => {
   try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Not authorized' });
-    }
-
-    const user = await User.findById(req.params.id).select('-password');
+    console.log('Profile update request received:', {
+      userId: req.user._id, 
+      bodyFields: Object.keys(req.body),
+      hasFiles: !!req.files
+    });
+    
+    const user = await User.findById(req.user._id);
+    
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      console.log(`User not found with ID: ${req.user._id}`);
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
     }
 
-    res.json(user);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// @route   POST api/users
-// @desc    Create user
-// @access  Private (Admin only)
-router.post('/', [
-  auth,
-  check('name', 'Name is required').not().isEmpty(),
-  check('email', 'Please include a valid email').isEmail(),
-  check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
-  check('role', 'Valid role is required').isIn(['admin', 'officer', 'investigator'])
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Not authorized' });
-    }
-
-    const { name, email, password, role, department, phone, address } = req.body;
-
-    // Check if user exists
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
-
-    // Create new user
-    user = new User({
-      name,
-      email,
-      password,
-      role,
-      department,
-      phone,
-      address
+    console.log('Found user:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      currentFields: {
+        name: !!user.name,
+        email: !!user.email,
+        phone: !!user.phone,
+        department: !!user.department,
+        address: !!user.address,
+        profileImage: !!user.profileImage
+      }
     });
 
-    await user.save();
-    res.status(201).json(user);
+    // Update user fields if provided
+    const updateFields = ['name', 'email', 'phone', 'department', 'address'];
+    const updatedFields = [];
+    
+    updateFields.forEach(field => {
+      if (req.body[field] !== undefined) {
+        console.log(`Updating field '${field}' from '${user[field]}' to '${req.body[field]}'`);
+        user[field] = req.body[field];
+        updatedFields.push(field);
+      }
+    });
+    
+    // Handle password update separately with validation
+    if (req.body.password) {
+      if (req.body.password.length < 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password must be at least 6 characters long'
+        });
+      }
+      user.password = req.body.password;
+      updatedFields.push('password');
+    }
+
+    // Handle profile image
+    if (req.files && req.files.profileImage) {
+      // Generate a proper URL for the profile image rather than a file path
+      const imagePath = req.files.profileImage[0].path;
+      const filename = req.files.profileImage[0].filename;
+      
+      // Convert the file path to a proper URL that the server can serve
+      const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+      const imageUrl = `${baseUrl}/uploads/${filename}`;
+      
+      console.log('Profile image saved, generating URL:', {
+        originalPath: imagePath,
+        filename: filename,
+        generatedUrl: imageUrl
+      });
+      
+      // Store the URL, not the file path
+      user.profileImage = imageUrl;
+      updatedFields.push('profileImage');
+    }
+
+    // Save the updated user
+    const updatedUser = await user.save();
+    
+    console.log('User successfully updated:', {
+      id: updatedUser._id,
+      updatedFields,
+      fieldsStatus: {
+        name: !!updatedUser.name,
+        email: !!updatedUser.email,
+        phone: !!updatedUser.phone,
+        department: !!updatedUser.department,
+        address: !!updatedUser.address,
+        profileImage: !!updatedUser.profileImage
+      }
+    });
+
+    // Return user data in the expected format
+    res.json({
+      success: true,
+      user: {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        department: updatedUser.department,
+        phone: updatedUser.phone,
+        address: updatedUser.address,
+        profileImage: updatedUser.profileImage,
+        active: updatedUser.active,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt
+      }
+    });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error updating user profile:', error);
+    
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email already exists'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Error updating profile',
+      error: error.message
+    });
   }
 });
-
-// @route   PUT api/users/:id
-// @desc    Update user
-// @access  Private (Admin only)
-router.put('/:id', [
-  auth,
-  check('name', 'Name is required').not().isEmpty(),
-  check('email', 'Please include a valid email').isEmail(),
-  check('role', 'Valid role is required').isIn(['admin', 'officer', 'investigator'])
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Not authorized' });
-    }
-
-    const { name, email, role, department, phone, address } = req.body;
-
-    // Check if email is already taken
-    const existingUser = await User.findOne({ email, _id: { $ne: req.params.id } });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already in use' });
-    }
-
-    // Update user
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      { name, email, role, department, phone, address },
-      { new: true }
-    ).select('-password');
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.json(user);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// @route   DELETE api/users/:id
-// @desc    Delete user
-// @access  Private (Admin only)
-router.delete('/:id', auth, async (req, res) => {
-  try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Not authorized' });
-    }
-
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.json({ message: 'User deleted' });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
+router.put('/consent', protect, updateConsentStatus);
+router.put('/last-login', protect, recordLastLogin);
+router.get('/available', protect, getAvailableUsers);
 
 // Special route for promoting Muneeb to admin (no auth required)
 router.post('/promote-muneeb', async (req, res, next) => {
@@ -306,6 +291,128 @@ router.post('/promote-muneeb', async (req, res, next) => {
     }
     
     next(error);
+  }
+});
+
+// Protected routes - admin only
+router.get('/', protect, authorize('admin'), getUsers);
+
+// @route   GET api/users/role/:role
+// @desc    Get users by role
+// @access  Private
+router.get('/role/:role', protect, async (req, res) => {
+  try {
+    const role = req.params.role;
+    const validRoles = ['admin', 'officer', 'investigator'];
+    
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({ message: 'Invalid role specified' });
+    }
+
+    // Log request details for debugging
+    console.log(`Fetching users with role: ${role}`);
+    
+    const users = await User.find({ role }).select('-password');
+    console.log(`Found ${users.length} users with role ${role}`);
+    
+    res.json(users);
+  } catch (error) {
+    console.error(`Error fetching users by role: ${error.message}`);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+router.get('/:id', protect, authorize('admin'), getUserById);
+router.put('/:id', protect, authorize('admin'), updateUser);
+router.delete('/:id', protect, authorize('admin'), deleteUser);
+router.put('/:id/role', protect, async (req, res, next) => {
+  try {
+    // Add debug logging to understand what's happening
+    console.log('Role update request details:', {
+      pathId: req.params.id,
+      requestedBy: req.user?._id,
+      requestedRole: req.body.role,
+      currentUserRole: req.user?.role,
+      currentUserEmail: req.user?.email
+    });
+
+    // Check if this is a request to promote Muneeb
+    const isMuneebRequest = req.params.id === '67fdfab1c5f4f06ad5dced30';
+    const isMuneebEmail = req.user?.email === 'muneeb@123.com';
+    
+    // Allow if it's Muneeb's email or if admin
+    const isMuneebPromotingSelf = isMuneebRequest && isMuneebEmail;
+    
+    console.log('Promotion check:', {
+      isMuneebRequest,
+      isMuneebEmail,
+      isMuneebPromotingSelf
+    });
+
+    // If it's Muneeb promoting himself, allow it; otherwise, check admin role
+    if (!isMuneebPromotingSelf && req.user.role !== 'admin') {
+      console.log('Authorization failed for role update');
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to change user roles',
+        detail: 'You must be an admin to change user roles'
+      });
+    }
+    
+    console.log('Role update authorized, proceeding to controller');
+    // Proceed to controller
+    next();
+  } catch (error) {
+    console.error('Error in role update middleware:', error);
+    next(error);
+  }
+}, updateUserRole);
+
+// @route   POST api/users
+// @desc    Create user
+// @access  Private (Admin only)
+router.post('/', [
+  auth,
+  check('name', 'Name is required').not().isEmpty(),
+  check('email', 'Please include a valid email').isEmail(),
+  check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
+  check('role', 'Valid role is required').isIn(['admin', 'officer', 'investigator'])
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    // Check if user is admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    const { name, email, password, role, department, phone, address } = req.body;
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Create new user
+    user = new User({
+      name,
+      email,
+      password,
+      role,
+      department,
+      phone,
+      address
+    });
+
+    await user.save();
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

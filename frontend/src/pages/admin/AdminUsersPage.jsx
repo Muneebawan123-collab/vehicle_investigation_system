@@ -7,6 +7,7 @@ import {
 import { adminService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { promoteMuneebToAdmin } from '../../utils/updateUserRole';
+import { message } from 'antd';
 
 const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -39,19 +40,52 @@ const AdminUsersPage = () => {
       setError(null);
       setSuccess(null);
       
-      await adminService.updateUserRole(userId, newRole);
+      console.log(`Updating user ${userId} to role: ${newRole}`);
       
-      // Update the users list
+      // Show processing message
+      message.loading(`Updating user role to ${newRole}...`, 1);
+      
+      // Track current selection to restore if there's an error
+      const originalUser = users.find(user => user._id === userId);
+      const originalRole = originalUser?.role;
+      
+      // Update UI optimistically
       setUsers(prevUsers => 
         prevUsers.map(user => 
           user._id === userId ? { ...user, role: newRole } : user
         )
       );
       
-      setSuccess(`User role updated successfully to ${newRole}`);
+      try {
+        const response = await adminService.updateUserRole(userId, newRole);
+        console.log('Role update response:', response.data);
+        
+        // Show success on completion
+        message.success(`User role updated successfully to ${newRole}`, 3);
+        setSuccess(`User role updated successfully to ${newRole}`);
+      } catch (error) {
+        console.error('Error updating role:', error);
+        
+        // Revert the optimistic UI update
+        setUsers(prevUsers => 
+          prevUsers.map(user => 
+            user._id === userId ? { ...user, role: originalRole } : user
+          )
+        );
+        
+        // Show detailed error message
+        const errorMessage = error.response?.data?.message || 'Failed to update user role. Please try again.';
+        message.error(errorMessage, 5);
+        setError(errorMessage);
+        
+        if (error.response?.status === 403) {
+          message.warning('You may not have sufficient permissions for this action.', 5);
+        }
+      }
     } catch (err) {
-      console.error('Failed to update user role:', err);
-      setError('Failed to update user role. Please try again.');
+      console.error('Unexpected error handling role change:', err);
+      message.error('An unexpected error occurred', 3);
+      setError('An unexpected error occurred while updating the user role.');
     } finally {
       setLoading(false);
     }

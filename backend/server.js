@@ -22,13 +22,21 @@ const incidentRoutes = require('./routes/incidentRoutes');
 const documentRoutes = require('./routes/documentRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const trafficRoutes = require('./routes/trafficRoutes');
+const settingsRoutes = require('./routes/settingsRoutes');
 
 // Create Express app
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Allow your frontend domains
+  credentials: true, // Allow cookies to be sent
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Connect to MongoDB
 connectDB()
@@ -36,6 +44,15 @@ connectDB()
     logger.info('MongoDB Connected Successfully');
     // Test Cloudinary connection after MongoDB is connected
     testCloudinaryConnection();
+    
+    // Initialize notification routes after DB is connected
+    try {
+      const notificationRoutes = require('./routes/notificationRoutes');
+      app.use('/api/notifications', notificationRoutes);
+      logger.info('Notification routes registered');
+    } catch (error) {
+      logger.warn('Could not register notification routes:', error.message);
+    }
   })
   .catch(err => {
     logger.error('MongoDB Connection Error:', err);
@@ -55,7 +72,21 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      connectSrc: ["'self'", "http://localhost:5173", "http://localhost:5000"],
+      imgSrc: ["'self'", "http://localhost:5173", "http://localhost:5000", "data:", "blob:"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      fontSrc: ["'self'", "data:"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: false,
+  crossOriginOpenerPolicy: false,
+}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -84,6 +115,7 @@ app.use('/api/incidents', incidentRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/traffic', trafficRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

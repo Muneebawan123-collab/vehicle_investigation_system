@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 const VehiclesListPage = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const VehiclesListPage = () => {
   const fetchVehicles = async (page = 1, limit = 10) => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/api/vehicles`, {
+      const response = await axios.get(`/api/vehicles`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
@@ -165,7 +165,7 @@ const VehiclesListPage = () => {
   // Add delete handler
   const handleDeleteVehicle = async (id) => {
     try {
-      await axios.delete(`${API_BASE_URL}/api/vehicles/${id}`, {
+      await axios.delete(`/api/vehicles/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

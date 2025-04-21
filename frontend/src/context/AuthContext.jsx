@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { formatFileUrl } from '../utils/imageUtils';
 
-// Define the backend API base URL - change port if your backend runs on a different port
-const API_BASE_URL = 'http://localhost:5000';
+// Define the backend API base URL
+const API_BASE_URL = '';
 
 const AuthContext = createContext(null);
 
@@ -74,9 +75,27 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
     try {
       console.log('Fetching user profile...');
-      const response = await axios.get(`${API_BASE_URL}/api/users/profile`);
+      const response = await axios.get(`/api/users/profile`);
       console.log('User profile received:', response.data);
-      setUser(response.data);
+      
+      // Store user data in state and localStorage
+      const userData = response.data;
+      
+      // Log specific fields to diagnose the issue
+      console.log('User name from API:', userData.name);
+      console.log('User address from API:', userData.address);
+      
+      // Ensure user data has name and address properly set
+      if (!userData.name) {
+        console.warn('Name field is missing from user data');
+      }
+      
+      if (!userData.address) {
+        console.warn('Address field is missing from user data');
+      }
+      
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
       setIsAuthenticated(true);
     } catch (error) {
       console.error('Error fetching user:', error.response || error);
@@ -92,7 +111,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       console.log('Attempting login...');
-      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, credentials);
+      const response = await axios.post(`/api/auth/login`, credentials);
       const { token, user } = response.data;
       console.log('Login successful, token received');
       
@@ -112,63 +131,144 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Add function to format image URL
+  const formatImageUrl = (url) => {
+    return formatFileUrl(url);
+  };
+
+  // Helper function to format user data including profile image URL
+  const formatUserData = (userData) => {
+    if (!userData) return null;
+    
+    const formattedUser = { ...userData };
+    
+    if (formattedUser.profileImage) {
+      formattedUser.profileImage = formatImageUrl(formattedUser.profileImage);
+    }
+    
+    return formattedUser;
+  };
+
   const updateProfile = async (profileData) => {
     try {
       console.log('Updating user profile...', profileData);
+      setLoading(true);
       
       // Check if we have a valid token
       if (!token) {
         throw new Error('Authentication required to update profile');
       }
       
-      // Convert name field to firstName/lastName for backend compatibility
-      const formattedData = { ...profileData };
+      // Check if profileData is FormData (for file uploads) or regular object
+      const isFormData = profileData instanceof FormData;
       
-      if (profileData.name) {
-        // Split the name into firstName and lastName
-        const nameParts = profileData.name.split(' ');
-        formattedData.firstName = nameParts[0] || '';
-        formattedData.lastName = nameParts.slice(1).join(' ') || '';
-        // Keep name for our frontend
-        formattedData.name = profileData.name;
+      // Log form data contents for debugging
+      if (isFormData) {
+        console.log('Form data contents:');
+        for (let [key, value] of profileData.entries()) {
+          if (key !== 'profileImage') { // Don't log the entire image data
+            console.log(key, ':', value);
+          } else {
+            console.log('profileImage: [File data]');
+          }
+        }
+        
+        // Ensure critical fields are present
+        const name = profileData.get('name');
+        const address = profileData.get('address');
+        console.log('Direct formData access - name:', name);
+        console.log('Direct formData access - address:', address);
       }
       
-      // Make the API call
+      // Make the API call with appropriate headers
       const response = await axios.put(
-        `${API_BASE_URL}/api/users/profile`, 
-        formattedData,
+        `/api/users/profile`, 
+        profileData,
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            ...(isFormData ? {
+              'Content-Type': 'multipart/form-data'
+            } : {
+              'Content-Type': 'application/json'
+            })
           }
         }
       );
       
       console.log('Profile update response:', response.data);
       
-      // Update the user state with the new data
-      if (response.data && response.data.user) {
-        setUser(response.data.user);
-      } else if (response.data) {
-        // Combine firstName and lastName into name if they exist
-        const userData = { ...response.data };
-        if (response.data.firstName || response.data.lastName) {
-          userData.name = `${response.data.firstName || ''} ${response.data.lastName || ''}`.trim();
-        }
-        
-        setUser(userData);
+      // After getting the response, format the user data
+      let updatedUser = null;
+      
+      if (response.data?.success && response.data?.user) {
+        // Standard format with success flag and user object
+        updatedUser = response.data.user;
+      } else if (response.data?._id) {
+        // Just the user object directly
+        updatedUser = response.data;
+      } else if (response.data?.user && response.data.user._id) {
+        // Another possible format
+        updatedUser = response.data.user;
       }
       
-      return response.data;
+      if (updatedUser) {
+        // Format and update the user data
+        const formattedUser = formatUserData(updatedUser);
+        
+        // Make sure name and address are properly set (fallback to form data if missing)
+        if (isFormData) {
+          // Direct fallbacks from form data
+          if (!formattedUser.name || formattedUser.name === 'undefined') {
+            const formName = profileData.get('name');
+            if (formName) {
+              console.log('Setting name from form data:', formName);
+              formattedUser.name = formName;
+            }
+          }
+          
+          if (!formattedUser.address || formattedUser.address === 'undefined') {
+            const formAddress = profileData.get('address');
+            if (formAddress) {
+              console.log('Setting address from form data:', formAddress);
+              formattedUser.address = formAddress;
+            }
+          }
+        }
+        
+        console.log('Setting updated user data:', formattedUser);
+        setUser(formattedUser);
+        localStorage.setItem('user', JSON.stringify(formattedUser));
+        
+        // Force a refresh of user data from server to ensure we have the latest
+        setTimeout(() => fetchUser(), 500);
+        
+        return {
+          success: true,
+          user: formattedUser
+        };
+      }
+      
+      // If we get here, the response format is unexpected
+      console.error('Unexpected response format:', response.data);
+      throw new Error('Invalid response format from server');
     } catch (error) {
       console.error('Profile update error:', error.response?.data || error);
-      throw error.response?.data || error;
+      
+      // Handle specific error cases
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      }
+      
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     delete axios.defaults.headers.common['Authorization'];
     setToken(null);
     setUser(null);
@@ -193,7 +293,7 @@ export const AuthProvider = ({ children }) => {
       
       const response = await axios({
         method: 'post',
-        url: `${API_BASE_URL}/api/users/register`,
+        url: `/api/users/register`,
         data: requestData,
         headers: {
           'Content-Type': 'application/json'

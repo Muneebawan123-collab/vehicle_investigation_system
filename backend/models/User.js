@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  profileImage: {
+    type: String,
+    default: null
+  },
   isActive: {
     type: Boolean,
     default: true

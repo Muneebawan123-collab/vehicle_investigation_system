@@ -206,3 +206,263 @@ TypeError: user.matchPassword is not a function
 2025-04-15 15:28:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
 2025-04-15 15:28:09 error: Error creating audit log: Audit validation failed: resourceType: `chat` is not a valid enum value for path `resourceType`.
 2025-04-15 23:15:12 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-16 00:47:28 error: Error assigning incident: Cannot read properties of undefined (reading 'push')
+2025-04-16 00:47:56 error: Error assigning incident: Cannot read properties of undefined (reading 'push')
+2025-04-16 00:48:13 error: Error assigning incident: Cannot read properties of undefined (reading 'push')
+2025-04-16 00:53:35 error: Error assigning incident: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-16 00:53:40 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:53:40 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:53:51 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:53:51 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:54:24 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:54:24 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:54:50 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:54:50 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:54:59 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:54:59 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:55:00 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:55:00 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:55:07 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:55:07 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:58:40 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:58:40 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:58:43 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 00:58:43 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-16 01:02:22 error: Error assigning incident: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-16 01:02:59 error: Error assigning incident: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-16 20:01:58 error: Error submitting investigation report: Assignment to constant variable.
+2025-04-16 20:02:06 error: Error submitting investigation report: Assignment to constant variable.
+2025-04-16 20:02:11 error: Error submitting investigation report: Assignment to constant variable.
+2025-04-16 20:02:15 error: Error submitting investigation report: Assignment to constant variable.
+2025-04-16 20:02:20 error: Error submitting investigation report: Assignment to constant variable.
+2025-04-16 20:08:07 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:08:53 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:08:53 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:12:37 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:12:37 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:14:04 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:14:06 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:14:06 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:15:39 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:15:42 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:15:42 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:16:07 error: Server Error: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "officers" (type string) at path "_id" for model "User"
+    at SchemaObjectId.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1255:12)
+    at SchemaType.castForQuery (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1673:17)
+    at cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\cast.js:390:32)
+    at Query.cast (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4907:12)
+    at Query._castConditions (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2325:10)
+    at model.Query._findOne (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:2648:8)
+    at model.Query.exec (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\query.js:4456:80)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async getUserById (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\controllers\userController.js:316:18)
+2025-04-16 20:28:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-16 20:28:39 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-16 22:39:40 error: Error updating incident: Validation failed: status: `Resolved` is not a valid enum value for path `status`.
+2025-04-16 22:39:47 error: Error updating incident: Validation failed: status: `Resolved` is not a valid enum value for path `status`.
+2025-04-16 22:39:57 error: Error updating incident: Validation failed: status: `Resolved` is not a valid enum value for path `status`.
+2025-04-16 22:41:09 error: Error updating incident: Validation failed: status: `Resolved` is not a valid enum value for path `status`.
+2025-04-16 22:47:13 error: Error updating incident: Validation failed: status: `Resolved` is not a valid enum value for path `status`.
+2025-04-16 22:47:21 error: Error updating incident: Validation failed: status: `Resolved` is not a valid enum value for path `status`.
+2025-04-16 22:47:25 error: Error updating incident: Validation failed: status: `Resolved` is not a valid enum value for path `status`.
+2025-04-17 07:34:17 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-17 14:24:57 error: Error getting incident: Cast to ObjectId failed for value "new" (type string) at path "_id" for model "Incident"
+2025-04-17 14:24:57 error: Error getting incident: Cast to ObjectId failed for value "new" (type string) at path "_id" for model "Incident"
+2025-04-17 14:27:21 error: Error creating incident: Incident validation failed: location.address: Cast to Object failed for value "National Highway 24" (type string) at path "location.address", type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required., status: `Open` is not a valid enum value for path `status`.
+2025-04-17 14:35:37 error: Error creating incident: Incident validation failed: incidentNumber: Path `incidentNumber` is required.
+2025-04-17 14:47:22 error: Error creating incident: Incident validation failed: incidentNumber: Path `incidentNumber` is required.
+2025-04-17 14:52:14 error: Error creating incident: Incident validation failed: incidentNumber: Path `incidentNumber` is required.
+2025-04-17 14:52:59 error: Error creating incident: Incident validation failed: incidentNumber: Path `incidentNumber` is required.
+2025-04-17 14:58:06 error: Authentication error: read ECONNRESET
+2025-04-17 14:58:18 error: Authentication error: read ECONNRESET
+2025-04-17 14:58:18 error: Authentication error: read ECONNRESET
+2025-04-17 21:33:16 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-17 21:33:16 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-17 21:33:40 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-17 21:33:40 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-17 23:37:40 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-17 23:37:40 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-19 15:50:19 error: Error assigning incident: Cannot read properties of undefined (reading 'push')
+2025-04-19 15:52:48 error: Error assigning incident: Cannot read properties of undefined (reading 'push')
+2025-04-19 15:53:01 error: Error assigning incident: Cannot read properties of undefined (reading 'push')
+2025-04-19 15:58:21 error: Error getting incident: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:21 error: Error getting incident: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:31 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:31 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:35 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:35 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:47 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:47 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:54 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:58:54 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:59:30 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 15:59:30 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 16:00:18 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 16:00:18 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 16:00:35 error: Authentication error: read ECONNRESET
+2025-04-19 16:00:35 error: Authentication error: read ECONNRESET
+2025-04-19 16:00:49 error: Authentication error: read ECONNRESET
+2025-04-19 16:00:49 error: Authentication error: read ECONNRESET
+2025-04-19 18:42:17 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:42:17 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:42:42 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:42:42 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:42:47 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:42:47 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:43:03 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:43:03 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:43:10 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:43:10 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:44:52 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 18:44:52 error: Error getting incidents: Cannot populate path `vehicle` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-04-19 19:13:29 error: Error assigning incident: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-19 19:13:40 error: Error assigning incident: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-19 19:23:10 error: Error submitting investigation report: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-19 19:23:26 error: Error submitting investigation report: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-19 19:25:50 error: Error submitting investigation report: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-19 19:27:09 error: Error submitting investigation report: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-19 19:28:01 error: Error submitting investigation report: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-19 19:31:06 error: Error submitting investigation report: Incident validation failed: type: Incident type is required, time: Incident time is required, incidentNumber: Path `incidentNumber` is required.
+2025-04-19 19:35:43 error: Error creating admin notifications: Class constructor ObjectId cannot be invoked without 'new'
+2025-04-19 19:38:27 error: Error updating incident: Validation failed: status: `Closed` is not a valid enum value for path `status`.
+2025-04-19 19:38:32 error: Error updating incident: Validation failed: status: `Closed` is not a valid enum value for path `status`.
+2025-04-19 20:27:43 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-19 20:27:43 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-20 17:58:47 error: Authentication error: read ECONNRESET
+2025-04-20 17:58:59 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-20 17:58:59 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-20 21:50:16 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Invoice_1745166011570" (type string) at path "resourceId" because of "BSONError"
+2025-04-20 21:57:44 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "Invoice_1744654562538" (type string) at path "resourceId" because of "BSONError"
+2025-04-20 21:58:32 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "Invoice_1745166011570" (type string) at path "resourceId" because of "BSONError"
+2025-04-20 22:09:40 error: Authentication error: read ECONNRESET
+2025-04-20 22:09:40 error: Authentication error: read ECONNRESET
+2025-04-20 22:09:41 error: Authentication error: read ECONNRESET
+2025-04-20 22:12:42 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Invoice_1745166011570" (type string) at path "resourceId" because of "BSONError"
+2025-04-20 23:52:14 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Other_1744654931773" (type string) at path "resourceId" because of "BSONError"
+2025-04-21 06:45:46 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Invoice_1745198142688" (type string) at path "resourceId" because of "BSONError"
+2025-04-21 16:12:31 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-21 16:12:56 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-21 16:13:30 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.

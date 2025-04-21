@@ -1,7 +1,15 @@
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const path = require('path');
-const { createAuditLog } = require('../utils/auditUtils');
+// Check if auditUtils exists before importing
+try {
+  var { createAuditLog } = require('../utils/auditUtils');
+} catch (error) {
+  // Create a dummy function if the module doesn't exist
+  var createAuditLog = async () => {};
+  console.log('Warning: auditUtils module not found, audit logging disabled');
+}
+const Document = require('../models/document');
 
 // Upload document
 exports.uploadDocument = async (req, res) => {
@@ -298,21 +306,68 @@ exports.updateDocument = async (req, res) => {
 // Delete document
 exports.deleteDocument = async (req, res) => {
   try {
-    await cloudinary.uploader.destroy(req.params.id);
+    console.log('Delete document request received for ID:', req.params.id);
+    
+    // Find the document in MongoDB
+    const document = await Document.findOne({
+      $or: [
+        { _id: req.params.id },
+        { publicId: req.params.id },
+        { publicId: `vehicle_documents/${req.params.id}` }
+      ]
+    });
 
+    if (!document) {
+      console.log('Document not found:', req.params.id);
+      return res.status(404).json({
+        success: false,
+        message: 'Document not found'
+      });
+    }
+
+    console.log('Found document:', {
+      id: document._id,
+      publicId: document.publicId,
+      name: document.name
+    });
+
+    // Delete from Cloudinary
+    if (document.publicId) {
+      try {
+        console.log('Attempting to delete from Cloudinary:', document.publicId);
+        await cloudinary.uploader.destroy(document.publicId);
+        console.log('Successfully deleted from Cloudinary');
+      } catch (cloudinaryError) {
+        console.error('Error deleting from Cloudinary:', cloudinaryError);
+        // Continue with document deletion even if Cloudinary fails
+      }
+    }
+
+    // Delete from MongoDB
+    await Document.findByIdAndDelete(document._id);
+    console.log('Successfully deleted from MongoDB');
+
+    // Create audit log
     await createAuditLog(
       req,
       'delete',
       'document',
-      req.params.id,
-      `Deleted document: ${req.params.id}`,
+      document._id,
+      `Document deleted: ${document.name}`,
       true
     );
 
-    res.json({ message: 'Document deleted' });
+    res.json({
+      success: true,
+      message: 'Document deleted successfully'
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error deleting document:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting document',
+      error: error.message
+    });
   }
 };
 

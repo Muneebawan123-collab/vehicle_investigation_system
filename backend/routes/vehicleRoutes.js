@@ -23,8 +23,9 @@ const {
   updateComplianceDetails
 } = require('../controllers/vehicleController');
 const { protect, authorize } = require('../middleware/authMiddleware');
-const upload = require('../utils/multerConfig');
+const { upload } = require('../config/cloudinary');
 const { check, validationResult } = require('express-validator');
+const Vehicle = require('../models/Vehicle');
 
 // Search and filter routes - must come before :id routes to avoid conflicts
 router.get('/search', protect, searchVehicles);
@@ -53,7 +54,39 @@ router.put('/:id/compliance', protect, authorize('officer', 'admin', 'investigat
 router.put('/:id/location', protect, authorize('officer', 'admin', 'investigator'), updateVehicleLocation);
 
 // Image routes
-router.post('/:id/images', protect, authorize('officer', 'admin', 'investigator'), upload.array('images'), uploadVehicleImages);
+router.post('/:id/images', protect, authorize('officer', 'admin', 'investigator'), upload.array('images', 5), async (req, res) => {
+  try {
+    const vehicle = await Vehicle.findById(req.params.id);
+    if (!vehicle) {
+      return res.status(404).json({
+        success: false,
+        message: 'Vehicle not found'
+      });
+    }
+
+    // Add new images to the vehicle
+    const newImages = req.files.map(file => ({
+      url: file.path,
+      publicId: file.filename
+    }));
+
+    vehicle.images = [...vehicle.images, ...newImages];
+    await vehicle.save();
+
+    res.json({
+      success: true,
+      data: vehicle.images,
+      message: 'Images uploaded successfully'
+    });
+  } catch (error) {
+    console.error('Error uploading images:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error uploading images',
+      error: error.message
+    });
+  }
+});
 router.put('/:id/main-image', protect, authorize('officer', 'admin', 'investigator'), setMainVehicleImage);
 router.delete('/:id/images/:imageId', protect, authorize('officer', 'admin', 'investigator'), removeVehicleImage);
 

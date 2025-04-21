@@ -190,7 +190,7 @@ const incidentSchema = new mongoose.Schema({
     caseNumber: String,
     status: {
       type: String,
-      enum: ['not_assigned', 'open', 'under_review', 'closed'],
+      enum: ['not_assigned', 'assigned', 'under_investigation', 'report_submitted', 'review_complete', 'closed'],
       default: 'not_assigned'
     },
     priority: {
@@ -210,7 +210,55 @@ const incidentSchema = new mongoose.Schema({
       type: String,
       enum: ['pending', 'substantiated', 'unsubstantiated', 'inconclusive'],
       default: 'pending'
+    },
+    investigationReport: {
+      submittedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      submittedAt: Date,
+      content: String,
+      attachments: [String],
+      status: {
+        type: String,
+        enum: ['pending', 'submitted', 'reviewed', 'approved', 'rejected'],
+        default: 'pending'
+      }
+    },
+    officerActions: {
+      reviewedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      reviewedAt: Date,
+      actions: String,
+      notes: String,
+      status: {
+        type: String,
+        enum: ['pending', 'in_progress', 'completed'],
+        default: 'pending'
+      }
     }
+  },
+  vehicle: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Vehicle'
+  },
+  incidentType: {
+    type: String,
+    enum: [
+      'theft', 
+      'accident', 
+      'vandalism', 
+      'traffic_violation', 
+      'dui', 
+      'abandoned', 
+      'suspicious_activity',
+      'other'
+    ]
+  },
+  dateTime: {
+    type: Date
   }
 }, {
   timestamps: true
@@ -236,9 +284,35 @@ incidentSchema.pre('save', async function(next) {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     this.incidentNumber = `INC-${year}${month}-${(count + 1).toString().padStart(4, '0')}`;
   }
+
+  // Sync type and incidentType fields
+  if (this.type && !this.incidentType) {
+    this.incidentType = this.type;
+  } else if (this.incidentType && !this.type) {
+    this.type = this.incidentType;
+  }
+
+  // Sync date and dateTime fields
+  if (this.date && !this.dateTime) {
+    this.dateTime = this.date;
+  } else if (this.dateTime && !this.date) {
+    this.date = this.dateTime;
+  }
+
+  // Sync vehicle field with vehicles array
+  if (this.vehicle && (!this.vehicles || this.vehicles.length === 0)) {
+    this.vehicles = [{ 
+      vehicle: this.vehicle, 
+      involvement: 'victim',
+      details: 'Primary vehicle'
+    }];
+  } else if (this.vehicles && this.vehicles.length > 0 && !this.vehicle) {
+    this.vehicle = this.vehicles[0].vehicle;
+  }
+
   next();
 });
 
-const Incident = mongoose.model('Incident', incidentSchema);
+const Incident = mongoose.model('Incident', incidentSchema, 'incidents', { strict: false });
 
 module.exports = Incident; 

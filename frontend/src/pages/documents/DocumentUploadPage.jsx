@@ -52,7 +52,7 @@ const DocumentUploadPage = () => {
         setError('File object is not available. Please try selecting the file again.');
         return;
       }
-      
+
       console.log('File to upload:', {
         name: fileObj.name,
         type: fileObj.type,
@@ -143,7 +143,7 @@ const DocumentUploadPage = () => {
       const isValidType = [
         'application/pdf',
         'image/jpeg',
-        'image/png', 
+        'image/png',
         'image/jpg',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'

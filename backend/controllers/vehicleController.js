@@ -155,20 +155,79 @@ const getVehicleById = async (req, res, next) => {
  */
 const updateVehicle = async (req, res, next) => {
   try {
+    console.log('Update vehicle request received for ID:', req.params.id);
+    console.log('Update data:', req.body);
+    
+    // Validate request ID
+    if (!req.params.id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Vehicle ID is required'
+      });
+    }
+    
+    // Find the vehicle first to check if it exists
     const vehicle = await Vehicle.findById(req.params.id);
     if (!vehicle) {
-      return res.status(404).json({ message: 'Vehicle not found' });
+      console.log('Vehicle not found with ID:', req.params.id);
+      return res.status(404).json({
+        success: false,
+        message: 'Vehicle not found'
+      });
     }
 
+    // Update the vehicle
     const updatedVehicle = await Vehicle.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
-    res.json(updatedVehicle);
+    // Create audit log
+    await createAuditLog(
+      req,
+      'update',
+      'vehicle',
+      updatedVehicle._id,
+      `Vehicle updated: ${updatedVehicle.year} ${updatedVehicle.make} ${updatedVehicle.model} (${updatedVehicle.licensePlate})`,
+      true
+    );
+
+    console.log('Vehicle updated successfully:', updatedVehicle._id);
+    
+    res.json({
+      success: true,
+      message: 'Vehicle updated successfully',
+      data: updatedVehicle
+    });
   } catch (error) {
-    next(error);
+    console.error('Error updating vehicle:', error);
+    
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: messages
+      });
+    }
+    
+    // Handle duplicate key errors
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      const value = error.keyValue[field];
+      return res.status(400).json({
+        success: false,
+        message: `A vehicle with this ${field} (${value}) already exists`
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Server error during vehicle update',
+      error: error.message
+    });
   }
 };
 
@@ -207,11 +266,52 @@ const deleteVehicle = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Search vehicles
+ * @route   GET /api/vehicles/search
+ * @access  Private
+ */
+const searchVehicles = async (req, res) => {
+  try {
+    const { query } = req.query;
+    
+    if (!query) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a search query'
+      });
+    }
+
+    // Search for vehicles by license plate (case-insensitive)
+    const vehicles = await Vehicle.find({
+      licensePlate: { $regex: query, $options: 'i' }
+    }).select('-__v');
+
+    if (vehicles.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No vehicles found matching the search criteria'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: vehicles
+    });
+  } catch (error) {
+    console.error('Error searching vehicles:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error searching vehicles',
+      error: error.message
+    });
+  }
+};
+
 // Placeholder functions for unimplemented features
 const uploadVehicleImages = (req, res) => res.status(501).json({ message: 'Not implemented' });
 const setMainVehicleImage = (req, res) => res.status(501).json({ message: 'Not implemented' });
 const removeVehicleImage = (req, res) => res.status(501).json({ message: 'Not implemented' });
-const searchVehicles = (req, res) => res.status(501).json({ message: 'Not implemented' });
 const updateVehicleLocation = (req, res) => res.status(501).json({ message: 'Not implemented' });
 const addVehicleNote = (req, res) => res.status(501).json({ message: 'Not implemented' });
 const getVehicleNotes = (req, res) => res.status(501).json({ message: 'Not implemented' });

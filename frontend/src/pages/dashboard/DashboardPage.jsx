@@ -1,30 +1,37 @@
 import { useState, useEffect } from 'react';
 import {
   Box, Typography, Grid, Card, CardContent, Paper, CircularProgress,
-  List, ListItem, ListItemText, Divider, Avatar, Button, Alert, Stack
+  List, ListItem, ListItemText, Divider, Avatar, Button, Alert, Stack,
+  TextField
 } from '@mui/material';
 import {
   DirectionsCar, Description, Report, Timeline, Add, Upload,
-  Warning, Notifications, ErrorOutline
+  Warning, Notifications, ErrorOutline, SearchOutlined as SearchIcon
 } from '@mui/icons-material';
 import { vehicleService, incidentService, documentService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { PieChart, Pie, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../../context/AuthContext';
 import LiveTrafficUpdates from '../../components/traffic/LiveTrafficUpdates';
+import VehicleDetails from '../../components/vehicles/VehicleDetails';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 const DashboardPage = () => {
-  const [vehicleCount, setVehicleCount] = useState(null);
-  const [incidentCount, setIncidentCount] = useState(null);
-  const [documentCount, setDocumentCount] = useState(null);
+  const { user } = useAuth();
+  const [vehicleCount, setVehicleCount] = useState(0);
+  const [incidentCount, setIncidentCount] = useState(0);
+  const [documentCount, setDocumentCount] = useState(0);
   const [recentVehicles, setRecentVehicles] = useState([]);
   const [recentDocuments, setRecentDocuments] = useState([]);
   const [vehiclesByMake, setVehiclesByMake] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,13 +42,15 @@ const DashboardPage = () => {
 
         // Fetch vehicle statistics
         const vehicleResponse = await vehicleService.getAllVehicles();
-        const vehicles = vehicleResponse.data.data || vehicleResponse.data || [];
+        const vehicles = Array.isArray(vehicleResponse.data) ? vehicleResponse.data : 
+                        (vehicleResponse.data?.data || []);
         setVehicleCount(vehicles.length);
         
         // Get 5 most recent vehicles
-        const sortedVehicles = [...vehicles].sort((a, b) => 
-          new Date(b.createdAt || b.registrationDate || 0) - new Date(a.createdAt || a.registrationDate || 0)
-        ).slice(0, 5);
+        const sortedVehicles = vehicles
+          .sort((a, b) => new Date(b.createdAt || b.registrationDate || 0) - 
+                         new Date(a.createdAt || a.registrationDate || 0))
+          .slice(0, 5);
         setRecentVehicles(sortedVehicles);
         
         // Group vehicles by make for chart
@@ -51,64 +60,53 @@ const DashboardPage = () => {
           makeCount[make] = (makeCount[make] || 0) + 1;
         });
         
-        // Convert to array for chart
         const makeData = Object.entries(makeCount)
           .map(([make, count]) => ({ name: make, value: count }))
           .sort((a, b) => b.value - a.value)
-          .slice(0, 6); // Take top 6 makes
+          .slice(0, 6);
         
         setVehiclesByMake(makeData);
-        
-        // Check for vehicles with expired registrations
-        const currentDate = new Date();
-        const expiredVehicles = vehicles.filter(vehicle => {
-          if (!vehicle.registrationExpiry) return false;
-          const expiryDate = new Date(vehicle.registrationExpiry);
-          return expiryDate < currentDate;
-        });
-        
-        if (expiredVehicles.length > 0) {
-          setAlerts(prev => [...prev, {
-            type: 'warning',
-            message: `${expiredVehicles.length} vehicle(s) have expired registrations`,
-            action: () => navigate('/vehicles')
-          }]);
-        }
 
         // Fetch incident statistics
         const incidentResponse = await incidentService.getAllIncidents();
-        const incidents = incidentResponse.data.data || incidentResponse.data || [];
+        const incidents = Array.isArray(incidentResponse.data) ? incidentResponse.data :
+                         (incidentResponse.data?.data || []);
         setIncidentCount(incidents.length);
-        
-        // Check for unassigned incidents
-        const unassignedIncidents = incidents.filter(
-          incident => !incident.assignedTo || incident.status === 'unassigned'
-        );
-        
-        if (unassignedIncidents.length > 0) {
-          setAlerts(prev => [...prev, {
-            type: 'error',
-            message: `${unassignedIncidents.length} incident(s) are unassigned`,
-            action: () => navigate('/incidents')
-          }]);
-        }
 
         // Fetch document statistics
         const documentResponse = await documentService.getAllDocuments();
-        const documents = documentResponse.data.data || 
-                         (Array.isArray(documentResponse.data) ? documentResponse.data : []) ||
-                         (documentResponse.data.resources ? documentResponse.data.resources : []);
+        let documents = [];
+        
+        // Handle different possible response structures
+        if (documentResponse && documentResponse.data) {
+          if (Array.isArray(documentResponse.data)) {
+            documents = documentResponse.data;
+          } else if (documentResponse.data.data && Array.isArray(documentResponse.data.data)) {
+            documents = documentResponse.data.data;
+          } else if (documentResponse.data.resources && Array.isArray(documentResponse.data.resources)) {
+            documents = documentResponse.data.resources;
+          }
+        }
+        
         setDocumentCount(documents.length);
         
         // Get 5 most recent documents
-        const sortedDocuments = [...documents].sort((a, b) => 
-          new Date(b.uploadDate || b.createdAt || 0) - new Date(a.uploadDate || a.createdAt || 0)
-        ).slice(0, 5);
+        const sortedDocuments = documents
+          .sort((a, b) => new Date(b.uploadDate || b.createdAt || 0) - 
+                         new Date(a.uploadDate || a.createdAt || 0))
+          .slice(0, 5);
         setRecentDocuments(sortedDocuments);
 
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
         setError('Failed to load dashboard data. Please try again later.');
+        // Initialize empty states on error
+        setVehicleCount(0);
+        setIncidentCount(0);
+        setDocumentCount(0);
+        setRecentVehicles([]);
+        setRecentDocuments([]);
+        setVehiclesByMake([]);
       } finally {
         setLoading(false);
       }
@@ -116,6 +114,32 @@ const DashboardPage = () => {
 
     fetchDashboardData();
   }, [navigate]);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    try {
+      setSearchLoading(true);
+      setSearchError(null);
+      const response = await vehicleService.searchVehicles(searchQuery);
+      
+      // Check if response has the expected structure
+      if (response && response.data) {
+        // Access the data array from the response
+        const vehicles = response.data.data || [];
+        setSearchResults(vehicles);
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (err) {
+      console.error('Search error:', err);
+      setSearchError(err.response?.data?.message || 'Failed to search vehicles');
+      setSearchResults([]);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
 
   const renderStatCard = (title, value, isLoading, icon) => (
     <Card 
@@ -175,6 +199,14 @@ const DashboardPage = () => {
     { name: 'Documents', value: documentCount || 0 }
   ];
 
+  if (loading) {
+    return (
+      <Box className="page-container" display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box className="page-container">
       <Typography variant="h4" component="h1" gutterBottom>
@@ -188,6 +220,64 @@ const DashboardPage = () => {
       {error && (
         <Paper sx={{ p: 2, mb: 3, bgcolor: '#ffebee' }}>
           <Typography color="error">{error}</Typography>
+        </Paper>
+      )}
+      
+      {/* Search Section */}
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <SearchIcon sx={{ mr: 1 }} />
+          Search Vehicle
+        </Typography>
+        
+        <form onSubmit={handleSearch}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={9}>
+              <TextField
+                fullWidth
+                label="Enter vehicle license plate number"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                disabled={searchLoading}
+                sx={{ height: '100%', minHeight: '56px' }}
+              >
+                {searchLoading ? <CircularProgress size={24} /> : 'Search'}
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+      
+      {/* Search Results */}
+      {searchError && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {searchError}
+        </Alert>
+      )}
+
+      {searchResults && (
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            Search Results ({searchResults.length} vehicles found)
+          </Typography>
+          {searchResults.length === 0 ? (
+            <Alert severity="info">
+              No vehicles found matching your search criteria.
+            </Alert>
+          ) : (
+            searchResults.map((vehicle) => (
+              <VehicleDetails key={vehicle._id} vehicle={vehicle} />
+            ))
+          )}
         </Paper>
       )}
       

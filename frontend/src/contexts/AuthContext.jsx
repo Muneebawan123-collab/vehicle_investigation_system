@@ -13,13 +13,26 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
+      setLoading(true);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // Fetch user data
-      axios.get('/api/auth/me')
+      
+      // Fetch user profile from correct endpoint
+      axios.get('/api/users/profile')
         .then(response => {
-          setUser(response.data);
+          console.log('Profile data received:', response.data);
+          if (response.data && (response.data.success || response.data._id)) {
+            const userData = response.data.user || response.data;
+            console.log('Setting user data in context:', userData);
+            setUser(userData);
+            localStorage.setItem('userData', JSON.stringify(userData));
+          } else {
+            console.warn('Unexpected profile data format:', response.data);
+            localStorage.removeItem('token');
+            delete axios.defaults.headers.common['Authorization'];
+          }
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error('Error fetching profile:', error);
           localStorage.removeItem('token');
           delete axios.defaults.headers.common['Authorization'];
         })
@@ -64,12 +77,16 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (profileData) => {
     try {
-      const response = await axios.put('/api/auth/profile', profileData);
-      setUser(response.data);
-      return true;
+      setLoading(true);
+      const response = await axios.put('/api/users/profile', profileData);
+      setUser(response.data.user);
+      message.success('Profile updated successfully');
+      return response.data;
     } catch (error) {
       message.error(error.response?.data?.message || 'Failed to update profile');
-      return false;
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 

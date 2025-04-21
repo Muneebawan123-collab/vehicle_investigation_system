@@ -1,12 +1,27 @@
 const cloudinary = require('cloudinary').v2;
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const logger = require('./logger');
 
-// Configure Cloudinary with environment variables
+// Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'Set',
+  api_key: process.env.CLOUDINARY_API_KEY || 'Set',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'Set'
 });
+
+// Configure storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'vehicle_investigation',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'gif'],
+    transformation: [{ width: 1000, height: 1000, crop: 'limit' }]
+  }
+});
+
+// Create multer upload middleware
+const upload = multer({ storage: storage });
 
 // Log configuration
 console.log('Cloudinary configuration loaded:', {
@@ -32,4 +47,8 @@ const testCloudinaryConnection = async () => {
   }
 };
 
-module.exports = { cloudinary, testCloudinaryConnection }; 
+module.exports = {
+  cloudinary,
+  upload,
+  testCloudinaryConnection
+}; 

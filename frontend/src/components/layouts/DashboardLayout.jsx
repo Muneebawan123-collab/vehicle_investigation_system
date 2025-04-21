@@ -27,6 +27,7 @@ import {
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import { styled } from '@mui/material/styles';
+import { formatFileUrl } from '../../utils/imageUtils';
 
 // Icons
 import MenuIcon from '@mui/icons-material/Menu';
@@ -378,7 +379,7 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
             >
               <Avatar 
                 alt={user?.firstName} 
-                src={user?.profileImage}
+                src={formatFileUrl(user?.profileImage)}
                 sx={{ width: 32, height: 32 }}
               >
                 {user?.firstName?.[0]}{user?.lastName?.[0]}

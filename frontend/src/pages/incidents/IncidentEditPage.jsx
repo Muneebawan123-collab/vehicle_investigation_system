@@ -22,12 +22,20 @@ const IncidentEditPage = () => {
   const [error, setError] = useState(null);
   const { isAuthenticated } = useAuth();
 
+  // Initialize form with default values
+  useEffect(() => {
+    form.setFieldsValue({
+      status: 'open',
+      severity: 'medium'
+    });
+  }, [form]);
+
   useEffect(() => {
     if (isAuthenticated && id) {
       fetchIncidentDetails();
       fetchVehicles();
     }
-  }, [id, isAuthenticated]);
+  }, [id, isAuthenticated, form]); // Add form to dependencies
 
   const fetchVehicles = async () => {
     try {
@@ -59,13 +67,13 @@ const IncidentEditPage = () => {
       form.setFieldsValue({
         title: data.title,
         description: data.description,
-        incidentType: data.incidentType,
+        incidentType: data.incidentType || data.type, // Handle both fields
         severity: data.severity,
         dateTime: incidentDate,
         location: data.location?.address || '',
-        vehicle: data.vehicle?._id || data.vehicle, // Handle both populated and non-populated vehicle
+        vehicle: data.vehicle?._id || data.vehicle,
         policeReportNumber: data.policeReportNumber || '',
-        status: data.status || 'Open'
+        status: data.status?.toLowerCase() || 'open' // Ensure lowercase status
       });
     } catch (error) {
       console.error('Failed to fetch incident details:', error);
@@ -84,34 +92,46 @@ const IncidentEditPage = () => {
       // Format the date
       const formattedDate = values.dateTime ? values.dateTime.toISOString() : new Date().toISOString();
       
-      // Create the incident data
+      // Format the location data
+      const locationData = values.location ? {
+        type: 'Point',
+        coordinates: [0, 0],
+        address: values.location
+      } : undefined;
+
+      // Create the incident update data
       const incidentData = {
         title: values.title,
         description: values.description,
+        type: values.incidentType, // Use type instead of incidentType
         incidentType: values.incidentType,
         severity: values.severity,
         dateTime: formattedDate,
-        location: {
-          type: 'Point',
-          coordinates: [0, 0], // Default coordinates
-          address: values.location
-        },
+        date: formattedDate, // Add date field
+        time: moment(formattedDate).format('HH:mm:ss'), // Add time field
+        location: locationData,
         vehicle: values.vehicle,
-        policeReportNumber: values.policeReportNumber || '',
-        status: values.status
+        policeReportNumber: values.policeReportNumber || "",
+        status: values.status.toLowerCase() // Ensure lowercase status
       };
-      
-      console.log('Updating incident with data:', incidentData);
-      
-      // Make API call using incidentService
+
+      // Remove undefined values
+      Object.keys(incidentData).forEach(key => 
+        incidentData[key] === undefined && delete incidentData[key]
+      );
+
+      console.log("Sending update data:", JSON.stringify(incidentData, null, 2));
+
       const response = await incidentService.updateIncident(id, incidentData);
       
       message.success('Incident updated successfully!');
-      navigate(`/incidents/${id}`);
+      console.log('Updated incident:', response.data);
+      navigate('/incidents');
     } catch (error) {
       console.error('Failed to update incident:', error);
-      setError('Failed to update incident: ' + (error.response?.data?.message || error.message));
-      message.error('Failed to update incident: ' + (error.response?.data?.message || error.message));
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message;
+      setError('Failed to update incident: ' + errorMessage);
+      message.error('Failed to update incident: ' + errorMessage);
     } finally {
       setLoading(false);
     }
@@ -165,7 +185,7 @@ const IncidentEditPage = () => {
   return (
     <div style={{ 
       padding: '24px',
-      paddingTop: '100px', // Add extra top padding to accommodate navbar
+      paddingTop: '100px',
       position: 'relative',
       zIndex: 0
     }}>
@@ -196,6 +216,7 @@ const IncidentEditPage = () => {
           name="incident-edit"
           onFinish={onFinish}
           layout="vertical"
+          preserve={false}
         >
           <Form.Item
             name="title"
@@ -236,6 +257,10 @@ const IncidentEditPage = () => {
               <Option value="accident">Accident</Option>
               <Option value="theft">Theft</Option>
               <Option value="vandalism">Vandalism</Option>
+              <Option value="traffic_violation">Traffic Violation</Option>
+              <Option value="dui">DUI</Option>
+              <Option value="abandoned">Abandoned</Option>
+              <Option value="suspicious_activity">Suspicious Activity</Option>
               <Option value="other">Other</Option>
             </Select>
           </Form.Item>
@@ -297,10 +322,11 @@ const IncidentEditPage = () => {
             rules={[{ required: true, message: 'Please select the status!' }]}
           >
             <Select>
-              <Option value="Open">Open</Option>
-              <Option value="In Progress">In Progress</Option>
-              <Option value="Resolved">Resolved</Option>
-              <Option value="Closed">Closed</Option>
+              <Option value="open">Open</Option>
+              <Option value="under_investigation">Under Investigation</Option>
+              <Option value="pending">Pending</Option>
+              <Option value="closed">Closed</Option>
+              <Option value="reopened">Reopened</Option>
             </Select>
           </Form.Item>
 

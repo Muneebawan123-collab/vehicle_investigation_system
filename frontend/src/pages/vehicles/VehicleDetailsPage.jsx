@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Card, Descriptions, Button, Tag, Spin, message, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 const { confirm } = Modal;
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 
 const VehicleDetailsPage = () => {
   const { id } = useParams();
@@ -20,7 +20,7 @@ const VehicleDetailsPage = () => {
   const fetchVehicleDetails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/api/vehicles/${id}`, {
+      const response = await axios.get(`/api/vehicles/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -47,7 +47,7 @@ const VehicleDetailsPage = () => {
       cancelText: 'No',
       onOk: async () => {
         try {
-          await axios.delete(`${API_BASE_URL}/api/vehicles/${id}`, {
+          await axios.delete(`/api/vehicles/${id}`, {
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -83,7 +83,12 @@ const VehicleDetailsPage = () => {
             <Button
               type="primary"
               icon={<EditOutlined />}
-              onClick={() => navigate(`/vehicles/${id}/edit`)}
+              onClick={() => {
+                console.log('Edit button clicked for vehicle:', id);
+                const editUrl = `/vehicles/edit/${id}`;
+                console.log('Navigating to:', editUrl);
+                navigate(editUrl);
+              }}
               style={{ marginRight: 8 }}
             >
               Edit
@@ -121,18 +126,22 @@ const VehicleDetailsPage = () => {
           <Descriptions.Item label="Registration Expiry">
             {vehicle.registrationExpiry ? new Date(vehicle.registrationExpiry).toLocaleDateString() : 'N/A'}
           </Descriptions.Item>
+          
+          {/* Owner Information Section */}
           <Descriptions.Item label="Owner Name" span={2}>
-            {vehicle.owner?.name}
+            {vehicle.ownerName || 'N/A'}
           </Descriptions.Item>
           <Descriptions.Item label="Owner Contact" span={2}>
-            {vehicle.owner?.contact?.phone}
+            {vehicle.ownerContact || 'N/A'}
           </Descriptions.Item>
           <Descriptions.Item label="Owner Email" span={2}>
-            {vehicle.owner?.contact?.email || 'N/A'}
+            {vehicle.ownerEmail || 'N/A'}
           </Descriptions.Item>
           <Descriptions.Item label="Owner Address" span={2}>
-            {vehicle.owner?.contact?.address}
+            {vehicle.ownerAddress || 'N/A'}
           </Descriptions.Item>
+
+          {/* Insurance Information Section */}
           <Descriptions.Item label="Insurance Provider" span={2}>
             {vehicle.insuranceProvider || 'N/A'}
           </Descriptions.Item>
@@ -146,6 +155,8 @@ const VehicleDetailsPage = () => {
               {new Date(vehicle.insuranceExpiry).toLocaleDateString()}
             </Descriptions.Item>
           )}
+
+          {/* Theft Information Section (if applicable) */}
           {vehicle.status === 'stolen' && (
             <>
               <Descriptions.Item label="Theft Report Date" span={2}>
@@ -160,6 +171,14 @@ const VehicleDetailsPage = () => {
             </>
           )}
         </Descriptions>
+        <div style={{ marginTop: 16 }}>
+          <Link to={`/vehicles/test-edit/${id}`} style={{ marginRight: 8 }}>
+            Test Edit Route
+          </Link>
+          <Link to={`/test`}>
+            Test Basic Route
+          </Link>
+        </div>
       </Card>
     </div>
   );

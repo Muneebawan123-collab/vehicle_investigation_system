@@ -4,6 +4,7 @@ import { SearchOutlined, UploadOutlined, DownloadOutlined, DeleteOutlined, FileT
 import { useNavigate } from 'react-router-dom';
 import { documentService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { formatFileUrl, downloadBlob, formatFileSize } from '../../utils/imageUtils';
 
 const DocumentsListPage = () => {
   const navigate = useNavigate();
@@ -34,11 +35,19 @@ const DocumentsListPage = () => {
       if (response.data && Array.isArray(response.data.data)) {
         // Handle standard backend response format with data property
         console.log('Documents found:', response.data.data.length);
-        setDocuments(response.data.data);
+        setDocuments(response.data.data.map(doc => ({
+          ...doc,
+          id: doc._id || doc.id, // Use MongoDB _id if available
+          name: doc.name || doc.public_id?.split('/').pop() || 'Unnamed Document'
+        })));
       } else if (response.data && Array.isArray(response.data)) {
         // Handle simple array response
         console.log('Documents found (array):', response.data.length);
-        setDocuments(response.data);
+        setDocuments(response.data.map(doc => ({
+          ...doc,
+          id: doc._id || doc.id, // Use MongoDB _id if available
+          name: doc.name || doc.public_id?.split('/').pop() || 'Unnamed Document'
+        })));
       } else if (response.data && Array.isArray(response.data.resources)) {
         // Handle Cloudinary response format
         console.log('Documents found (Cloudinary):', response.data.resources.length);
@@ -87,28 +96,36 @@ const DocumentsListPage = () => {
     try {
       // Direct download from URL if available
       if (documentUrl) {
-        window.open(documentUrl, '_blank');
+        // Fix local file URLs - convert to relative paths
+        const formattedUrl = formatFileUrl(documentUrl);
+        window.open(formattedUrl, '_blank');
         return;
       }
       
       // Otherwise use API
-      const response = await documentService.getDocumentById(documentId);
-      if (response.data && response.data.secure_url) {
-        window.open(response.data.secure_url, '_blank');
+      const response = await documentService.downloadDocument(documentId);
+      if (response && response.data) {
+        // Create a blob URL for the file data
+        const blob = new Blob([response.data], { 
+          type: response.headers?.['content-type'] || 'application/octet-stream' 
+        });
+        const filename = documentId.split('/').pop() || 'document';
+        downloadBlob(blob, filename);
       } else {
-        message.error('Document URL not found');
+        message.error('Document data not found');
       }
     } catch (error) {
       console.error('Failed to download document:', error);
-      message.error('Failed to download document');
+      message.error('Failed to download document: ' + (error.response?.data?.message || error.message));
     }
   };
 
   const handleDelete = async (documentId) => {
     try {
+      console.log('Deleting document:', documentId);
       await documentService.deleteDocument(documentId);
       message.success('Document deleted successfully');
-      fetchDocuments();
+      fetchDocuments(); // Refresh the list
     } catch (error) {
       console.error('Failed to delete document:', error);
       message.error('Failed to delete document: ' + (error.response?.data?.message || error.message));
