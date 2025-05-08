@@ -233,6 +233,11 @@ const incidentSchema = new mongoose.Schema({
       reviewedAt: Date,
       actions: String,
       notes: String,
+      conclusion: {
+        type: String,
+        enum: ['confirmed', 'additional_investigation', 'case_dismissed', 'legal_action', 'other'],
+        default: 'confirmed'
+      },
       status: {
         type: String,
         enum: ['pending', 'in_progress', 'completed'],
@@ -313,6 +318,5 @@ incidentSchema.pre('save', async function(next) {
   next();
 });
 
-const Incident = mongoose.model('Incident', incidentSchema, 'incidents', { strict: false });
-
-module.exports = Incident; 
+// Check if the model already exists before creating it again
+module.exports = mongoose.models.Incident || mongoose.model('Incident', incidentSchema); 

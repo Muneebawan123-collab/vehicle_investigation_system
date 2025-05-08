@@ -53,6 +53,5 @@ chatSchema.virtual('unreadCount').get(function() {
   return this.messages.filter(msg => !msg.readBy.includes(this._id)).length;
 });
 
-const Chat = mongoose.model('Chat', chatSchema);
-
-module.exports = Chat; 
+// Check if the model already exists before creating it
+module.exports = mongoose.models.Chat || mongoose.model('Chat', chatSchema); 

@@ -6,6 +6,9 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
+const axios = require('axios');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const { 
   uploadDocument,
   getDocuments,
@@ -22,10 +25,14 @@ const {
   getExpiringDocuments,
   logDocumentAccess,
   getDocumentVersions,
-  replaceDocument
+  replaceDocument,
+  downloadDocumentFile,
+  getDocumentBinaryFromMongoDB,
+  storeDocumentInMongoDB
 } = require('../controllers/documentController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const Document = require('../models/document');
+const { getSecureDownloadUrl } = require('../config/cloudinary');
 
 // Configure Cloudinary
 cloudinary.config({
@@ -238,6 +245,9 @@ router.get('/expiring', protect, getExpiringDocuments);
 router.get('/:id/versions', protect, getDocumentVersions);
 router.get('/:id', protect, getDocumentById);
 
+// Download routes
+router.get('/download/:id', protect, downloadDocumentFile);
+
 // PUT routes - Update operations (admin only)
 router.put('/:id', protect, authorize('admin'), updateDocument);
 router.put('/:id/verify', protect, authorize('admin'), verifyDocument);
@@ -251,90 +261,134 @@ router.post('/:id/watermark', protect, authorize('admin'), watermarkDocument);
 router.post('/:id/sign', protect, authorize('admin'), signDocument);
 router.post('/:id/replace', protect, authorize('admin'), upload.single('file'), handleMulterError, replaceDocument);
 
-// DELETE routes - Delete operations (admin only)
-router.delete('/:id', protect, authorize('admin'), async (req, res) => {
+// Special direct path route handler using simple Express 4.x style wildcard
+router.get('/path/*', protect, async (req, res) => {
   try {
-    const documentId = req.params.id;
-    console.log('Delete request received for document:', documentId);
+    // Extract the path from the wildcard (everything after /path/)
+    const fullPath = req.params[0]; // This works in both Express 4.x and 5.x
+    console.log('Direct path route hit with:', fullPath);
     
-    // Find the document in MongoDB
+    // Find document by publicId
+    const document = await Document.findOne({ publicId: fullPath });
+    
+    if (!document) {
+      console.log('Document not found with publicId:', fullPath);
+      return res.status(404).json({
+        success: false,
+        message: 'Document not found'
+      });
+    }
+    
+    // If document found, serve it
+    console.log('Document found, serving binary data');
+    
+    // Check if document has binary data
+    if (document.fileData && document.fileData.length > 0) {
+      console.log('Serving from MongoDB binary data');
+      
+      // Set appropriate content type
+      let contentType = 'application/octet-stream';
+      if (document.type === 'pdf') contentType = 'application/pdf';
+      else if (['jpg', 'jpeg'].includes(document.type?.toLowerCase())) contentType = 'image/jpeg';
+      else if (document.type?.toLowerCase() === 'png') contentType = 'image/png';
+      
+      // Set response headers
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Disposition', `attachment; filename="${document.name || 'document'}"`);
+      
+      // Send the binary data
+      return res.send(document.fileData);
+    }
+    
+    // Fallback to URL if available
+    if (document.url || document.fileUrl) {
+      console.log('Fetching from document URL');
+      const fileUrl = document.url || document.fileUrl;
+      
+      try {
+        const response = await axios({
+          method: 'GET',
+          url: fileUrl,
+          responseType: 'arraybuffer',
+          timeout: 30000
+        });
+        
+        if (response.status !== 200) {
+          throw new Error(`Failed to fetch document: ${response.status}`);
+        }
+        
+        // Set appropriate content type
+        let contentType = 'application/octet-stream';
+        if (document.type === 'pdf') contentType = 'application/pdf';
+        else if (['jpg', 'jpeg'].includes(document.type?.toLowerCase())) contentType = 'image/jpeg';
+        else if (document.type?.toLowerCase() === 'png') contentType = 'image/png';
+        
+        // Set headers
+        res.setHeader('Content-Type', contentType);
+        res.setHeader('Content-Disposition', `attachment; filename="${document.name || 'document'}"`);
+        
+        // Send the data
+        return res.send(Buffer.from(response.data));
+      } catch (fetchError) {
+        console.error('Error fetching document from URL:', fetchError);
+        throw fetchError;
+      }
+    }
+    
+    return res.status(404).json({
+      success: false,
+      message: 'Document found but no content available'
+    });
+  } catch (error) {
+    console.error('Error in direct path route:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving document',
+      error: error.message
+    });
+  }
+});
+
+// MongoDB binary routes
+router.get('/mongo-binary/:id', protect, getDocumentBinaryFromMongoDB);
+
+// Simple pattern for the complex path route
+router.get('/document-by-path/*', protect, async (req, res) => {
+  try {
+    // Extract the full path from the params
+    const documentId = req.params[0];
+    
+    console.log('Document path route hit with document ID:', documentId);
+    
+    // Find document by various ID formats including the full path
     const document = await Document.findOne({
       $or: [
-        { _id: documentId },
         { publicId: documentId },
-        { publicId: `vehicle_documents/${documentId}` }
+        { name: documentId }
       ]
     });
-
+    
     if (!document) {
-      console.log('Document not found:', documentId);
+      console.log('Document not found with ID:', documentId);
       return res.status(404).json({
         success: false,
         message: 'Document not found'
       });
     }
-
-    console.log('Found document:', {
-      id: document._id,
-      publicId: document.publicId,
-      name: document.name
-    });
-
-    // Delete from Cloudinary if publicId exists
-    if (document.publicId) {
-      try {
-        console.log('Attempting to delete from Cloudinary:', document.publicId);
-        await cloudinary.uploader.destroy(document.publicId);
-        console.log('Successfully deleted from Cloudinary');
-      } catch (error) {
-        console.error('Error deleting from Cloudinary:', error);
-        // Continue with document deletion even if Cloudinary fails
-      }
-    }
-
-    // Delete document from database
-    await Document.findByIdAndDelete(document._id);
-    console.log('Successfully deleted from MongoDB');
-
-    res.json({
-      success: true,
-      message: 'Document deleted successfully'
-    });
+    
+    // If document found, call the binary retrieval function
+    req.params.id = document._id.toString();
+    return await getDocumentBinaryFromMongoDB(req, res);
   } catch (error) {
-    console.error('Error deleting document:', error);
+    console.error('Error in document path route:', error);
     res.status(500).json({
       success: false,
-      message: 'Error deleting document',
+      message: 'Error retrieving document binary data',
       error: error.message
     });
   }
 });
 
-// Download route
-router.get('/:id/download', protect, async (req, res) => {
-  try {
-    const document = await Document.findById(req.params.id);
-    if (!document) {
-      return res.status(404).json({
-        success: false,
-        message: 'Document not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      data: {
-        url: document.url
-      }
-    });
-  } catch (error) {
-    console.error('Error downloading document:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error downloading document',
-      error: error.message
-    });
-  }
-});
+router.post('/:id/store-in-mongodb', protect, authorize('admin'), storeDocumentInMongoDB);
 
 module.exports = router; 

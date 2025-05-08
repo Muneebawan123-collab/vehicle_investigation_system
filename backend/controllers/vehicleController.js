@@ -3,6 +3,9 @@ const logger = require('../utils/logger');
 const { createAuditLog } = require('../utils/auditUtils');
 const { cloudinary } = require('../config/cloudinary');
 const asyncHandler = require('express-async-handler');
+const { generateVehicleQRCode, generateVehicleQRCodeBuffer } = require('../utils/qrCodeGenerator');
+const mongoose = require('mongoose');
+const { notifyUser, notifyAdmins } = require('../utils/notificationUtils');
 
 /**
  * @desc    Get all vehicles
@@ -103,6 +106,25 @@ const registerVehicle = asyncHandler(async (req, res) => {
       vehicle._id,
       `Vehicle ${registrationNumber} (${make} ${model}) registered by ${req.user.name}`,
       true
+    );
+
+    // Send real-time notification to the user
+    await notifyUser(
+      req.user._id,
+      'Vehicle Registered',
+      `Vehicle ${vehicle.registrationNumber} has been successfully registered.`,
+      'success',
+      'vehicle',
+      vehicle._id
+    );
+
+    // Notify all admins about the new registration
+    await notifyAdmins(
+      'New Vehicle Registration',
+      `${req.user.firstName || ''} ${req.user.lastName || ''} has registered a new vehicle: ${vehicle.registrationNumber}`,
+      'info',
+      'vehicle',
+      vehicle._id
     );
 
     res.status(201).json({
@@ -308,6 +330,137 @@ const searchVehicles = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Generate QR code for a vehicle
+ * @route   GET /api/vehicles/:id/qrcode
+ * @access  Private
+ */
+const generateQRCode = async (req, res) => {
+  try {
+    const vehicle = await Vehicle.findById(req.params.id);
+    
+    if (!vehicle) {
+      return res.status(404).json({
+        success: false,
+        message: 'Vehicle not found'
+      });
+    }
+    
+    // Generate QR code data URL
+    const qrCodeDataUrl = await generateVehicleQRCode(vehicle._id, req.get('origin') || '');
+    
+    res.json({
+      success: true,
+      qrCode: qrCodeDataUrl,
+      message: 'QR code generated successfully'
+    });
+  } catch (error) {
+    console.error('Error generating QR code:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error generating QR code',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * @desc    Stream QR code image for a vehicle
+ * @route   GET /api/vehicles/:id/qrcode-image
+ * @access  Private
+ */
+const getQRCodeImage = async (req, res) => {
+  try {
+    const vehicle = await Vehicle.findById(req.params.id);
+    
+    if (!vehicle) {
+      return res.status(404).json({
+        success: false,
+        message: 'Vehicle not found'
+      });
+    }
+    
+    // Generate QR code as buffer
+    const qrCodeBuffer = await generateVehicleQRCodeBuffer(vehicle._id, req.get('origin') || '');
+    
+    // Set response headers
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Disposition', `inline; filename="vehicle-${vehicle._id}-qr.png"`);
+    
+    // Send the QR code buffer as the response
+    res.send(qrCodeBuffer);
+  } catch (error) {
+    console.error('Error generating QR code image:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error generating QR code image',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * @desc    Get vehicle details via QR code (public access for scanning)
+ * @route   GET /api/vehicles/scan/:id
+ * @access  Public
+ */
+const getVehicleDetailsFromQR = async (req, res) => {
+  try {
+    console.log(`Scan request received for vehicle ID: ${req.params.id}`);
+    
+    if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+      console.log('Invalid vehicle ID format:', req.params.id);
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid vehicle ID format'
+      });
+    }
+    
+    const vehicle = await Vehicle.findById(req.params.id)
+      .select('-__v')
+      .lean();
+    
+    if (!vehicle) {
+      console.log(`Vehicle not found with ID: ${req.params.id}`);
+      return res.status(404).json({
+        success: false,
+        message: 'Vehicle not found'
+      });
+    }
+    
+    console.log(`QR code scanned successfully for vehicle ${vehicle._id} at ${new Date().toISOString()}`);
+    console.log('Returning vehicle data:', {
+      licensePlate: vehicle.licensePlate,
+      make: vehicle.make,
+      model: vehicle.model
+    });
+    
+    // Return public vehicle information
+    const publicVehicleInfo = {
+      licensePlate: vehicle.licensePlate,
+      vin: vehicle.vin,
+      make: vehicle.make,
+      model: vehicle.model,
+      year: vehicle.year,
+      color: vehicle.color,
+      registrationState: vehicle.registrationState,
+      status: vehicle.status
+    };
+    
+    res.json({
+      success: true,
+      vehicle: publicVehicleInfo
+    });
+  } catch (error) {
+    console.error('Error retrieving vehicle details from QR code:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving vehicle details',
+      error: error.message
+    });
+  }
+};
+
 // Placeholder functions for unimplemented features
 const uploadVehicleImages = (req, res) => res.status(501).json({ message: 'Not implemented' });
 const setMainVehicleImage = (req, res) => res.status(501).json({ message: 'Not implemented' });
@@ -344,5 +497,8 @@ module.exports = {
   checkVehicleCompliance,
   getVehiclesByOwner,
   getVehiclesByStatus,
-  updateComplianceDetails
+  updateComplianceDetails,
+  generateQRCode,
+  getQRCodeImage,
+  getVehicleDetailsFromQR
 };

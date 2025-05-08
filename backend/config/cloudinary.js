@@ -47,8 +47,28 @@ const testCloudinaryConnection = async () => {
   }
 };
 
+// Get secure download URL from Cloudinary
+const getSecureDownloadUrl = async (publicId) => {
+  try {
+    // Generate a signed URL with short expiration
+    const options = {
+      resource_type: 'raw',
+      type: 'private',
+      expires_at: Math.floor(Date.now() / 1000) + 300, // 5 minutes expiration
+      attachment: true // Force download
+    };
+
+    const url = cloudinary.utils.private_download_url(publicId, '', options);
+    return url;
+  } catch (error) {
+    console.error('Error generating secure download URL:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   cloudinary,
   upload,
-  testCloudinaryConnection
+  testCloudinaryConnection,
+  getSecureDownloadUrl
 }; 

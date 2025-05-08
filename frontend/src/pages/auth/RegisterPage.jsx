@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Form, Input, Button, message, Alert } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, IdcardOutlined } from '@ant-design/icons';
+import { Link, Box } from '@mui/material';
 
 const RegisterPage = () => {
   const [form] = Form.useForm();
@@ -32,7 +33,7 @@ const RegisterPage = () => {
       
       await register(userData);
       message.success('Registration successful! Please login.');
-      navigate('/login');
+      navigate('/login', { state: { from: { pathname: "/" } } });
     } catch (error) {
       console.error("Registration error:", error);
       
@@ -164,6 +165,12 @@ const RegisterPage = () => {
             </Button>
           </div>
         </Form>
+
+        <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Link component={RouterLink} to="/home" variant="body2">
+            Return to Home Page
+          </Link>
+        </Box>
       </div>
     </div>
   );

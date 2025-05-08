@@ -34,7 +34,7 @@ router.get('/unread', protect, async (req, res) => {
   try {
     const count = await Notification.countDocuments({ 
       user: req.user._id,
-      isRead: false
+      read: false
     });
       
     res.json({ unreadCount: count });
@@ -62,7 +62,7 @@ router.put('/:id/read', protect, async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to access this notification' });
     }
     
-    notification.isRead = true;
+    notification.read = true;
     await notification.save();
     
     res.json(notification);
@@ -80,8 +80,8 @@ router.put('/:id/read', protect, async (req, res) => {
 router.put('/read-all', protect, async (req, res) => {
   try {
     await Notification.updateMany(
-      { user: req.user._id, isRead: false },
-      { isRead: true }
+      { user: req.user._id, read: false },
+      { read: true }
     );
     
     res.json({ message: 'All notifications marked as read' });
@@ -109,7 +109,7 @@ router.delete('/:id', protect, async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to delete this notification' });
     }
     
-    await notification.remove();
+    await notification.deleteOne();
     
     res.json({ message: 'Notification removed' });
   } catch (error) {
@@ -130,6 +130,45 @@ router.delete('/clear-all', protect, async (req, res) => {
     res.json({ message: 'All notifications cleared' });
   } catch (error) {
     logger.error(`Error clearing all notifications: ${error.message}`);
+    res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+});
+
+/**
+ * @route   POST /api/notifications/test
+ * @desc    Create a test notification for the current user (for testing purposes only)
+ * @access  Private
+ */
+router.post('/test', protect, async (req, res) => {
+  try {
+    const { type = 'info', title = 'Test Notification', message = 'This is a test notification' } = req.body;
+    
+    const notification = await Notification.create({
+      user: req.user._id,
+      title,
+      message,
+      type,
+      read: false,
+      isUrgent: req.body.isUrgent || false,
+      resourceType: req.body.resourceType || 'system',
+      resourceId: req.body.resourceId || null
+    });
+    
+    // Get io instance
+    const io = req.app.get('io');
+    const userSockets = req.app.get('userSockets');
+    
+    if (io) {
+      const socketId = userSockets.get(req.user._id.toString());
+      if (socketId) {
+        io.to(socketId).emit('notification', notification);
+        logger.info(`Test notification sent in real-time to user ${req.user._id}`);
+      }
+    }
+    
+    res.status(201).json(notification);
+  } catch (error) {
+    logger.error(`Error creating test notification: ${error.message}`);
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 });

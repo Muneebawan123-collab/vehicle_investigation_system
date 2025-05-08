@@ -61,7 +61,7 @@ const trafficAlerts = [
 ];
 
 // @desc    Get a random safety tip
-// @route   GET /api/traffic/safety-tips
+// @route   GET /traffic/safety-tips
 // @access  Public
 router.get('/safety-tips', (req, res) => {
   try {
@@ -80,14 +80,15 @@ router.get('/safety-tips', (req, res) => {
 });
 
 // @desc    Get a random traffic alert
-// @route   GET /api/traffic/alerts
+// @route   GET /traffic/alerts
 // @access  Public
 router.get('/alerts', (req, res) => {
   try {
     const randomIndex = Math.floor(Math.random() * trafficAlerts.length);
     const alert = {
       ...trafficAlerts[randomIndex],
-      timestamp: new Date() // Update timestamp to current time
+      timestamp: new Date(), // Update timestamp to current time
+      severity: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)] // Add random severity
     };
     
     logger.info(`Traffic alert retrieved: ${alert.alert.substring(0, 30)}...`);
@@ -99,7 +100,7 @@ router.get('/alerts', (req, res) => {
 });
 
 // @desc    Get all safety tips
-// @route   GET /api/traffic/all-safety-tips
+// @route   GET /traffic/all-safety-tips
 // @access  Protected (Admin only)
 router.get('/all-safety-tips', protect, (req, res) => {
   try {
@@ -118,7 +119,7 @@ router.get('/all-safety-tips', protect, (req, res) => {
 });
 
 // @desc    Get all traffic alerts
-// @route   GET /api/traffic/all-alerts
+// @route   GET /traffic/all-alerts
 // @access  Protected (Admin only)
 router.get('/all-alerts', protect, (req, res) => {
   try {

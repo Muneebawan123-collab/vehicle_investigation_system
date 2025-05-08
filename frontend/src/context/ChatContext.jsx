@@ -20,22 +20,22 @@ export const ChatProvider = ({ children }) => {
     setError(null);
     
     try {
-      const response = await api.get('/api/chats');
+      const response = await api.get('/chats');
       // Make sure response.data.chats exists and is an array
-      const chatsList = response.data?.chats || [];
+      const chatsList = Array.isArray(response.data?.chats) ? response.data.chats : [];
       setChats(chatsList);
       
       // Calculate unread count
-      let count = 0;
-      if (Array.isArray(chatsList)) {
-        chatsList.forEach(chat => {
-          if (chat && chat.unreadCount) count += chat.unreadCount;
-        });
-      }
+      const count = chatsList.reduce((acc, chat) => acc + (chat?.unreadCount || 0), 0);
       setUnreadCount(count);
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not fetch chats');
-      console.error('Error fetching chats:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Could not fetch chats';
+      setError(errorMessage);
+      console.error('Error fetching chats:', {
+        message: errorMessage,
+        status: err.response?.status,
+        error: err
+      });
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ export const ChatProvider = ({ children }) => {
     setError(null);
     
     try {
-      const response = await api.get(`/api/chats/${chatId}`);
+      const response = await api.get(`/chats/${chatId}`);
       setCurrentChat(response.data.chat);
       
       // Update this chat in the chats list
@@ -66,8 +66,14 @@ export const ChatProvider = ({ children }) => {
       
       return response.data.chat;
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not fetch chat');
-      console.error('Error fetching chat:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Could not fetch chat';
+      setError(errorMessage);
+      console.error('Error fetching chat:', {
+        chatId,
+        message: errorMessage,
+        status: err.response?.status,
+        error: err
+      });
       return null;
     } finally {
       setLoading(false);
@@ -82,7 +88,7 @@ export const ChatProvider = ({ children }) => {
     setError(null);
     
     try {
-      const response = await api.post('/api/chats', {
+      const response = await api.post('/chats', {
         participants,
         title,
         initialMessage
@@ -93,8 +99,13 @@ export const ChatProvider = ({ children }) => {
       
       return response.data.chat;
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not create chat');
-      console.error('Error creating chat:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Could not create chat';
+      setError(errorMessage);
+      console.error('Error creating chat:', {
+        message: errorMessage,
+        status: err.response?.status,
+        error: err
+      });
       return null;
     } finally {
       setLoading(false);
@@ -108,7 +119,7 @@ export const ChatProvider = ({ children }) => {
     setError(null);
     
     try {
-      const response = await api.post(`/api/chats/${chatId}/messages`, { content });
+      const response = await api.post(`/chats/${chatId}/messages`, { content });
       
       // Update current chat with the new message
       if (currentChat && currentChat._id === chatId) {
@@ -127,20 +138,21 @@ export const ChatProvider = ({ children }) => {
       
       return response.data.chatMessage;
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not send message');
-      console.error('Error sending message:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Could not send message';
+      setError(errorMessage);
+      console.error('Error sending message:', {
+        chatId,
+        message: errorMessage,
+        status: err.response?.status,
+        error: err
+      });
       return null;
     }
   }, [user, currentChat]);
 
   // Calculate total unread messages
   const calculateUnreadCount = useCallback(() => {
-    let count = 0;
-    if (Array.isArray(chats)) {
-      chats.forEach(chat => {
-        if (chat && chat.unreadCount) count += chat.unreadCount;
-      });
-    }
+    const count = chats.reduce((acc, chat) => acc + (chat?.unreadCount || 0), 0);
     setUnreadCount(count);
   }, [chats]);
 
@@ -151,7 +163,7 @@ export const ChatProvider = ({ children }) => {
     setError(null);
     
     try {
-      await api.delete(`/api/chats/${chatId}`);
+      await api.delete(`/chats/${chatId}`);
       
       // Remove the chat from the chats list
       setChats(prev => prev.filter(chat => chat._id !== chatId));
@@ -163,8 +175,14 @@ export const ChatProvider = ({ children }) => {
       
       return true;
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not delete chat');
-      console.error('Error deleting chat:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Could not delete chat';
+      setError(errorMessage);
+      console.error('Error deleting chat:', {
+        chatId,
+        message: errorMessage,
+        status: err.response?.status,
+        error: err
+      });
       return false;
     }
   }, [user, currentChat]);
@@ -196,9 +214,7 @@ export const ChatProvider = ({ children }) => {
     return () => clearInterval(intervalId);
   }, [user, fetchChats, fetchChat, currentChat]);
 
-  return (
-    <ChatContext.Provider
-      value={{
+  const value = {
         chats,
         currentChat,
         loading,
@@ -210,8 +226,10 @@ export const ChatProvider = ({ children }) => {
         sendMessage,
         deleteChat,
         setCurrentChat
-      }}
-    >
+  };
+
+  return (
+    <ChatContext.Provider value={value}>
       {children}
     </ChatContext.Provider>
   );

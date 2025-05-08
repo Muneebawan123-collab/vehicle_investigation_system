@@ -32,24 +32,51 @@ import { formatFileUrl } from '../../utils/imageUtils';
 // Icons
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import ReportIcon from '@mui/icons-material/Report';
-import DescriptionIcon from '@mui/icons-material/Description';
-import PersonIcon from '@mui/icons-material/Person';
-import PeopleIcon from '@mui/icons-material/People';
-import SettingsIcon from '@mui/icons-material/Settings';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import DescriptionIcon from '@mui/icons-material/Description';
+import PeopleIcon from '@mui/icons-material/People';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import HomeIcon from '@mui/icons-material/Home';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import HomeIcon from '@mui/icons-material/Home';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 import ChatIcon from '@mui/icons-material/Chat';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import Psychology from '@mui/icons-material/Psychology';
+import FindInPage from '@mui/icons-material/FindInPage';
+import BrokenImage from '@mui/icons-material/BrokenImage';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import ReportIcon from '@mui/icons-material/Report';
+import {
+  Dashboard as DashboardIcon,
+  DirectionsCar as CarsIcon,
+  Assignment as IncidentsIcon,
+  Description as DocumentsIcon,
+  People as UsersIcon,
+  BarChart as StatsIcon,
+  Settings as SettingsIcon,
+  ExitToApp as LogoutIcon2,
+  Person as PersonIcon,
+  Notifications as NotificationsIcon2,
+  Search as SearchIcon2,
+  ChatBubbleOutline as ChatIcon2,
+  DarkMode as DarkModeIcon2,
+  LightMode as LightModeIcon2,
+  Psychology as AIIcon,
+  FindInPage as FraudDetectionIcon,
+  BrokenImage as DamageAnalysisIcon
+} from '@mui/icons-material';
 
 // Context
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
+import { useNotifications } from '../../context/NotificationContext';
+import NotificationBell from '../notifications/NotificationBell';
 
 // Constants
 const drawerWidth = 260;
@@ -108,10 +135,11 @@ const StyledAppBar = styled(AppBar, { shouldForwardProp: (prop) => prop !== 'ope
 // Menu Items
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-  { text: 'Vehicles', icon: <DirectionsCarIcon />, path: '/vehicles' },
+  { text: 'Vehicles', icon: <CarsIcon />, path: '/vehicles' },
   { text: 'Incidents', icon: <ReportIcon />, path: '/incidents' },
   { text: 'Documents', icon: <DescriptionIcon />, path: '/documents' },
-  { text: 'Messages', icon: <ChatIcon />, path: '/messages' },
+  { text: 'Messages', icon: <ChatIcon2 />, path: '/messages' },
+  { text: 'AI Tools', icon: <AIIcon />, path: '/ai' },
   { text: 'Profile', icon: <PersonIcon />, path: '/profile' },
 ];
 
@@ -121,6 +149,134 @@ const adminMenuItems = [
   { text: 'Promote Muneeb', icon: <PersonIcon />, path: '/admin/promote-muneeb' },
   { text: 'System Logs', icon: <DescriptionIcon />, path: '/admin/logs' },
   { text: 'Settings', icon: <SettingsIcon />, path: '/admin/settings' },
+  { text: 'Test Notifications', icon: <NotificationsIcon2 />, path: '/admin/test-notifications' },
+];
+
+const officerMenuItems = [
+  { text: 'Pending Reviews', icon: <CheckCircleOutlineIcon />, path: '/incidents/officer-review' },
+];
+
+// Navigation items for different user roles
+const navigationItems = [
+  {
+    title: 'Dashboard',
+    path: '/',
+    icon: <DashboardIcon />,
+    roles: ['Admin', 'Officer', 'Investigator', 'Viewer'],
+  },
+  {
+    title: 'Vehicles',
+    path: '/vehicles',
+    icon: <CarsIcon />,
+    roles: ['Admin', 'Officer', 'Investigator', 'Viewer'],
+    children: [
+      {
+        title: 'All Vehicles',
+        path: '/vehicles',
+        roles: ['Admin', 'Officer', 'Investigator', 'Viewer'],
+      },
+      {
+        title: 'Register Vehicle',
+        path: '/vehicles/register',
+        roles: ['Admin', 'Officer'],
+      },
+    ],
+  },
+  {
+    title: 'Incidents',
+    path: '/incidents',
+    icon: <IncidentsIcon />,
+    roles: ['Admin', 'Officer', 'Investigator', 'Viewer'],
+    children: [
+      {
+        title: 'All Incidents',
+        path: '/incidents',
+        roles: ['Admin', 'Officer', 'Investigator', 'Viewer'],
+      },
+      {
+        title: 'Create Incident',
+        path: '/incidents/create',
+        roles: ['Admin', 'Officer', 'Investigator'],
+      },
+      {
+        title: 'Officer Review',
+        path: '/incidents/officer-review',
+        roles: ['Admin', 'Officer'],
+      },
+    ],
+  },
+  {
+    title: 'Documents',
+    path: '/documents',
+    icon: <DocumentsIcon />,
+    roles: ['Admin', 'Officer', 'Investigator', 'Viewer'],
+    children: [
+      {
+        title: 'All Documents',
+        path: '/documents',
+        roles: ['Admin', 'Officer', 'Investigator', 'Viewer'],
+      },
+      {
+        title: 'Upload Document',
+        path: '/documents/upload',
+        roles: ['Admin', 'Officer', 'Investigator'],
+      },
+    ],
+  },
+  {
+    title: 'Messages',
+    path: '/messages',
+    icon: <ChatIcon2 />,
+    roles: ['Admin', 'Officer', 'Investigator'],
+  },
+  {
+    title: 'AI Tools',
+    path: '/ai',
+    icon: <AIIcon />,
+    roles: ['Admin', 'Officer', 'Investigator'],
+    children: [
+      {
+        title: 'Fraud Detection',
+        path: '/ai/fraud-detection',
+        icon: <FraudDetectionIcon />,
+        roles: ['Admin', 'Officer', 'Investigator'],
+      },
+      {
+        title: 'Damage Analysis',
+        path: '/ai/damage-analysis',
+        icon: <DamageAnalysisIcon />,
+        roles: ['Admin', 'Officer', 'Investigator'],
+      },
+    ],
+  },
+  {
+    title: 'Admin',
+    path: '/admin',
+    icon: <SettingsIcon />,
+    roles: ['Admin'],
+    children: [
+      {
+        title: 'Manage Users',
+        path: '/admin/users',
+        roles: ['Admin'],
+      },
+      {
+        title: 'All Users',
+        path: '/admin/manage-users',
+        roles: ['Admin'],
+      },
+      {
+        title: 'System Logs',
+        path: '/admin/logs',
+        roles: ['Admin'],
+      },
+      {
+        title: 'Settings',
+        path: '/admin/settings',
+        roles: ['Admin'],
+      },
+    ],
+  },
 ];
 
 const DashboardLayout = ({ darkMode, setDarkMode }) => {
@@ -130,7 +286,8 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
   const [notificationsAnchorEl, setNotificationsAnchorEl] = useState(null);
   
   const { user, loading, logout, hasRole } = useAuth();
-  const { unreadCount } = useChat();
+  const { unreadCount: chatUnreadCount } = useChat();
+  const { unreadCount: notificationUnreadCount } = useNotifications();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -200,8 +357,9 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
     
     crumbs.push({
       text: 'Home',
-      path: '/',
+      path: '/home',
       icon: <HomeIcon fontSize="small" sx={{ mr: 0.5 }} />,
+      isHomeIcon: true,
     });
     
     pathSegments.forEach((segment, index) => {
@@ -228,6 +386,14 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
   };
   
   const breadcrumbs = generateBreadcrumbs();
+  
+  // Handle home icon click
+  const handleHomeClick = () => {
+    // Logout the user
+    logout();
+    // Navigate to home page with proper redirect state
+    navigate('/home', { state: { from: { pathname: "/" } } });
+  };
   
   // Loading state
   if (loading) {
@@ -274,8 +440,8 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
             >
               <ListItemIcon>
                 {item.text === 'Messages' ? (
-                  <Badge color="error" badgeContent={unreadCount} invisible={!unreadCount}>
-                    <ChatIcon />
+                  <Badge color="error" badgeContent={chatUnreadCount} invisible={!chatUnreadCount}>
+                    <ChatIcon2 />
                   </Badge>
                 ) : (
                   item.icon
@@ -296,7 +462,7 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
             {adminMenuItems.map((item) => (
               <ListItem key={item.text} disablePadding>
                 <ListItemButton
-                  selected={location.pathname.startsWith(item.path)}
+                  selected={location.pathname === item.path}
                   onClick={() => navigate(item.path)}
                   sx={{
                     '&.Mui-selected': {
@@ -314,9 +480,84 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
               </ListItem>
             ))}
           </List>
-          <Divider />
         </>
       )}
+      
+      {hasRole('officer') && (
+        <>
+          <Typography variant="caption" sx={{ ml: 2, mt: 2, color: 'text.secondary' }}>
+            OFFICER TOOLS
+          </Typography>
+          <List>
+            {officerMenuItems.map((item) => (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton
+                  selected={location.pathname === item.path}
+                  onClick={() => navigate(item.path)}
+                  sx={{
+                    '&.Mui-selected': {
+                      backgroundColor: (theme) => theme.palette.primary.main + '20',
+                      borderRight: (theme) => `3px solid ${theme.palette.primary.main}`,
+                      '&:hover': {
+                        backgroundColor: (theme) => theme.palette.primary.main + '30',
+                      },
+                    },
+                  }}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
+      
+      {/* AI Tools Section */}
+      <>
+        <Typography variant="caption" sx={{ ml: 2, mt: 2, color: 'text.secondary' }}>
+          AI TOOLS
+        </Typography>
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton
+              selected={location.pathname === '/ai/fraud-detection'}
+              onClick={() => navigate('/ai/fraud-detection')}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: (theme) => theme.palette.primary.main + '20',
+                  borderRight: (theme) => `3px solid ${theme.palette.primary.main}`,
+                  '&:hover': {
+                    backgroundColor: (theme) => theme.palette.primary.main + '30',
+                  },
+                },
+              }}
+            >
+              <ListItemIcon><FraudDetectionIcon /></ListItemIcon>
+              <ListItemText primary="Fraud Detection" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              selected={location.pathname === '/ai/damage-analysis'}
+              onClick={() => navigate('/ai/damage-analysis')}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: (theme) => theme.palette.primary.main + '20',
+                  borderRight: (theme) => `3px solid ${theme.palette.primary.main}`,
+                  '&:hover': {
+                    backgroundColor: (theme) => theme.palette.primary.main + '30',
+                  },
+                },
+              }}
+            >
+              <ListItemIcon><DamageAnalysisIcon /></ListItemIcon>
+              <ListItemText primary="Damage Analysis" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </>
+      <Divider />
       <Box sx={{ mt: 'auto', p: 2 }}>
         <Divider sx={{ mb: 2 }} />
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1 }}>
@@ -324,8 +565,8 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
           <Switch
             checked={darkMode}
             onChange={handleThemeToggle}
-            icon={<LightModeIcon />}
-            checkedIcon={<DarkModeIcon />}
+            icon={<LightModeIcon2 />}
+            checkedIcon={<DarkModeIcon2 />}
           />
         </Box>
       </Box>
@@ -350,42 +591,60 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
           </IconButton>
           
           <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}>
-            Vehicle Investigation System
+            InvestiCar Platform
           </Typography>
           
           <Box sx={{ flexGrow: 1 }} />
           
-          {/* Notifications Icon */}
-          <Tooltip title="Notifications">
-            <IconButton
-              size="large"
-              color="inherit"
-              onClick={handleNotificationsOpen}
-            >
-              <Badge badgeContent={3} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Tooltip>
-          
-          {/* User Menu */}
-          <Tooltip title="Account settings">
-            <IconButton
-              size="large"
-              edge="end"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-              sx={{ ml: 1 }}
-            >
-              <Avatar 
-                alt={user?.firstName} 
-                src={formatFileUrl(user?.profileImage)}
-                sx={{ width: 32, height: 32 }}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {/* Theme Toggle */}
+            <Tooltip title={darkMode ? 'Light Mode' : 'Dark Mode'}>
+              <IconButton
+                color="inherit"
+                onClick={handleThemeToggle}
+                size="large"
               >
-                {user?.firstName?.[0]}{user?.lastName?.[0]}
-              </Avatar>
-            </IconButton>
-          </Tooltip>
+                {darkMode ? <LightModeIcon2 /> : <DarkModeIcon2 />}
+              </IconButton>
+            </Tooltip>
+            
+            {/* Messages */}
+            <Tooltip title="Messages">
+              <IconButton 
+                color="inherit" 
+                onClick={() => navigate('/messages')}
+                size="large"
+              >
+                <Badge badgeContent={chatUnreadCount} color="error">
+                  <ChatIcon2 />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+            
+            {/* Notifications */}
+            <NotificationBell />
+            
+            {/* Profile */}
+            <Tooltip title="Account">
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls="primary-account-menu"
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+                size="large"
+              >
+                <Avatar 
+                  alt={user?.name || 'User'} 
+                  src={user?.profileImage}
+                  sx={{ width: 32, height: 32 }}
+                >
+                  {(user?.name || 'U').charAt(0)}
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Toolbar>
       </StyledAppBar>
       
@@ -417,48 +676,42 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
       
       {/* User Menu */}
       <Menu
+        id="primary-account-menu"
         anchorEl={anchorEl}
         open={isMenuOpen}
         onClose={handleMenuClose}
-        PaperProps={{
-          sx: { width: 200 },
-        }}
+        onClick={handleMenuClose}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Box sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-            {user?.firstName} {user?.lastName}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {user?.role}
-          </Typography>
-        </Box>
-        <Divider />
         <MenuItem onClick={handleProfileClick}>
           <ListItemIcon>
             <PersonIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Profile</ListItemText>
+          Profile
         </MenuItem>
+        
+        <MenuItem onClick={() => navigate('/profile/notifications')}>
+          <ListItemIcon>
+            <NotificationsIcon2 fontSize="small" />
+          </ListItemIcon>
+          Notifications
+        </MenuItem>
+        
         <MenuItem onClick={handleSettingsClick}>
           <ListItemIcon>
             <SettingsIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Settings</ListItemText>
+          Settings
         </MenuItem>
-        {user?.email === 'muneeb@123.com' && (
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/admin/promote-muneeb'); }}>
-            <ListItemIcon>
-              <PersonIcon fontSize="small" color="primary" />
-            </ListItemIcon>
-            <ListItemText primary="Promote to Admin" primaryTypographyProps={{ color: 'primary' }} />
-          </MenuItem>
-        )}
+        
         <Divider />
+        
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
-            <LogoutIcon fontSize="small" />
+            <LogoutIcon2 fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Logout</ListItemText>
+          Logout
         </MenuItem>
       </Menu>
       
@@ -508,6 +761,22 @@ const DashboardLayout = ({ darkMode, setDarkMode }) => {
         >
           {breadcrumbs.map((crumb, index) => {
             const isLast = index === breadcrumbs.length - 1;
+            
+            if (crumb.isHomeIcon) {
+              return (
+                <Link 
+                  key={crumb.path}
+                  color="inherit" 
+                  sx={{ display: 'flex', alignItems: 'center' }}
+                  component="button"
+                  variant="body1"
+                  onClick={handleHomeClick}
+                >
+                  {crumb.icon}
+                  {crumb.text}
+                </Link>
+              );
+            }
             
             return isLast ? (
               <Typography 

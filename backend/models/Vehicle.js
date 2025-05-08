@@ -96,6 +96,5 @@ const vehicleSchema = new mongoose.Schema({
 // We don't need to re-declare the indexes since they're already in the schema definition
 // The schema will automatically create indexes for fields marked as unique
 
-const Vehicle = mongoose.model('Vehicle', vehicleSchema);
-
-module.exports = Vehicle; 
+// Check if the model already exists before creating it
+module.exports = mongoose.models.Vehicle || mongoose.model('Vehicle', vehicleSchema); 

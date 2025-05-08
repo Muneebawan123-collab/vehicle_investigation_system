@@ -15,7 +15,8 @@ const {
   resetPassword,
   updateConsentStatus,
   recordLastLogin,
-  getAvailableUsers
+  getAvailableUsers,
+  getPublicUserById
 } = require('../controllers/userController');
 const { protect, authorize, admin } = require('../middleware/authMiddleware');
 const upload = require('../utils/multerConfig');
@@ -415,5 +416,10 @@ router.post('/', [
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+// @route   GET /api/users/public/:id
+// @desc    Get user by ID (public fields only)
+// @access  Private (all authenticated users)
+router.get('/public/:id', protect, getPublicUserById);
 
 module.exports = router; 

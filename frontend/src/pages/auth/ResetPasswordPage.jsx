@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Input, Button, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
+import { Form, Input, Button, message, Alert } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
+import { Box, Link } from '@mui/material';
+import axios from 'axios';
 
 const ResetPasswordPage = () => {
   const [form] = Form.useForm();
@@ -88,6 +90,11 @@ const ResetPasswordPage = () => {
           </div>
         </Form>
       </div>
+      <Box sx={{ mt: 3, textAlign: 'center' }}>
+        <Link component={RouterLink} to="/home" variant="body2">
+          Return to Home Page
+        </Link>
+      </Box>
     </div>
   );
 };

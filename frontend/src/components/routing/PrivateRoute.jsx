@@ -23,11 +23,18 @@ const PrivateRoute = () => {
     );
   }
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  // Check for authentication with fallback to localStorage
+  const localStorageUser = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+  const hasLocalAuth = !!localStorageUser && !!token;
+  
+  if (!user && !isAuthenticated && !hasLocalAuth) {
+    console.log('User not authenticated, redirecting to /home');
+    return <Navigate to="/home" state={{ from: { pathname: "/" } }} replace />;
   }
 
+  console.log('User authenticated, rendering protected content');
+  
   // Render the protected route
   return <Outlet />;
 };

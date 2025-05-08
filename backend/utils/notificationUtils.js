@@ -1,6 +1,7 @@
 const logger = require('../config/logger');
 const User = require('../models/User');
 const mongoose = require('mongoose');
+const express = require('express');
 
 /**
  * Create a notification for all admin users
@@ -102,6 +103,9 @@ const notifyAdmins = async (title, message, type = 'info', resourceType = null, 
     results.forEach(result => {
       if (result.status === 'fulfilled' && result.value) {
         notifications.push(result.value);
+        
+        // Send real-time notification via Socket.IO
+        emitNotification(result.value);
       }
     });
 
@@ -155,11 +159,52 @@ const notifyUser = async (userId, title, message, type = 'info', resourceType = 
       resourceId
     });
 
+    // Send real-time notification via Socket.IO
+    emitNotification(notification);
+
     logger.info(`Created notification for user ${userId}: "${title}"`);
     return notification;
   } catch (error) {
     logger.error(`Error creating user notification: ${error.message}`);
     return null;
+  }
+};
+
+/**
+ * Send a notification using Socket.IO
+ * @param {Object} notification - The notification object
+ */
+const emitNotification = (notification) => {
+  try {
+    // Access the main app directly
+    const app = global.app || require('../server').app;
+    
+    if (!app) {
+      logger.warn('Express app instance not found for real-time notifications');
+      return;
+    }
+    
+    // Get Socket.IO instance and userSockets map from app
+    const io = app.get('io');
+    const userSockets = app.get('userSockets');
+    
+    if (!io) {
+      logger.warn('Socket.IO instance not found for real-time notifications');
+      return;
+    }
+    
+    // Get the user's socket ID
+    const socketId = userSockets.get(notification.user.toString());
+    
+    if (socketId) {
+      // Send to specific user
+      io.to(socketId).emit('notification', notification);
+      logger.info(`Real-time notification sent to user ${notification.user.toString()}`);
+    } else {
+      logger.info(`User ${notification.user.toString()} not connected, notification stored for later`);
+    }
+  } catch (error) {
+    logger.error(`Error sending real-time notification: ${error.message}`);
   }
 };
 

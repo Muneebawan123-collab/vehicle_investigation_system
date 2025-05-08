@@ -75,6 +75,5 @@ auditSchema.index({ timestamp: -1 });
 // Create text index for searching
 auditSchema.index({ description: 'text' });
 
-const Audit = mongoose.model('Audit', auditSchema);
-
-module.exports = Audit;
+// Check if the model already exists before creating it
+module.exports = mongoose.models.Audit || mongoose.model('Audit', auditSchema);

@@ -34,6 +34,52 @@ const documentSchema = new mongoose.Schema({
   uploadDate: {
     type: Date,
     default: Date.now
+  },
+  // Add binary data storage
+  fileData: {
+    type: Buffer,
+    required: false
+  },
+  lastBinaryUpdate: {
+    type: Date,
+    required: false
+  },
+  fileUrl: {
+    type: String,
+    required: false
+  },
+  // Document access logs
+  accessLog: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      action: {
+        type: String,
+        enum: ['viewed', 'downloaded', 'edited', 'shared'],
+        required: true
+      },
+      timestamp: {
+        type: Date,
+        default: Date.now
+      },
+      ipAddress: String,
+      userAgent: String
+    }
+  ],
+  description: {
+    type: String,
+    required: false
+  },
+  tags: [String],
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  expiration: {
+    type: Date,
+    required: false
   }
 }, {
   timestamps: true
@@ -44,7 +90,8 @@ documentSchema.index({ name: 'text' });
 documentSchema.index({ vehicle: 1 });
 documentSchema.index({ uploadedBy: 1 });
 documentSchema.index({ type: 1 });
+documentSchema.index({ tags: 1 });
+documentSchema.index({ expiration: 1 });
 
-const Document = mongoose.model('Document', documentSchema);
-
-module.exports = Document; 
+// Check if the model already exists before creating it
+module.exports = mongoose.models.Document || mongoose.model('Document', documentSchema); 

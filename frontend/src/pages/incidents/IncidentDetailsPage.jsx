@@ -30,6 +30,7 @@ import {
 } from '@ant-design/icons';
 import { incidentService, adminService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import UserDisplay from '../../components/common/UserDisplay';
 
 const { confirm } = Modal;
 const { TabPane } = Tabs;
@@ -102,6 +103,7 @@ const InvestigationReportForm = ({ onSubmit, loading }) => {
   const handleSubmit = () => {
     form.validateFields()
       .then(values => {
+        console.log('Review form values before submission:', values);
         onSubmit(values);
       })
       .catch(err => {
@@ -159,12 +161,13 @@ const InvestigationReportForm = ({ onSubmit, loading }) => {
 };
 
 // Officer Review Form for reviewing investigation reports
-const OfficerReviewForm = ({ report, onSubmit, loading }) => {
+const OfficerReviewForm = ({ report, incident, onSubmit, loading }) => {
   const [form] = Form.useForm();
 
   const handleSubmit = () => {
     form.validateFields()
       .then(values => {
+        console.log('Review form values before submission:', values);
         onSubmit(values);
       })
       .catch(err => {
@@ -176,13 +179,21 @@ const OfficerReviewForm = ({ report, onSubmit, loading }) => {
     <Card title="Review Investigation Report" style={{ marginTop: 16 }}>
       <Descriptions title="Investigation Report Details" bordered column={1}>
         <Descriptions.Item label="Submitted By">
-          {report?.submittedBy?.firstName} {report?.submittedBy?.lastName}
+          <UserDisplay 
+            user={typeof report?.submittedBy === 'object' ? report.submittedBy : null}
+            userId={typeof report?.submittedBy === 'string' ? report?.submittedBy : null}
+            showRole={true}
+          />
         </Descriptions.Item>
         <Descriptions.Item label="Submitted On">
           {report?.submittedAt ? new Date(report.submittedAt).toLocaleString() : 'N/A'}
         </Descriptions.Item>
-        <Descriptions.Item label="Findings">{report?.findings || 'N/A'}</Descriptions.Item>
-        <Descriptions.Item label="Recommendations">{report?.recommendations || 'N/A'}</Descriptions.Item>
+        <Descriptions.Item label="Findings">
+          {report?.findings || 'N/A'}
+        </Descriptions.Item>
+        <Descriptions.Item label="Recommendations">
+          {report?.recommendations || 'N/A'}
+        </Descriptions.Item>
         <Descriptions.Item label="Conclusion">
           <Tag color={
             report?.conclusion === 'substantiated' ? 'green' : 
@@ -191,7 +202,9 @@ const OfficerReviewForm = ({ report, onSubmit, loading }) => {
             {report?.conclusion?.toUpperCase() || 'PENDING'}
           </Tag>
         </Descriptions.Item>
-        <Descriptions.Item label="Report Content">{report?.reportContent || 'N/A'}</Descriptions.Item>
+        <Descriptions.Item label="Report Content">
+          {report?.reportContent || report?.content || 'N/A'}
+        </Descriptions.Item>
       </Descriptions>
       
       <Divider />
@@ -203,6 +216,20 @@ const OfficerReviewForm = ({ report, onSubmit, loading }) => {
           rules={[{ required: true, message: 'Please specify your actions' }]}
         >
           <TextArea rows={4} placeholder="Describe actions taken or to be taken based on this report" />
+        </Form.Item>
+        
+        <Form.Item
+          name="conclusion"
+          label="Officer's Conclusion"
+          rules={[{ required: true, message: 'Please provide your conclusion' }]}
+        >
+          <Select placeholder="Select your conclusion">
+            <Option value="confirmed">Confirm Investigation Findings</Option>
+            <Option value="additional_investigation">Additional Investigation Required</Option>
+            <Option value="case_dismissed">Case Dismissed</Option>
+            <Option value="legal_action">Legal Action Required</Option>
+            <Option value="other">Other (Specify in Notes)</Option>
+          </Select>
         </Form.Item>
         
         <Form.Item
@@ -257,7 +284,10 @@ const IncidentDetailsPage = () => {
   const isAdmin = currentUser?.role === 'admin';
   const isInvestigator = currentUser?.role === 'investigator';
   const isOfficer = currentUser?.role === 'officer';
-  const isAssignedInvestigator = isInvestigator && incident?.assignedTo === currentUser?._id;
+  const isAssignedInvestigator = isInvestigator && incident?.assignedTo && (
+    (typeof incident.assignedTo === 'object' && incident.assignedTo._id?.toString() === currentUser?._id?.toString()) ||
+    (typeof incident.assignedTo === 'string' && incident.assignedTo === currentUser?._id?.toString())
+  );
 
   // Define tab items outside of the return statement
   const getTabItems = () => [
@@ -293,7 +323,15 @@ const IncidentDetailsPage = () => {
             </Descriptions.Item>
             
             <Descriptions.Item label="Location" span={2}>
-              {incident?.location?.address || 'Unknown location'}
+              {incident?.location?.address ? (
+                typeof incident.location.address === 'string' ? 
+                  incident.location.address :
+                  `${incident.location.address.street || ''}, 
+                   ${incident.location.address.city || ''} 
+                   ${incident.location.address.state || ''} 
+                   ${incident.location.address.zipCode || ''} 
+                   ${incident.location.address.country || ''}`.trim().replace(/\s+/g, ' ')
+              ) : 'Unknown location'}
             </Descriptions.Item>
             
             <Descriptions.Item label="Description" span={2}>
@@ -305,13 +343,15 @@ const IncidentDetailsPage = () => {
             </Descriptions.Item>
             
             <Descriptions.Item label="Assigned To">
-              {incident?.assignedTo ? 
-                (typeof incident.assignedTo === 'object' ? 
-                  `${incident.assignedTo.name || 'Name not available'} (${incident.assignedTo.role || 'Role not available'})` :
-                  incident.assignedTo
-                ) : 
+              {incident?.assignedTo ? (
+                <UserDisplay 
+                  user={typeof incident.assignedTo === 'object' ? incident.assignedTo : null}
+                  userId={typeof incident.assignedTo === 'string' ? incident.assignedTo : null}
+                  showRole={true}
+                />
+              ) : (
                 'Not assigned'
-              }
+              )}
             </Descriptions.Item>
           </Descriptions>
           
@@ -353,10 +393,11 @@ const IncidentDetailsPage = () => {
               
               {incident.caseFile.assignedInvestigator && (
                 <Descriptions.Item label="Assigned Investigator">
-                  {typeof incident.caseFile.assignedInvestigator === 'object' ?
-                    `${incident.caseFile.assignedInvestigator.name || 'Name not available'}` :
-                    incident.caseFile.assignedInvestigator
-                  }
+                  <UserDisplay 
+                    user={typeof incident.caseFile.assignedInvestigator === 'object' ? incident.caseFile.assignedInvestigator : null}
+                    userId={typeof incident.caseFile.assignedInvestigator === 'string' ? incident.caseFile.assignedInvestigator : null}
+                    showRole={true}
+                  />
                 </Descriptions.Item>
               )}
               
@@ -423,10 +464,11 @@ const IncidentDetailsPage = () => {
                 </Descriptions.Item>
                 
                 <Descriptions.Item label="Submitted By">
-                  {typeof incident.caseFile.investigationReport.submittedBy === 'object' ?
-                    `${incident.caseFile.investigationReport.submittedBy.name || 'Name not available'}` :
-                    incident.caseFile.investigationReport.submittedBy || 'Unknown'
-                  }
+                  <UserDisplay 
+                    user={typeof incident.caseFile.investigationReport.submittedBy === 'object' ? incident.caseFile.investigationReport.submittedBy : null}
+                    userId={typeof incident.caseFile.investigationReport.submittedBy === 'string' ? incident.caseFile.investigationReport.submittedBy : null}
+                    showRole={true}
+                  />
                 </Descriptions.Item>
                 
                 <Descriptions.Item label="Submitted At">
@@ -456,10 +498,17 @@ const IncidentDetailsPage = () => {
                 </Descriptions.Item>
                 
                 <Descriptions.Item label="Reviewed By">
-                  {typeof incident.caseFile.officerActions.reviewedBy === 'object' ?
-                    `${incident.caseFile.officerActions.reviewedBy.name || 'Name not available'}` :
-                    incident.caseFile.officerActions.reviewedBy || 'Unknown'
-                  }
+                  {typeof incident.caseFile.officerActions.reviewedBy === 'object' && incident.caseFile.officerActions.reviewedBy !== null ? (
+                    <UserDisplay 
+                      user={incident.caseFile.officerActions.reviewedBy} 
+                      showRole={true}
+                    />
+                  ) : (
+                    <UserDisplay 
+                      userId={incident.caseFile.officerActions.reviewedBy} 
+                      showRole={true}
+                    />
+                  )}
                 </Descriptions.Item>
                 
                 <Descriptions.Item label="Reviewed At">
@@ -497,7 +546,7 @@ const IncidentDetailsPage = () => {
                     <strong>{event.action}</strong>
                     <p>{event.description}</p>
                     {typeof event.performedBy === 'object' && (
-                      <Text type="secondary">By: {event.performedBy.name}</Text>
+                      <Text type="secondary">By: {event.performedBy.name || 'Unknown'}</Text>
                     )}
                   </>
                 )
@@ -536,6 +585,18 @@ const IncidentDetailsPage = () => {
       
       const response = await incidentService.getIncidentById(id);
       console.log('Incident details:', response.data);
+      
+      // Log specific caseFile and report information for debugging
+      if (response.data?.caseFile) {
+        console.log('CaseFile details:', {
+          status: response.data.caseFile.status,
+          findings: response.data.caseFile.findings,
+          recommendations: response.data.caseFile.recommendations,
+          conclusion: response.data.caseFile.conclusion,
+          investigationReport: response.data.caseFile.investigationReport
+        });
+      }
+      
       setIncident(response.data);
     } catch (error) {
       console.error('Failed to fetch incident details:', error);
@@ -612,12 +673,45 @@ const IncidentDetailsPage = () => {
   const handleReviewReport = async (values) => {
     try {
       setActionLoading(true);
+      console.log('Submitting review with values:', values);
       const response = await incidentService.reviewInvestigationReport(id, values);
-      message.success('Investigation report reviewed successfully');
-      setIncident(response.data.incident);
+      console.log('Review response:', response);
+      
+      if (response.data && response.data.success) {
+        message.success('Investigation report reviewed successfully');
+        
+        // If the server returned incident data, update our state directly
+        if (response.data.incident) {
+          setIncident(prev => ({
+            ...prev,
+            ...response.data.incident
+          }));
+        } else {
+          // Otherwise, refresh the full incident details
+          await fetchIncidentDetails();
+        }
+      } else {
+        message.warning('Review submitted but response was unexpected');
+        await fetchIncidentDetails();
+      }
     } catch (error) {
       console.error('Failed to review report:', error);
-      message.error('Failed to review report: ' + (error.response?.data?.message || error.message));
+      let errorMsg = 'Failed to review report';
+      
+      if (error.response) {
+        console.error('Error response:', error.response);
+        errorMsg = error.response.data?.message || error.response.statusText;
+        
+        if (error.response.data?.errors) {
+          // Handle validation errors
+          const validationErrors = error.response.data.errors.map(err => err.msg).join(', ');
+          errorMsg += `: ${validationErrors}`;
+        }
+      } else if (error.message) {
+        errorMsg += `: ${error.message}`;
+      }
+      
+      message.error(errorMsg);
     } finally {
       setActionLoading(false);
     }
@@ -678,7 +772,7 @@ const IncidentDetailsPage = () => {
     
     if (isInvestigator) {
       // Check if this investigator is assigned to this incident
-      if (incident?.assignedTo === currentUser?._id) {
+      if (isAssignedInvestigator) {
         // Check if a report has already been submitted
         if (incident?.caseFile?.investigationReport?.status === 'submitted') {
           return (
@@ -709,9 +803,26 @@ const IncidentDetailsPage = () => {
     if (isOfficer) {
       // Check if there's a submitted report to review
       if (incident?.caseFile?.investigationReport?.status === 'submitted') {
+        // Create a complete report object by combining investigationReport with findings, recommendations, etc.
+        const reportData = {
+          ...incident.caseFile.investigationReport,
+          findings: incident.caseFile.findings,
+          recommendations: incident.caseFile.recommendations,
+          conclusion: incident.caseFile.conclusion,
+          reportContent: incident.caseFile.investigationReport?.content
+        };
+        
+        // Log the investigator information for debugging
+        console.log('Assigned investigator info:', {
+          assignedTo: incident.assignedTo,
+          assignedInvestigator: incident.caseFile?.assignedInvestigator,
+          submittedBy: incident.caseFile?.investigationReport?.submittedBy
+        });
+        
         return (
           <OfficerReviewForm 
-            report={incident.caseFile.investigationReport}
+            report={reportData}
+            incident={incident}
             onSubmit={handleReviewReport}
             loading={actionLoading}
           />

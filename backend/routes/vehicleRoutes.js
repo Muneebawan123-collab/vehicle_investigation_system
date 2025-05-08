@@ -20,12 +20,18 @@ const {
   checkVehicleCompliance,
   getVehiclesByOwner,
   getVehiclesByStatus,
-  updateComplianceDetails
+  updateComplianceDetails,
+  generateQRCode,
+  getQRCodeImage,
+  getVehicleDetailsFromQR
 } = require('../controllers/vehicleController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const { upload } = require('../config/cloudinary');
 const { check, validationResult } = require('express-validator');
 const Vehicle = require('../models/Vehicle');
+
+// Public QR code scan endpoint (no auth required)
+router.get('/scan/:id', getVehicleDetailsFromQR);
 
 // Search and filter routes - must come before :id routes to avoid conflicts
 router.get('/search', protect, searchVehicles);
@@ -44,17 +50,17 @@ router.put('/:id', protect, authorize('officer', 'admin', 'investigator'), updat
 router.delete('/:id', protect, authorize('admin'), deleteVehicle);
 
 // Additional features
-router.get('/:id/notes', protect, getVehicleNotes);
-router.post('/:id/notes', protect, authorize('officer', 'admin', 'investigator'), addVehicleNote);
-router.get('/:id/flags', protect, getVehicleFlags);
-router.post('/:id/flags', protect, authorize('officer', 'admin', 'investigator'), addVehicleFlag);
-router.put('/:id/flags/:flagId/resolve', protect, authorize('officer', 'admin', 'investigator'), resolveVehicleFlag);
-router.get('/:id/compliance-check', protect, checkVehicleCompliance);
-router.put('/:id/compliance', protect, authorize('officer', 'admin', 'investigator'), updateComplianceDetails);
-router.put('/:id/location', protect, authorize('officer', 'admin', 'investigator'), updateVehicleLocation);
+router.get('/notes/:id', protect, getVehicleNotes);
+router.post('/notes/:id', protect, authorize('officer', 'admin', 'investigator'), addVehicleNote);
+router.get('/flags/:id', protect, getVehicleFlags);
+router.post('/flags/:id', protect, authorize('officer', 'admin', 'investigator'), addVehicleFlag);
+router.put('/flags/:id/:flagId', protect, authorize('officer', 'admin', 'investigator'), resolveVehicleFlag);
+router.get('/compliance-check/:id', protect, checkVehicleCompliance);
+router.put('/compliance/:id', protect, authorize('officer', 'admin', 'investigator'), updateComplianceDetails);
+router.put('/location/:id', protect, authorize('officer', 'admin', 'investigator'), updateVehicleLocation);
 
 // Image routes
-router.post('/:id/images', protect, authorize('officer', 'admin', 'investigator'), upload.array('images', 5), async (req, res) => {
+router.post('/images/:id', protect, authorize('officer', 'admin', 'investigator'), upload.array('images', 5), async (req, res) => {
   try {
     const vehicle = await Vehicle.findById(req.params.id);
     if (!vehicle) {
@@ -87,7 +93,11 @@ router.post('/:id/images', protect, authorize('officer', 'admin', 'investigator'
     });
   }
 });
-router.put('/:id/main-image', protect, authorize('officer', 'admin', 'investigator'), setMainVehicleImage);
-router.delete('/:id/images/:imageId', protect, authorize('officer', 'admin', 'investigator'), removeVehicleImage);
+router.put('/main-image/:id', protect, authorize('officer', 'admin', 'investigator'), setMainVehicleImage);
+router.delete('/images/:id/:imageId', protect, authorize('officer', 'admin', 'investigator'), removeVehicleImage);
+
+// QR code routes
+router.get('/qrcode/:id', protect, generateQRCode);
+router.get('/qrcode-image/:id', protect, getQRCodeImage);
 
 module.exports = router; 

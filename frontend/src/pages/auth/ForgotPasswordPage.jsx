@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
+import { Box, Link } from '@mui/material';
 
 const ForgotPasswordPage = () => {
   const [form] = Form.useForm();
@@ -65,6 +66,12 @@ const ForgotPasswordPage = () => {
             </Button>
           </div>
         </Form>
+
+        <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Link component={RouterLink} to="/home" variant="body2">
+            Return to Home Page
+          </Link>
+        </Box>
       </div>
     </div>
   );

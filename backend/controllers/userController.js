@@ -3,6 +3,7 @@ const logger = require('../utils/logger');
 const { generateToken, generateResetToken, hashString } = require('../utils/authUtils');
 const { createAuditLog } = require('../utils/auditUtils');
 const { cloudinary } = require('../config/cloudinary');
+const mongoose = require('mongoose');
 
 /**
  * @desc    Register a new user
@@ -310,7 +311,7 @@ const getUsers = async (req, res, next) => {
 };
 
 /**
- * @desc    Get user by ID
+ * @desc    Get user by ID (Admin only)
  * @route   GET /api/users/:id
  * @access  Private/Admin
  */
@@ -335,6 +336,43 @@ const getUserById = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
+  }
+};
+
+/**
+ * @desc    Get user by ID - accessible to all authenticated users
+ * @route   GET /api/users/:id
+ * @access  Private/Admin
+ */
+const getPublicUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    
+    // Log the request
+    logger.info(`Get user by ID request received for: ${userId}`);
+    
+    // Validate the ID format
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID format' });
+    }
+    
+    // Find the user by ID
+    const user = await User.findById(userId)
+      .select('name firstName lastName email role department'); // Only return non-sensitive fields
+    
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Log success
+    logger.info(`User ${userId} details retrieved successfully`);
+    
+    // Return the user data
+    res.json(user);
+  } catch (error) {
+    logger.error(`Error getting user by ID: ${error.message}`);
+    res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
 
@@ -752,6 +790,7 @@ module.exports = {
   updateUserProfile,
   getUsers,
   getUserById,
+  getPublicUserById,
   updateUser,
   deleteUser,
   forgotPassword,

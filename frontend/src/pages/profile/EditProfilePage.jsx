@@ -1,22 +1,35 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Form, Input, Button, Card, message, Progress, Upload, Avatar, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { formatFileUrl } from '../../utils/imageUtils';
 
 const EditProfilePage = () => {
-  const { user, updateProfile, loading: authLoading } = useAuth();
+  const auth = useAuth();
+  const user = auth?.user;
+  const updateProfile = auth?.updateProfile;
+  const authLoading = auth?.loading || false;
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(user?.profileImage);
+  const [error, setError] = useState(null);
 
   // Debug log to see user data
+  console.log('Edit Profile - Auth Data:', auth);
   console.log('Edit Profile - User Data:', user);
   console.log('Edit Profile - Name value:', user?.name);
   console.log('Edit Profile - Address value:', user?.address);
+
+  // Handle auth context not being available
+  useEffect(() => {
+    if (!auth) {
+      setError('Authentication context not available. Please try logging in again.');
+      console.error('Auth context is undefined in EditProfilePage');
+    }
+  }, [auth]);
 
   // Calculate profile completion percentage
   const profileCompletion = useMemo(() => {
@@ -56,6 +69,12 @@ const EditProfilePage = () => {
 
   const onFinish = async (values) => {
     try {
+      if (!updateProfile) {
+        message.error('Update functionality not available. Please try logging in again.');
+        console.error('updateProfile function is undefined');
+        return;
+      }
+
       // Debug log form values
       console.log('Form values before submit:', values);
       
@@ -125,7 +144,7 @@ const EditProfilePage = () => {
       setImagePreview(user.profileImage);
       setLoading(false);
     } else {
-      setLoading(true);
+      setLoading(false); // Still set loading to false to show potential error messages
     }
   }, [user, form]);
 
@@ -139,6 +158,36 @@ const EditProfilePage = () => {
             <p>Please wait while we retrieve your information</p>
           </div>
         </Spin>
+      </div>
+    );
+  }
+
+  // Show error state if authentication context is not available
+  if (error || !auth) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Card style={{ width: 500, textAlign: 'center' }}>
+          <h2 style={{ color: '#ff4d4f' }}>Authentication Error</h2>
+          <p>{error || 'Unable to load your profile. Please try logging in again.'}</p>
+          <Button type="primary" onClick={() => navigate('/login')}>
+            Go to Login
+          </Button>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show error state if user data is not available
+  if (!user) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Card style={{ width: 500, textAlign: 'center' }}>
+          <h2 style={{ color: '#ff4d4f' }}>Profile Not Found</h2>
+          <p>We couldn't find your profile information. Please try logging in again.</p>
+          <Button type="primary" onClick={() => navigate('/login')}>
+            Go to Login
+          </Button>
+        </Card>
       </div>
     );
   }

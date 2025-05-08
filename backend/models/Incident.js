@@ -107,4 +107,5 @@ const incidentSchema = new mongoose.Schema({
 // Add 2dsphere index for geospatial queries
 incidentSchema.index({ location: '2dsphere' });
 
-module.exports = mongoose.model('Incident', incidentSchema); 
+// Check if the model exists before creating it
+module.exports = mongoose.models.Incident || mongoose.model('Incident', incidentSchema); 

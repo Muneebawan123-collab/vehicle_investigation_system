@@ -56,12 +56,18 @@ const IncidentCreatePage = () => {
         dateTime: formattedDate,
         location: {
           type: 'Point',
-          coordinates: [0, 0], // Default coordinates
-          address: values.location
+          coordinates: [0, 0],
+          address: {
+            street: values.location,
+            city: '',
+            state: '',
+            zipCode: '',
+            country: 'USA'
+          }
         },
         vehicle: values.vehicle,
         policeReportNumber: values.policeReportNumber || "",
-        status: values.status || 'Open'
+        status: values.status // Status will now be lowercase from the Select options
       };
 
       console.log("Sending incident data:", JSON.stringify(incidentData, null, 2));
@@ -133,7 +139,7 @@ const IncidentCreatePage = () => {
           layout="vertical"
           initialValues={{ 
             severity: 'medium',
-            status: 'Open',
+            status: 'open',
             incidentType: 'accident'
           }}
         >
@@ -237,10 +243,11 @@ const IncidentCreatePage = () => {
             rules={[{ required: true, message: 'Please select the status!' }]}
           >
             <Select>
-              <Option value="Open">Open</Option>
-              <Option value="In Progress">In Progress</Option>
-              <Option value="Resolved">Resolved</Option>
-              <Option value="Closed">Closed</Option>
+              <Option value="open">Open</Option>
+              <Option value="under_investigation">Under Investigation</Option>
+              <Option value="pending">Pending</Option>
+              <Option value="closed">Closed</Option>
+              <Option value="reopened">Reopened</Option>
             </Select>
           </Form.Item>
 

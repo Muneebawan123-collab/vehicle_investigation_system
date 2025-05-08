@@ -1,19 +1,40 @@
 import axios from 'axios';
+import { message } from 'antd';
 
 // API base URL - use relative URL
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+// Ensure API_URL doesn't have trailing slash
+const getApiUrl = (endpoint) => {
+  const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return `${baseUrl}${cleanEndpoint}`;
+};
 
 // Simple in-memory cache
 const cache = new Map();
-const CACHE_DURATION = 60000; // 1 minute cache
+const CACHE_DURATION = 300000; // Increased from 60000 (1 minute) to 300000 (5 minutes)
+
+// Function to clean expired cache entries
+const cleanCache = () => {
+  const now = Date.now();
+  for (const [key, value] of cache.entries()) {
+    if (now - value.timestamp > CACHE_DURATION) {
+      cache.delete(key);
+    }
+  }
+};
+
+// Clean cache every 5 minutes
+setInterval(cleanCache, 300000);
 
 // Request queue to control concurrency
 const requestQueue = [];
-const MAX_CONCURRENT_REQUESTS = 2;
+const MAX_CONCURRENT_REQUESTS = 6;
 let activeRequests = 0;
 
 // Minimum delay between requests (in milliseconds)
-const REQUEST_DELAY = 300;
+const REQUEST_DELAY = 100;
 let lastRequestTime = 0;
 
 // Process the next request in the queue
@@ -45,7 +66,7 @@ const processNextRequest = () => {
         if (error.response && error.response.status === 429) {
           const retryAfter = error.response.headers['retry-after'] 
             ? parseInt(error.response.headers['retry-after'], 10) * 1000 
-            : 1000;
+            : 5000;
           
           console.log(`Rate limited, retrying after ${retryAfter}ms`);
           
@@ -87,65 +108,80 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Add timeout and credentials
+  timeout: 30000,
+  withCredentials: true,
+  // Add additional headers for download requests
+  responseType: 'json',
+  maxContentLength: 100 * 1024 * 1024, // 100MB max
+  maxBodyLength: 100 * 1024 * 1024 // 100MB max
 });
 
-// Add request interceptor for JWT token
+// Add request interceptor for JWT token and logging
 apiClient.interceptors.request.use(
   (config) => {
+    // For download requests, set responseType to blob
+    if (config.url.includes('/download') || 
+        config.url.includes('/binary') || 
+        config.url.includes('/by-public-id')) {
+      config.responseType = 'blob';
+    }
+
+    // Log request details
+    console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, {
+      baseURL: config.baseURL,
+      fullURL: `${config.baseURL}${config.url}`,
+      headers: {
+        ...config.headers,
+        Authorization: config.headers.Authorization ? 'Bearer [PRESENT]' : 'None'
+      }
+    });
+
     const token = localStorage.getItem('token');
     if (token) {
-      console.log(`Adding authorization header for ${config.url}`);
       config.headers.Authorization = `Bearer ${token}`;
-    } else {
-      console.warn(`No token available for request to ${config.url}`);
-    }
-    
-    // For debugging authorization issues
-    if (config.url?.includes('/users/') && config.url?.includes('/role')) {
-      console.log('Role update request details:', {
-        url: config.url,
-        method: config.method,
-        headers: {
-          ...config.headers,
-          Authorization: config.headers.Authorization ? 'Bearer [PRESENT]' : 'None'
-        },
-        data: config.data
-      });
     }
     
     return config;
   },
   (error) => {
-    console.error('Request interceptor error:', error);
+    console.error('[API Request Error]', error);
     return Promise.reject(error);
   }
 );
 
-// Add response interceptor for error handling
+// Add response interceptor for error handling and logging
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`[API Response Success] ${response.config.method?.toUpperCase()} ${response.config.url}`, {
+      status: response.status,
+      statusText: response.statusText,
+      data: response.data
+    });
+    return response;
+  },
   (error) => {
-    // Add more detailed logging for auth failures
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      console.error('Authorization error:', {
-        status: error.response.status,
-        statusText: error.response.statusText,
-        message: error.response.data?.message || 'No message',
-        detail: error.response.data?.detail || 'No detail',
-        url: error.config.url,
-        method: error.config.method
-      });
-      
-      // Log auth header presence
-      console.log('Authorization header was ' + 
-        (error.config.headers.Authorization ? 'present' : 'missing'));
+    console.error('[API Response Error]', {
+      config: {
+        method: error.config?.method,
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        fullURL: error.config?.baseURL + error.config?.url,
+        headers: error.config?.headers
+      },
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      message: error.message
+    });
+
+    // Handle specific error cases
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
     }
     
-    // Handle session expiration
-    if (error.response?.status === 401) {
-      // Optionally, you could redirect to login page here
-      // or this could be handled by the auth context
-    }
     return Promise.reject(error);
   }
 );
@@ -170,10 +206,14 @@ const throttledApiClient = {
       .then(response => {
         // Cache GET responses
         if (config.method === 'get') {
-          cache.set(cacheKey, {
-            response,
-            timestamp: Date.now()
-          });
+          const cacheableStatuses = [200, 304];
+          if (cacheableStatuses.includes(response.status)) {
+            console.log(`Caching response for ${cacheKey}`);
+            cache.set(cacheKey, {
+              response,
+              timestamp: Date.now()
+            });
+          }
         }
         return response;
       });
@@ -278,31 +318,133 @@ export const incidentService = {
  * Document Services
  */
 export const documentService = {
-  getAllDocuments: () => throttledApiClient.get('/documents'),
+  getAllDocuments: (params) => throttledApiClient.get('/documents', { params }),
   
   getDocumentById: (id) => throttledApiClient.get(`/documents/${id}`),
   
-  uploadDocument: (formData) => throttledApiClient.post('/documents/upload', formData, {
+  uploadDocument: (formData) => apiClient.post('/documents', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   }),
   
-  deleteDocument: (id) => {
-    // Remove the 'vehicle_documents/' prefix if it exists
-    const documentId = id.replace('vehicle_documents/', '');
-    return throttledApiClient.delete(`/documents/${documentId}`);
+  deleteDocument: (id) => throttledApiClient.delete(`/documents/${id}`),
+  
+  async downloadDocument(documentId, options = {}) {
+    try {
+      console.log('Starting document download:', { documentId, options });
+      
+      if (options.showNotifications) {
+        message.loading({ content: 'Preparing download...', key: 'download', duration: 0 });
+      }
+
+      // If we have a URL in options, try direct download first
+      if (options.url) {
+        try {
+          console.log('Attempting direct URL download:', options.url);
+          const response = await axios.get(options.url, {
+            responseType: 'blob',
+            timeout: 30000
+          });
+
+          if (response.status === 200) {
+            const blob = new Blob([response.data], {
+              type: response.headers['content-type'] || 'application/octet-stream'
+            });
+            
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = options.filename || documentId;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            if (options.showNotifications) {
+              message.success({ content: 'Download completed', key: 'download' });
+            }
+            return true;
+          }
+        } catch (directError) {
+          console.log('Direct URL download failed:', directError);
+        }
+      }
+
+      // If direct download fails or no URL provided, try the backend download endpoint
+      console.log('Attempting backend download endpoint');
+      const response = await apiClient.get(`/documents/download/${encodeURIComponent(documentId)}`, {
+        responseType: 'blob',
+        headers: {
+          'Accept': 'application/pdf,application/octet-stream,image/*'
+        },
+        timeout: 60000
+      });
+
+      if (response.status === 200) {
+        const blob = new Blob([response.data], {
+          type: response.headers['content-type'] || 'application/octet-stream'
+        });
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = options.filename || documentId;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        if (options.showNotifications) {
+          message.success({ content: 'Download completed', key: 'download' });
+        }
+        return true;
+      }
+
+      throw new Error('Failed to download document');
+    } catch (error) {
+      console.error('Document download failed:', error);
+      
+      if (options.showNotifications) {
+        message.error({ 
+          content: `Download failed: ${error.message}`, 
+          key: 'download' 
+        });
+      }
+      
+      throw error;
+    }
   },
   
-  searchDocuments: (query) => throttledApiClient.get(`/documents/search?q=${encodeURIComponent(query)}`),
+  updateDocument: (id, data) => throttledApiClient.put(`/documents/${id}`, data),
   
-  downloadDocument: (id) => {
-    // Remove the 'vehicle_documents/' prefix if it exists
-    const documentId = id.replace('vehicle_documents/', '');
-    return throttledApiClient.get(`/documents/${documentId}/download`, {
-      responseType: 'blob'
+  searchDocuments: (query) => throttledApiClient.get('/documents/search', { params: { query } }),
+  
+  logDocumentAccess: (id, accessType) => {
+    console.log(`Logging document access: ${id}, type: ${accessType}`);
+    return throttledApiClient.post(`/documents/${id}/access-log`, { 
+      accessType,
+      timestamp: new Date()
     });
+  },
+};
+
+// Get a temporary download token
+const getDownloadToken = async () => {
+  try {
+    const response = await throttledApiClient.get('/auth/download-token');
+    return response.data.token;
+  } catch (error) {
+    console.error('Failed to get download token:', error);
+    return '';
   }
+};
+
+// Helper function to get auth token
+const getToken = () => {
+  return localStorage.getItem('token') || '';
 };
 
 /*
@@ -316,11 +458,7 @@ export const adminService = {
   deleteUser: (id) => throttledApiClient.delete(`/users/${id}`),
   updateUserRole: (id, role) => {
     console.log(`Making API request to update role for user ${id} to ${role}`);
-    return throttledApiClient.put(`/users/${id}/role`, { role }, {
-      headers: {
-        'X-Debug-Info': 'Role update request from frontend'
-      }
-    })
+    return throttledApiClient.put(`/users/${id}/role`, { role })
     .then(response => {
       console.log('Role update successful:', response.data);
       return response;
@@ -351,4 +489,49 @@ export const notificationService = {
   markAllAsRead: () => throttledApiClient.put('/notifications/read-all'),
   deleteNotification: (id) => throttledApiClient.delete(`/notifications/${id}`),
   clearAllNotifications: () => throttledApiClient.delete('/notifications/clear-all'),
+};
+
+// Add a function to download a file directly as binary data
+export const downloadBinaryFile = async (documentId) => {
+  try {
+    if (!documentId) {
+      throw new Error('Document ID is required');
+    }
+    
+    // Create the URL for the binary download endpoint
+    const downloadUrl = `${API_URL}/api/documents/binary/${documentId}`;
+    console.log('Requesting binary download from:', downloadUrl);
+    
+    // Make a fetch request to get the binary data with proper headers
+    const response = await fetch(downloadUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${getToken()}`,
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+      throw new Error(errorData.message || `HTTP error: ${response.status}`);
+    }
+    
+    // Return the response for processing by the caller
+    return response;
+  } catch (error) {
+    console.error('Error downloading binary file:', error);
+    throw error;
+  }
+};
+
+// Export the throttled API client for use in components
+export { throttledApiClient };
+
+// Update chat service to use getApiUrl
+export const chatService = {
+  getAllChats: () => throttledApiClient.get(getApiUrl('chats')),
+  getChatById: (id) => throttledApiClient.get(getApiUrl(`chats/${id}`)),
+  createChat: (data) => throttledApiClient.post(getApiUrl('chats'), data),
+  updateChat: (id, data) => throttledApiClient.put(getApiUrl(`chats/${id}`), data),
+  deleteChat: (id) => throttledApiClient.delete(getApiUrl(`chats/${id}`)),
+  // Add any other chat-related endpoints
 }; 

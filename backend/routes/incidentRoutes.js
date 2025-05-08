@@ -87,10 +87,10 @@ router.delete('/:id', [protect, authorize('admin')], deleteIncident);
 
 // New Routes for the Incident Workflow
 
-// @route   POST api/incidents/:id/assign
+// @route   POST api/incidents/assign/:id
 // @desc    Assign incident to investigator (Admin only)
 // @access  Private (Admin only)
-router.post('/:id/assign', [
+router.post('/assign/:id', [
   protect, 
   authorize('admin'),
   check('investigatorId', 'Investigator ID is required').isMongoId(),
@@ -99,10 +99,10 @@ router.post('/:id/assign', [
     .isIn(['low', 'medium', 'high', 'urgent'])
 ], assignIncident);
 
-// @route   POST api/incidents/:id/report
+// @route   POST api/incidents/report/:id
 // @desc    Submit investigation report (Investigator only)
 // @access  Private (Investigator only)
-router.post('/:id/report', [
+router.post('/report/:id', [
   protect, 
   authorize('investigator'),
   check('findings', 'Findings are required').not().isEmpty(),
@@ -112,15 +112,18 @@ router.post('/:id/report', [
   check('reportContent', 'Report content is required').not().isEmpty()
 ], submitInvestigationReport);
 
-// @route   POST api/incidents/:id/review
+// @route   POST api/incidents/review/:id
 // @desc    Review investigation report (Officer only)
 // @access  Private (Officer only)
-router.post('/:id/review', [
+router.post('/review/:id', [
   protect, 
   authorize('officer'),
   check('actions', 'Actions are required').not().isEmpty(),
   check('reportStatus', 'Valid report status is required')
-    .isIn(['approved', 'rejected'])
+    .isIn(['approved', 'rejected']),
+  check('conclusion', 'Valid conclusion is required if provided')
+    .optional()
+    .isIn(['confirmed', 'additional_investigation', 'case_dismissed', 'legal_action', 'other'])
 ], reviewInvestigationReport);
 
 module.exports = router; 

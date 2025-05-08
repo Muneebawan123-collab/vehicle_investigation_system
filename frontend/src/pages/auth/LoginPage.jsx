@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   Button,
@@ -20,12 +20,41 @@ import Avatar from '@mui/material/Avatar';
 import { useAuth } from '../../context/AuthContext';
 
 const LoginPage = () => {
-  const { login, loading } = useAuth();
+  const { login, loading, user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Get redirect path from location state or default to dashboard
-  const from = location.state?.from?.pathname || '/';
+  // Always redirect to dashboard after login
+  const from = '/';
+  
+  // Redirect if already authenticated
+  useEffect(() => {
+    // Check auth context
+    if (user || isAuthenticated) {
+      console.log('User already authenticated, redirecting to dashboard');
+      navigate('/', { replace: true });
+      return;
+    }
+    
+    // Fallback check for local storage
+    const localStorageUser = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (localStorageUser && token) {
+      console.log('Found user data in localStorage, redirecting to dashboard');
+      navigate('/', { replace: true });
+    }
+    
+    // Add global redirect handler for login success
+    window.__redirectToDashboard = () => {
+      console.log('Global redirect handler called');
+      navigate('/', { replace: true });
+    };
+    
+    return () => {
+      // Clean up
+      delete window.__redirectToDashboard;
+    };
+  }, [user, isAuthenticated, navigate]);
   
   const [formData, setFormData] = useState({
     email: '',
@@ -78,9 +107,40 @@ const LoginPage = () => {
     if (!validateForm()) return;
     
     try {
-      await login({ email: formData.email, password: formData.password });
-      // Navigate after successful login
-      navigate(from, { replace: true });
+      console.log('Logging in with:', formData.email);
+      const result = await login({ email: formData.email, password: formData.password });
+      console.log('Login successful, user:', result);
+      
+      // Add more diagnostic logging
+      const authToken = localStorage.getItem('token');
+      console.log('Auth token stored:', authToken ? `${authToken.substring(0, 20)}...` : 'None');
+      console.log('User data stored:', localStorage.getItem('user'));
+      
+      // Force navigation to dashboard using multiple approaches
+      console.log('Navigating to dashboard at:', from);
+      
+      // Approach 1: Direct navigation
+      navigate('/', { replace: true });
+      
+      // Approach 2: Timeout navigation as backup
+      setTimeout(() => {
+        console.log('Executing delayed navigation to dashboard');
+        navigate('/', { replace: true });
+      }, 200);
+      
+      // Approach 3: Global handler
+      if (window.__redirectToDashboard) {
+        setTimeout(() => {
+          console.log('Executing global redirect handler');
+          window.__redirectToDashboard();
+        }, 300);
+      }
+      
+      // Approach 4: Direct window location (most drastic)
+      setTimeout(() => {
+        console.log('Executing direct window location change');
+        window.location.href = '/';
+      }, 400);
     } catch (err) {
       console.error("Login failed:", err);
       setLocalError(err.message || "Login failed. Please check your credentials.");
@@ -199,6 +259,11 @@ const LoginPage = () => {
               </Link>
             </Grid>
           </Grid>
+        </Box>
+        <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Link component={RouterLink} to="/home" variant="body2">
+            Return to Home Page
+          </Link>
         </Box>
       </Box>
     </motion.div>

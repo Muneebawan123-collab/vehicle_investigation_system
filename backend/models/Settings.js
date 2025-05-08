@@ -67,6 +67,5 @@ settingsSchema.statics.createDefault = async function() {
   }
 };
 
-const Settings = mongoose.model('Settings', settingsSchema);
-
-module.exports = Settings; 
+// Check if the model already exists before creating it
+module.exports = mongoose.models.Settings || mongoose.model('Settings', settingsSchema); 

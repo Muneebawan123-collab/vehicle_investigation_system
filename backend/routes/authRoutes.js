@@ -177,4 +177,23 @@ router.put('/password', [
   }
 });
 
+// @route   GET api/auth/download-token
+// @desc    Generate a temporary token for document downloads
+// @access  Private
+router.get('/download-token', auth, async (req, res) => {
+  try {
+    // Generate a temporary download token valid for 10 minutes
+    const token = jwt.sign(
+      { id: req.user.id, purpose: 'download' },
+      process.env.JWT_SECRET,
+      { expiresIn: '10m' }
+    );
+    
+    res.json({ token });
+  } catch (error) {
+    console.error('Error generating download token:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router; 

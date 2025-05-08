@@ -466,3 +466,105 @@ CastError: Cast to ObjectId failed for value "officers" (type string) at path "_
 2025-04-21 16:12:31 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
 2025-04-21 16:12:56 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
 2025-04-21 16:13:30 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-23 12:35:54 error: Error getting chat by ID: No matching document found for id "67fe23900c65d2523e45ec1b" version 5 modifiedPaths "messages, messages.2, messages.2.readBy, messages.3, messages.3.readBy"
+2025-04-23 12:55:19 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-24 16:54:34 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Report_1745493867939" (type string) at path "resourceId" because of "BSONError"
+2025-04-24 17:05:48 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-24 19:41:58 error: Authentication error: read ECONNRESET
+2025-04-24 19:41:58 error: Authentication error: read ECONNRESET
+2025-04-25 18:35:38 error: Error creating incident: Incident validation failed: location.address: Cast to Object failed for value "445-highway, chandigarh" (type string) at path "location.address", status: `Open` is not a valid enum value for path `status`.
+2025-04-25 18:37:34 error: Error creating incident: Incident validation failed: location.address: Cast to Object failed for value "445 highway, chandigarh" (type string) at path "location.address", status: `In Progress` is not a valid enum value for path `status`.
+2025-04-25 18:37:51 error: Error creating incident: Incident validation failed: location.address: Cast to Object failed for value " highway, chandigarh" (type string) at path "location.address", status: `In Progress` is not a valid enum value for path `status`.
+2025-04-25 18:40:01 error: Error creating incident: Incident validation failed: status: `Open` is not a valid enum value for path `status`.
+2025-04-25 18:46:41 error: Error creating audit log: Audit validation failed: resourceId: Cast to ObjectId failed for value "vehicle_documents/Invoice_1745586994127" (type string) at path "resourceId" because of "BSONError"
+2025-04-25 19:46:34 error: Authentication error: read ECONNRESET
+2025-04-26 00:21:51 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-26 00:21:51 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-26 00:31:02 error: Error connecting to MongoDB: querySrv ECONNREFUSED _mongodb._tcp.cluster0.rdlhh1c.mongodb.net
+2025-04-26 00:31:03 error: Cloudinary connection test failed: getaddrinfo ENOTFOUND api.cloudinary.com
+2025-04-26 09:02:36 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-26 09:17:17 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-26 09:19:14 error: Error getting chat by ID: No matching document found for id "67fe23900c65d2523e45ec1b" version 9 modifiedPaths "messages, messages.5, messages.5.readBy"
+2025-04-26 09:19:25 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-26 16:22:18 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-26 16:22:26 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-26 16:23:46 error: Error connecting to MongoDB: querySrv ECONNREFUSED _mongodb._tcp.cluster0.rdlhh1c.mongodb.net
+2025-04-26 16:23:47 error: Cloudinary connection test failed: getaddrinfo ENOTFOUND api.cloudinary.com
+2025-04-26 16:48:06 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-26 17:46:34 error: Error getting chat by ID: No matching document found for id "680c5d66ce03e0e0def187b9" version 2 modifiedPaths "messages, messages.1, messages.1.readBy"
+2025-04-26 18:00:49 error: Error reviewing investigation report: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+2025-04-26 18:00:59 error: Error reviewing investigation report: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+2025-04-26 18:01:06 error: Error reviewing investigation report: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+2025-04-26 18:01:29 error: Authentication error: read ECONNRESET
+2025-04-26 18:02:49 error: Error reviewing investigation report: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+2025-04-26 18:06:13 error: Error reviewing investigation report: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+2025-04-26 18:06:13 error: ValidationError: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+    at Document.invalidate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\document.js:3351:32)
+    at Subdocument.invalidate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\types\subdocument.js:229:12)
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\document.js:3112:17
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1407:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-04-26 18:29:49 error: Error reviewing investigation report: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+2025-04-26 18:29:49 error: ValidationError: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+    at Document.invalidate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\document.js:3351:32)
+    at Subdocument.invalidate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\types\subdocument.js:229:12)
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\document.js:3112:17
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1407:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-04-26 18:29:59 error: Error reviewing investigation report: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+2025-04-26 18:29:59 error: ValidationError: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+    at Document.invalidate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\document.js:3351:32)
+    at Subdocument.invalidate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\types\subdocument.js:229:12)
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\document.js:3112:17
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1407:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-04-26 18:30:06 error: Error reviewing investigation report: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+2025-04-26 18:30:06 error: ValidationError: Incident validation failed: vehicles.0.involvement: `primary` is not a valid enum value for path `involvement`.
+    at Document.invalidate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\document.js:3351:32)
+    at Subdocument.invalidate (C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\types\subdocument.js:229:12)
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\document.js:3112:17
+    at C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\node_modules\mongoose\lib\schemaType.js:1407:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-04-26 18:39:48 error: Error creating admin notifications: Class constructor ObjectId cannot be invoked without 'new'
+2025-04-26 19:22:47 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-26 19:22:47 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-26 19:23:31 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-26 19:23:31 error: Authentication error: getaddrinfo ENOTFOUND ac-crgpbhf-shard-00-00.rdlhh1c.mongodb.net
+2025-04-27 11:11:04 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.
+2025-04-27 20:00:16 error: Error creating admin notifications: Class constructor ObjectId cannot be invoked without 'new'
+2025-05-03 19:53:47 error: Error connecting to MongoDB: querySrv ECONNREFUSED _mongodb._tcp.cluster0.rdlhh1c.mongodb.net
+2025-05-03 19:53:47 error: Cloudinary connection test failed: getaddrinfo ENOTFOUND api.cloudinary.com
+2025-05-03 19:59:40 error: Error creating admin notifications: Class constructor ObjectId cannot be invoked without 'new'
+2025-05-03 20:03:45 error: Error creating admin notifications: Class constructor ObjectId cannot be invoked without 'new'
+2025-05-03 20:20:33 error: Error creating admin notifications: Class constructor ObjectId cannot be invoked without 'new'
+2025-05-04 18:21:33 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:21:33 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:22:24 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:22:24 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:22:57 error: Error initializing image analysis models fetch failed
+2025-05-04 18:22:57 error: Failed to initialize image analysis models Failed to initialize image analysis models
+2025-05-04 18:26:32 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:26:32 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:27:28 error: Error getting incident: Cast to ObjectId failed for value "new" (type string) at path "_id" for model "Incident"
+2025-05-04 18:27:28 error: Error getting incident: Cast to ObjectId failed for value "new" (type string) at path "_id" for model "Incident"
+2025-05-04 18:40:15 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:40:15 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:46:20 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:46:20 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:48:07 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:48:07 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:51:15 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:51:15 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:51:37 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:51:37 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:56:34 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-04 18:56:34 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-06 15:22:30 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-06 15:22:30 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-06 15:35:41 error: Error getting incident: Cast to ObjectId failed for value "new" (type string) at path "_id" for model "Incident"
+2025-05-06 15:35:41 error: Error getting incident: Cast to ObjectId failed for value "new" (type string) at path "_id" for model "Incident"
+2025-05-06 16:34:27 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-06 16:34:27 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-06 16:45:16 error: Error initializing fraud detection model Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-06 16:45:16 error: Failed to initialize fraud detection model Failed to initialize fraud detection model: Cannot find any save handlers for URL 'file://C:\Users\MUNEEB AWAN\vehicle_investigation_system\backend\models\fraud_detection\model.json'
+2025-05-06 16:47:02 error: Error creating audit log: Audit validation failed: resourceType: `message` is not a valid enum value for path `resourceType`.

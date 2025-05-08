@@ -156,6 +156,5 @@ documentSchema.virtual('isExpired').get(function() {
   return today > expiryDate;
 });
 
-const Document = mongoose.model('Document', documentSchema);
-
-module.exports = Document; 
+// Check if the model already exists before creating it
+module.exports = mongoose.models.Document || mongoose.model('Document', documentSchema); 

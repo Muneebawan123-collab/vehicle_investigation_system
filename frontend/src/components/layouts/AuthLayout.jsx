@@ -31,7 +31,7 @@ const AuthLayout = () => {
             align="center" 
             sx={{ mb: 3, fontWeight: 700 }}
           >
-            Vehicle Investigation System
+            InvestiCar Platform
           </Typography>
         </motion.div>
 
@@ -63,7 +63,7 @@ const AuthLayout = () => {
 
         <Box sx={{ mt: 4, textAlign: 'center' }}>
           <Typography variant="body2" color="text.secondary">
-            &copy; {new Date().getFullYear()} Vehicle Investigation System
+            &copy; {new Date().getFullYear()} InvestiCar Platform
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             <Link component={RouterLink} to="/privacy-policy" color="inherit">

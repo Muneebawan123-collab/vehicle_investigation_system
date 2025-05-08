@@ -31,22 +31,33 @@ const DocumentsListPage = () => {
       const response = await documentService.getAllDocuments();
       console.log('Documents response:', response);
       
-      // Properly handle the response structure from backend
       if (response.data && Array.isArray(response.data.data)) {
-        // Handle standard backend response format with data property
         console.log('Documents found:', response.data.data.length);
         setDocuments(response.data.data.map(doc => ({
           ...doc,
-          id: doc._id || doc.id, // Use MongoDB _id if available
-          name: doc.name || doc.public_id?.split('/').pop() || 'Unnamed Document'
+          id: doc._id || doc.id, // Use either _id or id
+          key: doc._id || doc.id, // Use either _id or id
+          name: doc.name || 'Unnamed Document',
+          type: doc.type || doc.fileType || 'unknown',
+          size: doc.size || 0,
+          uploadedBy: doc.uploadedBy?.name || 'System',
+          uploadDate: doc.uploadDate || doc.createdAt || new Date(),
+          url: doc.url || doc.fileUrl || null,
+          _id: doc._id || doc.id // Keep original MongoDB ID
         })));
       } else if (response.data && Array.isArray(response.data)) {
-        // Handle simple array response
         console.log('Documents found (array):', response.data.length);
         setDocuments(response.data.map(doc => ({
           ...doc,
-          id: doc._id || doc.id, // Use MongoDB _id if available
-          name: doc.name || doc.public_id?.split('/').pop() || 'Unnamed Document'
+          id: doc._id || doc.id, // Use either _id or id
+          key: doc._id || doc.id, // Use either _id or id
+          name: doc.name || 'Unnamed Document',
+          type: doc.type || doc.fileType || 'unknown',
+          size: doc.size || 0,
+          uploadedBy: doc.uploadedBy?.name || 'System',
+          uploadDate: doc.uploadDate || doc.createdAt || new Date(),
+          url: doc.url || doc.fileUrl || null,
+          _id: doc._id || doc.id // Keep original MongoDB ID
         })));
       } else if (response.data && Array.isArray(response.data.resources)) {
         // Handle Cloudinary response format
@@ -71,16 +82,8 @@ const DocumentsListPage = () => {
       console.error('Failed to fetch documents:', error);
       let errorMessage = 'Failed to fetch documents';
       
-      if (error.response) {
-        console.error('Error response:', error.response);
-        if (error.response.data && error.response.data.message) {
+      if (error.response?.data?.message) {
           errorMessage += `: ${error.response.data.message}`;
-          if (error.response.data.details) {
-            errorMessage += ` (${error.response.data.details})`;
-          }
-        } else {
-          errorMessage += `: ${error.message}`;
-        }
       } else if (error.message) {
         errorMessage += `: ${error.message}`;
       }
@@ -94,38 +97,95 @@ const DocumentsListPage = () => {
 
   const handleDownload = async (documentId, documentUrl) => {
     try {
-      // Direct download from URL if available
-      if (documentUrl) {
-        // Fix local file URLs - convert to relative paths
-        const formattedUrl = formatFileUrl(documentUrl);
-        window.open(formattedUrl, '_blank');
+      if (!documentId) {
+        message.error('Cannot download document: Document ID is missing');
         return;
       }
       
-      // Otherwise use API
-      const response = await documentService.downloadDocument(documentId);
-      if (response && response.data) {
-        // Create a blob URL for the file data
-        const blob = new Blob([response.data], { 
-          type: response.headers?.['content-type'] || 'application/octet-stream' 
+      console.log('Initiating document download:', { documentId, documentUrl });
+      message.loading({ content: 'Preparing download...', key: 'downloadMessage', duration: 0 });
+      
+      // Try to find the document in our list
+      const document = documents.find(doc => 
+        doc.name === documentId || 
+        doc._id === documentId || 
+        doc.id === documentId ||
+        doc.publicId === documentId
+      );
+      
+      console.log('Found document details:', document);
+      
+      // If we have a direct URL, use it first
+      if (documentUrl) {
+        try {
+          const response = await fetch(documentUrl);
+          if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = document?.name || documentId;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            message.success({
+              content: 'Download completed successfully',
+              key: 'downloadMessage'
+            });
+            return;
+          }
+        } catch (directError) {
+          console.log('Direct URL download failed:', directError);
+        }
+      }
+      
+      // If direct URL fails or isn't available, use the document service
+      const result = await documentService.downloadDocument(documentId, {
+        showNotifications: true,
+        filename: document?.name || documentId,
+        url: documentUrl
+      });
+      
+      if (!result) {
+        message.error({ 
+          content: 'Download failed. Please try again or contact support if the issue persists.', 
+          key: 'downloadMessage' 
         });
-        const filename = documentId.split('/').pop() || 'document';
-        downloadBlob(blob, filename);
       } else {
-        message.error('Document data not found');
+        message.success({
+          content: 'Download completed successfully',
+          key: 'downloadMessage'
+        });
       }
     } catch (error) {
       console.error('Failed to download document:', error);
-      message.error('Failed to download document: ' + (error.response?.data?.message || error.message));
+      message.error({ 
+        content: `Failed to download document: ${error.message}`, 
+        key: 'downloadMessage',
+        duration: 5
+      });
     }
   };
 
   const handleDelete = async (documentId) => {
     try {
+      if (!documentId) {
+        message.error('Cannot delete document: Document ID is missing');
+        return;
+      }
+      
       console.log('Deleting document:', documentId);
-      await documentService.deleteDocument(documentId);
+      const response = await documentService.deleteDocument(documentId);
+      
+      if (response.data?.success) {
       message.success('Document deleted successfully');
       fetchDocuments(); // Refresh the list
+      } else {
+        throw new Error(response.data?.message || 'Failed to delete document');
+      }
     } catch (error) {
       console.error('Failed to delete document:', error);
       message.error('Failed to delete document: ' + (error.response?.data?.message || error.message));
@@ -190,12 +250,18 @@ const DocumentsListPage = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (_, record) => (
+      render: (_, record) => {
+        // Use MongoDB ID if available, otherwise fallback to name
+        const documentId = record._id || record.id || record.name;
+        const documentUrl = record.url || record.fileUrl;
+        
+        return (
         <Space>
           <Button
             type="primary"
             icon={<DownloadOutlined />}
-            onClick={() => handleDownload(record.id, record.url)}
+              onClick={() => handleDownload(documentId, documentUrl)}
+              disabled={!documentId}
           >
             Download
           </Button>
@@ -204,13 +270,15 @@ const DocumentsListPage = () => {
               type="primary"
               danger
               icon={<DeleteOutlined />}
-              onClick={() => handleDelete(record.id)}
+                onClick={() => handleDelete(documentId)}
+                disabled={!documentId}
             >
               Delete
             </Button>
           )}
         </Space>
-      ),
+        );
+      },
     },
   ];
 

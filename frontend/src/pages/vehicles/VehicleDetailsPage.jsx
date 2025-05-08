@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Card, Descriptions, Button, Tag, Spin, message, Modal } from 'antd';
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Card, Descriptions, Button, Tag, Spin, message, Modal, Tabs } from 'antd';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, QrcodeOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import VehicleQRCode from '../../components/vehicles/VehicleQRCode';
 
 const { confirm } = Modal;
+const { TabPane } = Tabs;
 const API_BASE_URL = '';
 
 const VehicleDetailsPage = () => {
@@ -104,73 +106,88 @@ const VehicleDetailsPage = () => {
           </div>
         }
       >
-        <Descriptions bordered column={2}>
-          <Descriptions.Item label="License Plate">
-            {vehicle.licensePlate}
-          </Descriptions.Item>
-          <Descriptions.Item label="Status">
-            <Tag color={vehicle.status === 'stolen' ? 'red' : vehicle.status === 'active' ? 'green' : 'orange'}>
-              {vehicle.status.charAt(0).toUpperCase() + vehicle.status.slice(1)}
-            </Tag>
-          </Descriptions.Item>
-          <Descriptions.Item label="Make">{vehicle.make}</Descriptions.Item>
-          <Descriptions.Item label="Model">{vehicle.model}</Descriptions.Item>
-          <Descriptions.Item label="Year">{vehicle.year}</Descriptions.Item>
-          <Descriptions.Item label="Color">{vehicle.color}</Descriptions.Item>
-          <Descriptions.Item label="VIN" span={2}>
-            {vehicle.vin}
-          </Descriptions.Item>
-          <Descriptions.Item label="Registration State">
-            {vehicle.registrationState}
-          </Descriptions.Item>
-          <Descriptions.Item label="Registration Expiry">
-            {vehicle.registrationExpiry ? new Date(vehicle.registrationExpiry).toLocaleDateString() : 'N/A'}
-          </Descriptions.Item>
-          
-          {/* Owner Information Section */}
-          <Descriptions.Item label="Owner Name" span={2}>
-            {vehicle.ownerName || 'N/A'}
-          </Descriptions.Item>
-          <Descriptions.Item label="Owner Contact" span={2}>
-            {vehicle.ownerContact || 'N/A'}
-          </Descriptions.Item>
-          <Descriptions.Item label="Owner Email" span={2}>
-            {vehicle.ownerEmail || 'N/A'}
-          </Descriptions.Item>
-          <Descriptions.Item label="Owner Address" span={2}>
-            {vehicle.ownerAddress || 'N/A'}
-          </Descriptions.Item>
+        <Tabs defaultActiveKey="details">
+          <TabPane tab="Details" key="details">
+            <Descriptions bordered column={2}>
+              <Descriptions.Item label="License Plate">
+                {vehicle.licensePlate}
+              </Descriptions.Item>
+              <Descriptions.Item label="Status">
+                <Tag color={vehicle.status === 'stolen' ? 'red' : vehicle.status === 'active' ? 'green' : 'orange'}>
+                  {vehicle.status.charAt(0).toUpperCase() + vehicle.status.slice(1)}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="Make">{vehicle.make}</Descriptions.Item>
+              <Descriptions.Item label="Model">{vehicle.model}</Descriptions.Item>
+              <Descriptions.Item label="Year">{vehicle.year}</Descriptions.Item>
+              <Descriptions.Item label="Color">{vehicle.color}</Descriptions.Item>
+              <Descriptions.Item label="VIN" span={2}>
+                {vehicle.vin}
+              </Descriptions.Item>
+              <Descriptions.Item label="Registration State">
+                {vehicle.registrationState}
+              </Descriptions.Item>
+              <Descriptions.Item label="Registration Expiry">
+                {vehicle.registrationExpiry ? new Date(vehicle.registrationExpiry).toLocaleDateString() : 'N/A'}
+              </Descriptions.Item>
+              
+              {/* Owner Information Section */}
+              <Descriptions.Item label="Owner Name" span={2}>
+                {vehicle.ownerName || 'N/A'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Owner Contact" span={2}>
+                {vehicle.ownerContact || 'N/A'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Owner Email" span={2}>
+                {vehicle.ownerEmail || 'N/A'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Owner Address" span={2}>
+                {vehicle.ownerAddress || 'N/A'}
+              </Descriptions.Item>
 
-          {/* Insurance Information Section */}
-          <Descriptions.Item label="Insurance Provider" span={2}>
-            {vehicle.insuranceProvider || 'N/A'}
-          </Descriptions.Item>
-          {vehicle.insurancePolicyNumber && (
-            <Descriptions.Item label="Insurance Policy Number" span={2}>
-              {vehicle.insurancePolicyNumber}
-            </Descriptions.Item>
-          )}
-          {vehicle.insuranceExpiry && (
-            <Descriptions.Item label="Insurance Expiry" span={2}>
-              {new Date(vehicle.insuranceExpiry).toLocaleDateString()}
-            </Descriptions.Item>
-          )}
+              {/* Insurance Information Section */}
+              <Descriptions.Item label="Insurance Provider" span={2}>
+                {vehicle.insuranceProvider || 'N/A'}
+              </Descriptions.Item>
+              {vehicle.insurancePolicyNumber && (
+                <Descriptions.Item label="Insurance Policy Number" span={2}>
+                  {vehicle.insurancePolicyNumber}
+                </Descriptions.Item>
+              )}
+              {vehicle.insuranceExpiry && (
+                <Descriptions.Item label="Insurance Expiry" span={2}>
+                  {new Date(vehicle.insuranceExpiry).toLocaleDateString()}
+                </Descriptions.Item>
+              )}
 
-          {/* Theft Information Section (if applicable) */}
-          {vehicle.status === 'stolen' && (
-            <>
-              <Descriptions.Item label="Theft Report Date" span={2}>
-                {vehicle.theftReportDate ? new Date(vehicle.theftReportDate).toLocaleDateString() : 'N/A'}
-              </Descriptions.Item>
-              <Descriptions.Item label="Theft Location" span={2}>
-                {vehicle.theftLocation || 'N/A'}
-              </Descriptions.Item>
-              <Descriptions.Item label="Police Report Number" span={2}>
-                {vehicle.policeReportNumber || 'N/A'}
-              </Descriptions.Item>
-            </>
-          )}
-        </Descriptions>
+              {/* Theft Information Section (if applicable) */}
+              {vehicle.status === 'stolen' && (
+                <>
+                  <Descriptions.Item label="Theft Report Date" span={2}>
+                    {vehicle.theftReportDate ? new Date(vehicle.theftReportDate).toLocaleDateString() : 'N/A'}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Theft Location" span={2}>
+                    {vehicle.theftLocation || 'N/A'}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Police Report Number" span={2}>
+                    {vehicle.policeReportNumber || 'N/A'}
+                  </Descriptions.Item>
+                </>
+              )}
+            </Descriptions>
+          </TabPane>
+          <TabPane 
+            tab={
+              <span>
+                <QrcodeOutlined />
+                QR Code
+              </span>
+            } 
+            key="qrcode"
+          >
+            <VehicleQRCode vehicleId={id} />
+          </TabPane>
+        </Tabs>
         <div style={{ marginTop: 16 }}>
           <Link to={`/vehicles/test-edit/${id}`} style={{ marginRight: 8 }}>
             Test Edit Route

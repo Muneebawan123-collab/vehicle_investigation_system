@@ -42,8 +42,8 @@ const NewChatDialog = ({ open, onClose }) => {
     try {
       // Only admin can see all users
       const endpoint = user?.role === 'admin' 
-        ? '/api/users' 
-        : '/api/users/available';
+        ? '/users' 
+        : '/users/available';
       
       const response = await api.get(endpoint);
       

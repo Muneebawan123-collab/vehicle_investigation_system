@@ -117,12 +117,20 @@ export const AuthProvider = ({ children }) => {
       
       // Store token and user info
       localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      // Update state
       setToken(token);
       setUser(user);
       setIsAuthenticated(true);
       
+      // Set axios default header
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
       // Validate the new token
       isTokenValid(token);
+      
+      console.log('Authentication state updated', { isAuthenticated: true, user });
       
       return user;
     } catch (error) {

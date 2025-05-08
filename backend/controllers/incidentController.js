@@ -2,7 +2,8 @@ const Incident = require('../models/incidentModel');
 const logger = require('../utils/logger');
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
-const { notifyAdmins } = require('../utils/notificationUtils');
+const { notifyAdmins, notifyUser } = require('../utils/notificationUtils');
+const { createAuditLog } = require('../utils/auditLogUtils');
 
 // Get all incidents
 exports.getAllIncidents = async (req, res) => {
@@ -25,8 +26,8 @@ exports.getAllIncidents = async (req, res) => {
       ];
     }
 
-    // If user is not admin, only show incidents they reported
-    if (req.user.role !== 'admin' && req.user.role !== 'investigator') {
+    // If user is not admin, investigator, or officer, only show incidents they reported
+    if (req.user.role !== 'admin' && req.user.role !== 'investigator' && req.user.role !== 'officer') {
       query.reportedBy = req.user._id;
     }
 
@@ -53,20 +54,40 @@ exports.getIncidentById = async (req, res) => {
   try {
     const incident = await Incident.findById(req.params.id)
       .populate('vehicle', 'registrationNumber licensePlate make model')
-      .populate('reportedBy', 'name');
+      .populate('reportedBy', 'name email')
+      .populate('assignedTo', 'name email role')
+      .populate({
+        path: 'caseFile.assignedInvestigator',
+        select: 'name email role'
+      })
+      .populate({
+        path: 'caseFile.investigationReport.submittedBy',
+        select: 'name email role'
+      })
+      .populate({
+        path: 'caseFile.officerActions.reviewedBy',
+        select: 'name email role'
+      })
+      .populate({
+        path: 'timeline.performedBy',
+        select: 'name email role'
+      });
     
     if (!incident) {
       return res.status(404).json({ message: 'Incident not found' });
     }
 
-    // Check permission - admin, investigator or the user who reported it
+    // Check permission - admin, investigator, officer or the user who reported it
     if (
       req.user.role !== 'admin' &&
       req.user.role !== 'investigator' &&
+      req.user.role !== 'officer' &&
       incident.reportedBy._id.toString() !== req.user._id.toString()
     ) {
       return res.status(403).json({ message: 'Not authorized to view this incident' });
     }
+    
+    logger.info(`Incident ${incident._id} retrieved by user ${req.user._id} (${req.user.role})`);
     
     res.json(incident);
   } catch (error) {
@@ -154,6 +175,26 @@ exports.createIncident = async (req, res) => {
     const savedIncident = await incident.save();
     logger.info(`New incident created: ${savedIncident._id} by user ${req.user._id}`);
     
+    // Send real-time notification to the user
+    await notifyUser(
+      req.user._id,
+      'Incident Created',
+      `Incident #${savedIncident.incidentNumber} has been successfully created.`,
+      'success',
+      'incident',
+      savedIncident._id
+    );
+
+    // Notify all admins about the new incident
+    await notifyAdmins(
+      'New Incident Reported',
+      `${req.user.firstName || ''} ${req.user.lastName || ''} has reported a new incident: ${savedIncident.title}`,
+      'info',
+      'incident',
+      savedIncident._id,
+      savedIncident.severity === 'high' // Mark as urgent if severity is high
+    );
+    
     res.status(201).json(savedIncident);
   } catch (error) {
     logger.error(`Error creating incident: ${error.message}`);
@@ -190,10 +231,11 @@ exports.updateIncident = async (req, res) => {
       return res.status(404).json({ message: 'Incident not found' });
     }
 
-    // Check permission - admin, investigator or the user who reported it
+    // Check permission - admin, investigator, officer or the user who reported it
     if (
       req.user.role !== 'admin' &&
       req.user.role !== 'investigator' &&
+      req.user.role !== 'officer' &&
       incident.reportedBy.toString() !== req.user._id.toString()
     ) {
       return res.status(403).json({ message: 'Not authorized to update this incident' });
@@ -296,9 +338,10 @@ exports.deleteIncident = async (req, res) => {
       return res.status(404).json({ message: 'Incident not found' });
     }
 
-    // Only admin or the user who reported it can delete
+    // Only admin, officer or the user who reported it can delete
     if (
       req.user.role !== 'admin' &&
+      req.user.role !== 'officer' &&
       incident.reportedBy.toString() !== req.user._id.toString()
     ) {
       return res.status(403).json({ message: 'Not authorized to delete this incident' });
@@ -350,8 +393,8 @@ exports.getIncidentsByVehicle = async (req, res) => {
 // Get incidents by user ID
 exports.getIncidentsByUser = async (req, res) => {
   try {
-    // Only admin can see other user's incidents
-    if (req.user.role !== 'admin' && req.params.userId !== req.user._id.toString()) {
+    // Only admin or officer can see other user's incidents
+    if (req.user.role !== 'admin' && req.user.role !== 'officer' && req.params.userId !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to view these incidents' });
     }
 
@@ -453,6 +496,17 @@ exports.assignIncident = async (req, res) => {
     
     logger.info(`Incident ${incident._id} assigned to investigator ${investigatorId} by admin ${req.user._id}`);
     
+    // Notify the assigned investigator
+    await notifyUser(
+      investigatorId,
+      'Incident Assigned',
+      `You have been assigned to investigate incident #${incident.incidentNumber}: ${incident.title}`,
+      'info',
+      'incident',
+      incident._id,
+      true // Mark as urgent
+    );
+    
     res.json({
       success: true,
       message: 'Incident assigned successfully',
@@ -516,7 +570,11 @@ exports.submitInvestigationReport = async (req, res) => {
           submittedAt: new Date(),
           content: reportContent,
           attachments: attachments || [],
-          status: 'submitted'
+          status: 'submitted',
+          // Also include these fields in the report itself for consistency
+          findings: findings,
+          recommendations: recommendations,
+          conclusion: conclusion
         }
       }
     };
@@ -579,6 +637,24 @@ exports.submitInvestigationReport = async (req, res) => {
 // Review investigation report and take action (Officer only)
 exports.reviewInvestigationReport = async (req, res) => {
   try {
+    // Log request for debugging
+    logger.info(`Review request received: ${JSON.stringify({
+      incidentId: req.params.id,
+      userId: req.user._id,
+      userRole: req.user.role,
+      requestBody: req.body
+    })}`);
+
+    // Validate express-validator results
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      logger.error(`Validation errors: ${JSON.stringify(errors.array())}`);
+      return res.status(400).json({ 
+        message: 'Validation failed', 
+        errors: errors.array() 
+      });
+    }
+
     // Validate officer role
     if (req.user.role !== 'officer') {
       return res.status(403).json({ message: 'Only officers can review reports' });
@@ -587,7 +663,8 @@ exports.reviewInvestigationReport = async (req, res) => {
     const { 
       actions,
       notes,
-      reportStatus
+      reportStatus,
+      conclusion
     } = req.body;
     
     if (!actions) {
@@ -600,49 +677,147 @@ exports.reviewInvestigationReport = async (req, res) => {
       return res.status(404).json({ message: 'Incident not found' });
     }
 
-    // Verify this incident has a submitted report
-    if (!incident.caseFile || !incident.caseFile.investigationReport || 
-        incident.caseFile.investigationReport.status !== 'submitted') {
+    logger.info(`Processing review for incident ${incident._id} with status ${reportStatus}`);
+
+    // Ensure incident has a case file
+    if (!incident.caseFile) {
+      incident.caseFile = {};
+    }
+
+    // Check if there's an investigation report
+    const hasReport = incident.caseFile && 
+                      incident.caseFile.investigationReport && 
+                      incident.caseFile.investigationReport.status === 'submitted';
+    
+    if (!hasReport) {
       return res.status(400).json({ message: 'No submitted investigation report found for this incident' });
     }
 
+    // Set default reportStatus if not provided
+    const status = reportStatus || 'reviewed';
+
     // Update incident status
-    incident.status = reportStatus === 'approved' ? 'closed' : 'reopened';
+    incident.status = status === 'approved' ? 'closed' : 'reopened';
     
     // Update case file
-    incident.caseFile.status = reportStatus === 'approved' ? 'review_complete' : 'under_investigation';
+    incident.caseFile.status = status === 'approved' ? 'review_complete' : 'under_investigation';
     
     // Update investigation report status
-    incident.caseFile.investigationReport.status = reportStatus || 'reviewed';
+    if (!incident.caseFile.investigationReport) {
+      incident.caseFile.investigationReport = {};
+    }
+    incident.caseFile.investigationReport.status = status;
     
     // Add officer actions
+    if (!incident.caseFile.officerActions) {
+      incident.caseFile.officerActions = {};
+    }
+    
     incident.caseFile.officerActions = {
       reviewedBy: req.user._id,
       reviewedAt: new Date(),
       actions: actions,
       notes: notes || '',
-      status: reportStatus === 'approved' ? 'completed' : 'in_progress'
+      status: status === 'approved' ? 'completed' : 'in_progress',
+      conclusion: conclusion || 'confirmed'
     };
+    
+    // Initialize timeline if it doesn't exist
+    if (!incident.timeline) {
+      incident.timeline = [];
+    }
     
     // Add to timeline
     incident.timeline.push({
       date: new Date(),
       action: 'Investigation Report Reviewed',
-      description: `Investigation report reviewed by officer ${req.user.name || req.user.email}`,
+      description: `Investigation report reviewed by officer ${req.user.name || req.user.email}. Conclusion: ${conclusion || 'Not specified'}`,
       performedBy: req.user._id
     });
 
-    await incident.save();
+    logger.info(`Attempting to save updated incident with case file status: ${incident.caseFile.status}`);
     
-    logger.info(`Investigation report for incident ${incident._id} reviewed by officer ${req.user._id}`);
-    
-    res.json({
-      success: true,
-      message: 'Investigation report reviewed successfully',
-      incident
-    });
+    try {
+      // Use findByIdAndUpdate instead of save to bypass validation issues
+      const updatedIncident = await Incident.findByIdAndUpdate(
+        req.params.id,
+        { 
+          $set: {
+            status: incident.status,
+            'caseFile.status': incident.caseFile.status,
+            'caseFile.investigationReport.status': incident.caseFile.investigationReport.status,
+            'caseFile.officerActions': incident.caseFile.officerActions
+          },
+          $push: { 
+            timeline: {
+              date: new Date(),
+              action: 'Investigation Report Reviewed',
+              description: `Investigation report reviewed by officer ${req.user.name || req.user.email}. Conclusion: ${conclusion || 'Not specified'}`,
+              performedBy: req.user._id
+            }
+          }
+        },
+        { 
+          new: true,
+          runValidators: false // Disable validation for this update
+        }
+      );
+      
+      if (!updatedIncident) {
+        logger.error(`Failed to update incident: ${req.params.id}`);
+        return res.status(500).json({ message: 'Failed to update incident' });
+      }
+      
+      logger.info(`Successfully updated incident ${updatedIncident._id}`);
+      
+      // Create an audit log
+      try {
+        await createAuditLog(
+          req,
+          null,
+          'review',
+          'investigation_report',
+          incident._id,
+          `Officer ${req.user.name || req.user.email} reviewed investigation report for incident ${incident.incidentNumber || incident._id}`,
+          true
+        );
+      } catch (auditError) {
+        logger.error(`Error creating audit log: ${auditError.message}`);
+        // Continue execution even if audit log fails
+      }
+      
+      logger.info(`Investigation report for incident ${updatedIncident._id} reviewed by officer ${req.user._id}`);
+      
+      // Return only necessary data to reduce response size
+      const responseIncident = {
+        _id: updatedIncident._id,
+        status: updatedIncident.status,
+        caseFile: updatedIncident.caseFile,
+        timeline: updatedIncident.timeline && updatedIncident.timeline.length > 0 
+          ? [updatedIncident.timeline[updatedIncident.timeline.length - 1]] 
+          : []
+      };
+      
+      res.json({
+        success: true,
+        message: 'Investigation report reviewed successfully',
+        incident: responseIncident
+      });
+    } catch (saveError) {
+      logger.error(`Error saving incident: ${saveError.message}`);
+      logger.error(saveError.stack);
+      return res.status(500).json({ 
+        message: 'Failed to save incident', 
+        error: saveError.message
+      });
+    }
   } catch (error) {
     logger.error(`Error reviewing investigation report: ${error.message}`);
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    logger.error(error.stack);
+    res.status(500).json({ 
+      message: 'Server Error', 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
-}; 
+};

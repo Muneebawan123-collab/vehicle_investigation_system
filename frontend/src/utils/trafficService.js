@@ -45,8 +45,7 @@ const TRAFFIC_ALERTS = [
 export const fetchTrafficSafetyTip = async () => {
   try {
     // First try to get data from a real traffic API
-    // You can replace this with a real traffic API endpoint
-    const response = await api.get('/api/traffic/safety-tips');
+    const response = await api.get('/traffic/safety-tips');
     return response.data;
   } catch (error) {
     console.log('Using fallback safety tip data');
@@ -66,7 +65,7 @@ export const fetchTrafficSafetyTip = async () => {
 export const fetchTrafficAlert = async () => {
   try {
     // First try to get data from a real traffic API
-    const response = await api.get('/api/traffic/alerts');
+    const response = await api.get('/traffic/alerts');
     return response.data;
   } catch (error) {
     console.log('Using fallback traffic alert data');
